@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Our IT services at VedaNexus, including server maintenance, storage solutions, hardware support, network security, cloud services, and more." />
+  <meta name="description" content="Our IT services at VedaNexus, including server maintenance, storage solutions, hardware support, security, cloud services and more." />
   <title>VedaNexus - Services</title>
   <link rel="stylesheet" href="styles.css" />
+  <!-- Optionally add Font Awesome CDN for easy icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
   <nav class="navbar">
@@ -28,48 +30,50 @@
   </nav>
 
   <main>
-    <section id="services" class="services">
+    <section id="services" class="services new-services">
       <h2>Our Services</h2>
-      <p>We provide reliable IT infrastructure, cloud and hardware solutions for startups and businesses.</p>
-
-      <div class="service-card">
-        <h3>Server Maintenance</h3>
-        <p>Reliable server setup and monitoring to ensure uptime and performance.</p>
-      </div>
-      
-      <div class="service-card">
-        <h3>Storage Solutions</h3>
-        <p>Backup and cloud integration support to protect and access your data anytime.</p>
-      </div>
-      
-      <div class="service-card">
-        <h3>Hardware Support</h3>
-        <p>Fast and affordable hardware servicing, repair and replacement.</p>
-      </div>
-
-      <div class="service-card">
-        <h3>Network Security</h3>
-        <p>Comprehensive protection from cyber threats with firewalls, VPNs, and audits.</p>
-      </div>
-
-      <div class="service-card">
-        <h3>Cloud Services</h3>
-        <p>Cloud migration, hosting, and management to scale your business efficiently.</p>
-      </div>
-
-      <div class="service-card">
-        <h3>IT Consulting</h3>
-        <p>Expert advice for designing and implementing smart IT strategies tailored to your needs.</p>
-      </div>
-
-      <div class="service-card">
-        <h3>Help Desk Support</h3>
-        <p>24/7 technical support via phone, chat, or onsite for smooth daily operations.</p>
-      </div>
-
-      <div class="service-card">
-        <h3>Software Integration</h3>
-        <p>Custom integration of business software to increase productivity and workflow automation.</p>
+      <p>Powering your business with reliable IT solutions, proactive support, and modern digital infrastructure.</p>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-server"></i></div>
+          <h3>Server Maintenance</h3>
+          <p>Reliable server setup and monitoring to keep your systems always running.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-database"></i></div>
+          <h3>Storage Solutions</h3>
+          <p>Backup & cloud integration so your data is always secure and accessible.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-desktop"></i></div>
+          <h3>Hardware Support</h3>
+          <p>Quick, affordable servicing and upgrades for all your IT hardware.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
+          <h3>Network Security</h3>
+          <p>Comprehensive protection with firewall, VPNs, audits and threat monitoring.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-cloud"></i></div>
+          <h3>Cloud Services</h3>
+          <p>End-to-end cloud migration, hosting, and management.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-headset"></i></div>
+          <h3>Help Desk Support</h3>
+          <p>24x7 technical support via phone, chat or onsite for smooth operation.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-code"></i></div>
+          <h3>Software Integration</h3>
+          <p>Automation, custom APIs, and workflow tools that fit your goals.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-lightbulb"></i></div>
+          <h3>IT Consulting</h3>
+          <p>Technology audits, planning and strategy from experienced experts.</p>
+        </div>
       </div>
     </section>
   </main>
@@ -82,18 +86,11 @@
     </div>
     <p>&copy; 2025 VedaNexus. All rights reserved.</p>
   </footer>
-
   <script>
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('navLinks');
-    hamburger.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-    });
-    hamburger.addEventListener('keydown', (e) => {
-      if (e.key === " " || e.key === "Enter") {
-        navLinks.classList.toggle('active');
-      }
-    });
+    hamburger.addEventListener('click', () => { navLinks.classList.toggle('active'); });
+    hamburger.addEventListener('keydown', (e) => { if (e.key === " " || e.key === "Enter") { navLinks.classList.toggle('active'); }});
   </script>
 </body>
 </html>
