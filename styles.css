@@ -1,3 +1,4 @@
+/* Reset & base */
 * {
   margin: 0;
   padding: 0;
@@ -14,6 +15,7 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Navbar Styles */
 .navbar {
   background-color: #004080;
   color: white;
@@ -24,39 +26,66 @@ html {
   position: sticky;
   top: 0;
   z-index: 50;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .logo {
   display: flex;
   align-items: center;
 }
+
 .logo img {
   height: 40px;
   margin-right: 10px;
 }
+
+.logo a {
+  text-decoration: none;
+  color: white;
+}
+
+.logo h1 {
+  font-size: 1.5em;
+  user-select: none;
+}
+
 .nav-links {
   list-style: none;
   display: flex;
 }
+
 .nav-links li {
   margin-left: 20px;
 }
+
 .nav-links a {
   color: white;
   text-decoration: none;
   font-weight: bold;
   transition: color 0.3s ease;
-}
-.nav-links a:hover, .nav-links a:focus {
-  color: #ffc107;
+  padding: 5px 0;
+  border-bottom: 2px solid transparent;
 }
 
+.nav-links a:hover,
+.nav-links a:focus {
+  color: #ffc107;
+  border-bottom: 2px solid #ffc107;
+}
+
+.nav-links a.active {
+  color: #ffc107;
+  border-bottom: 2px solid #ffc107;
+}
+
+/* Hamburger Menu */
 .hamburger {
   display: none;
   flex-direction: column;
   cursor: pointer;
   margin-left: 20px;
 }
+
 .hamburger span {
   height: 3px;
   width: 25px;
@@ -65,6 +94,7 @@ html {
   border-radius: 2px;
 }
 
+/* Hero Section */
 .hero {
   height: 90vh;
   background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
@@ -75,14 +105,19 @@ html {
   justify-content: center;
   align-items: center;
   text-align: center;
+  padding: 0 20px;
 }
+
 .hero h1 {
   font-size: 3em;
+  user-select: none;
 }
+
 .hero p {
   margin-top: 15px;
   font-size: 1.2em;
 }
+
 .cta-btn {
   margin-top: 25px;
   padding: 10px 25px;
@@ -93,42 +128,65 @@ html {
   border-radius: 5px;
   text-decoration: none;
   transition: background 0.3s;
+  user-select: none;
 }
-.cta-btn:hover { background-color: #ffa000; }
 
+.cta-btn:hover {
+  background-color: #ffa000;
+}
+
+/* Services Section */
 .services {
   padding: 50px 30px;
   text-align: center;
   background: #fff;
 }
+
 .services h2 {
   margin-bottom: 30px;
   color: #004080;
 }
+
 .service-card {
   margin: 20px auto;
   padding: 20px;
   max-width: 600px;
   background: #e9ecef;
   border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+
+/* About & Contact sections */
 .about, .contact {
   padding: 50px 30px;
   background: #f1f3f6;
   text-align: center;
 }
+
 .contact-form {
   max-width: 400px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
 }
-.contact-form input, .contact-form textarea {
+
+.contact-form input,
+.contact-form textarea {
   margin: 10px 0;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  font-size: 1em;
+  resize: vertical;
+  transition: border-color 0.3s;
 }
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #004080;
+  outline: none;
+}
+
 .contact-form button {
   background: #004080;
   color: white;
@@ -138,27 +196,34 @@ html {
   font-weight: bold;
   cursor: pointer;
   transition: background 0.3s;
+  user-select: none;
 }
+
 .contact-form button:hover {
   background: #002952;
 }
 
+/* Footer Styles */
 footer {
   background: #333;
   color: white;
   text-align: center;
   padding: 20px;
 }
+
 .footer-socials {
   margin-bottom: 10px;
 }
+
 .footer-socials a img {
   height: 28px;
   width: 28px;
   margin: 0 7px;
   filter: brightness(0) invert(1);
   transition: filter 0.3s;
+  vertical-align: middle;
 }
+
 .footer-socials a:hover img {
   filter: brightness(0.8) invert(0.8) sepia(1) saturate(4) hue-rotate(15deg);
 }
@@ -182,16 +247,25 @@ footer {
     display: none;
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
   }
+
   .nav-links.active {
     display: flex;
   }
+
+  .nav-links li {
+    margin: 15px 0;
+    margin-left: 0;
+  }
+
   .hamburger {
     display: flex;
   }
+
   .service-card {
     max-width: 96%;
     margin: 15px auto;
   }
+
   .hero h1 {
     font-size: 1.5em;
   }
@@ -201,7 +275,12 @@ footer {
   .logo h1 {
     font-size: 1.1em;
   }
+
   .services, .about, .contact {
     padding: 30px 10px;
+  }
+
+  .hero p {
+    font-size: 1em;
   }
 }
