@@ -94,89 +94,34 @@ html {
   border-radius: 2px;
 }
 
-/* Hero Section */
-.hero {
-  height: 90vh;
-  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-              url('bg.jpg') center/cover no-repeat;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 0 20px;
-}
-
-.hero h1 {
-  font-size: 3em;
-  user-select: none;
-}
-
-.hero p {
-  margin-top: 15px;
-  font-size: 1.2em;
-}
-
-.cta-btn {
-  margin-top: 25px;
-  padding: 10px 25px;
-  background-color: #ffc107;
-  border: none;
-  font-size: 1em;
-  color: black;
-  border-radius: 5px;
-  text-decoration: none;
-  transition: background 0.3s;
-  user-select: none;
-}
-
-.cta-btn:hover {
-  background-color: #ffa000;
-}
-
-/* Services Section */
-.services {
-  padding: 50px 30px;
-  text-align: center;
-  background: #fff;
-}
-
-.services h2 {
-  margin-bottom: 30px;
-  color: #004080;
-}
-
-.service-card {
-  margin: 20px auto;
-  padding: 20px;
-  max-width: 600px;
-  background: #e9ecef;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-/* About & Contact sections */
-.about, .contact {
+/* Contact Section */
+.contact {
   padding: 50px 30px;
   background: #f1f3f6;
   text-align: center;
+}
+
+.contact h2 {
+  margin-bottom: 15px;
+}
+
+.contact p {
+  margin-bottom: 25px;
 }
 
 .contact-form {
   max-width: 400px;
   margin: 0 auto;
   display: flex;
-  flex-direction: column;   /* Vertical stacking of form */
-  gap: 15px;                /* Space between fields */
-  align-items: stretch;     /* Make inputs full width */
+  flex-direction: column;
+  gap: 15px;
+  align-items: stretch;
 }
 
 .contact-form input,
 .contact-form textarea {
-  width: 100%;              /* Full width of container */
+  width: 100%;
   padding: 10px;
-  margin: 0;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1em;
@@ -192,7 +137,7 @@ html {
 
 .contact-form button {
   width: fit-content;
-  align-self: flex-end;     /* Button aligned right */
+  align-self: flex-end;
   padding: 10px 25px;
   margin-top: 8px;
   background: #004080;
@@ -209,7 +154,6 @@ html {
   background: #002952;
 }
 
-/* Contact Details Styling */
 .contact-details p {
   margin: 6px 0;
   font-size: 1em;
@@ -241,12 +185,6 @@ footer {
 }
 
 /* Responsive Styles */
-@media (max-width: 900px) {
-  .hero h1 {
-    font-size: 2.3em;
-  }
-}
-
 @media (max-width: 768px) {
   .nav-links {
     flex-direction: column;
@@ -272,27 +210,10 @@ footer {
   .hamburger {
     display: flex;
   }
-
-  .service-card {
-    max-width: 96%;
-    margin: 15px auto;
-  }
-
-  .hero h1 {
-    font-size: 1.5em;
-  }
 }
 
 @media (max-width: 500px) {
-  .logo h1 {
-    font-size: 1.1em;
-  }
-
-  .services, .about, .contact {
-    padding: 30px 10px;
-  }
-
-  .hero p {
-    font-size: 1em;
+  .contact {
+    padding: 30px 15px;
   }
 }
