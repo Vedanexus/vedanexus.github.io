@@ -78,7 +78,6 @@ html {
   border-bottom: 2px solid #ffc107;
 }
 
-/* Hamburger Menu */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -102,11 +101,11 @@ html {
 }
 
 .contact h2 {
-  margin-bottom: 15px;
+  margin-bottom: 20px;       /* Heading ke neeche spacing */
 }
 
 .contact p {
-  margin-bottom: 25px;
+  margin-bottom: 30px;       /* Paragraph ke neeche spacing (form se space) */
 }
 
 .contact-form {
@@ -154,12 +153,15 @@ html {
   background: #002952;
 }
 
+.contact-details {
+  margin-top: 30px;
+}
+
 .contact-details p {
   margin: 6px 0;
   font-size: 1em;
 }
 
-/* Footer Styles */
 footer {
   background: #333;
   color: white;
