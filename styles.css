@@ -54,13 +54,170 @@ html {
   display: flex;
 }
 
-/* Purana code yahan rakhein (Reset, Navbar, Logo etc.) */
-
 .nav-links li {
-  margin-left: 20px; /* Complete this line for horizontal nav */
+  margin-left: 20px;
 }
 
-/* --- ABOUT PAGE STYLING --- */
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+  padding: 5px 0;
+  border-bottom: 2px solid transparent;
+}
+
+.nav-links a:hover,
+.nav-links a:focus,
+.nav-links a.active {
+  color: #ffc107;
+  border-bottom: 2px solid #ffc107;
+}
+
+/* Hamburger menu */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+.hamburger span {
+  height: 3px;
+  width: 25px;
+  background: white;
+  margin: 4px 0;
+  border-radius: 2px;
+}
+
+/* Hero Section */
+.hero {
+  height: 90vh;
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+    url('bg.jpg') center/cover no-repeat;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.hero h2 {
+  font-size: 3em;
+  user-select: none;
+}
+
+.hero p {
+  margin-top: 15px;
+  font-size: 1.2em;
+}
+
+.cta-btn {
+  margin-top: 25px;
+  padding: 10px 25px;
+  background-color: #ffc107;
+  border: none;
+  font-size: 1em;
+  color: black;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s;
+  user-select: none;
+}
+
+.cta-btn:hover {
+  background-color: #ffa000;
+}
+
+/* Bubble / Zig-Zag Services Section */
+.bubble-services {
+  padding: 54px 0;
+  background: #f7faff;
+  text-align: center;
+}
+
+.bubble-services h2 {
+  color: #004080;
+  margin-bottom: 18px;
+}
+
+.bubble-services > p {
+  color: #34445a;
+  margin-bottom: 40px;
+  font-size: 1.08em;
+}
+
+.bubble-container {
+  width: 95%;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.bubble-card {
+  display: flex;
+  align-items: flex-start;
+  max-width: 630px;
+  margin-bottom: 44px;
+  background: #fff;
+  border-radius: 2em;
+  box-shadow: 0 2px 14px 0 rgba(50,80,130,0.09);
+  padding: 28px 30px;
+  transition: box-shadow .19s, transform .18s;
+  position: relative;
+}
+
+.bubble-card .bubble-icon {
+  min-width: 58px;
+  min-height: 58px;
+  background: linear-gradient(135deg,#f0f4ff,#dff0f5);
+  color: #004080;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
+  margin-right: 26px;
+  box-shadow: 0 1px 5px #e6edf6;
+}
+
+.bubble-card h3 {
+  margin-bottom: 10px;
+  color: #002244;
+  font-size: 1.14em;
+  text-align: left;
+}
+
+.bubble-card p {
+  color: #475871;
+  font-size: 1em;
+  margin: 0;
+  text-align: left;
+}
+
+/* Alternate align: left/right */
+.bubble-card.left {
+  margin-right: auto;
+  flex-direction: row;
+}
+
+.bubble-card.right {
+  margin-left: auto;
+  flex-direction: row-reverse;
+}
+
+.bubble-card.right .bubble-icon {
+  margin-right: 0;
+  margin-left: 26px;
+}
+
+.bubble-card:hover {
+  box-shadow: 0 8px 32px 0 rgba(40,70,120,0.13);
+  transform: translateY(-6px) scale(1.05);
+}
+
+/* About Page Enhancements */
 .about {
   padding: 50px 30px;
   background: #f1f3f6;
@@ -99,6 +256,7 @@ html {
 .about-section ul {
   padding-left: 22px;
   margin-top: 10px;
+  margin-bottom: 0;
 }
 
 .about-section ul li {
@@ -145,16 +303,7 @@ html {
   margin-bottom: 5px;
 }
 
-@media (max-width:900px) {
-  .about { max-width: 98%; }
-  .team-grid { gap: 20px; }
-}
-@media (max-width:600px) {
-  .about { padding: 15px 4vw; }
-  .team-grid { flex-direction: column; align-items: center; }
-}
-
-/* --- CONTACT PAGE STYLING --- */
+/* Contact Section */
 .contact {
   padding: 50px 30px;
   background: #f1f3f6;
@@ -224,7 +373,103 @@ html {
   font-size: 1em;
 }
 
-/* Responsive tweaks for contact/about on mobile */
+/* Footer */
+footer {
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.footer-socials {
+  margin-bottom: 10px;
+}
+
+.footer-socials a img {
+  height: 28px;
+  width: 28px;
+  margin: 0 7px;
+  filter: brightness(0) invert(1);
+  transition: filter 0.3s;
+  vertical-align: middle;
+}
+
+.footer-socials a:hover img {
+  filter: brightness(0.8) invert(0.8) sepia(1) saturate(4) hue-rotate(15deg);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .about { max-width: 98%; }
+  .team-grid { gap: 20px; }
+  .hero h2 {
+    font-size: 2em;
+  }
+}
+
+@media (max-width: 800px) {
+  .bubble-card {
+    max-width: 99%;
+    padding: 21px 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    flex-direction: column;
+    background: #004080;
+    position: absolute;
+    top: 70px;
+    right: 0;
+    width: 180px;
+    padding: 20px 0;
+    display: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-links li {
+    margin: 15px 0;
+    margin-left: 0;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .hero h2 {
+    font-size: 1.3em;
+  }
+}
+
+@media (max-width: 600px) {
+  .about {
+    padding: 15px 4vw;
+  }
+  .team-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+  .bubble-container {
+    width: 100%;
+  }
+  .bubble-card, .bubble-card.left, .bubble-card.right {
+    flex-direction: column !important;
+    margin-left: 0;
+    margin-right: 0;
+    align-items: center;
+    text-align: center;
+  }
+  .bubble-card .bubble-icon {
+    margin: 0 0 20px 0;
+  }
+}
+
 @media (max-width: 500px) {
-  .about, .contact { padding: 30px 10px; }
+  .contact, .services {
+    padding: 30px 8px;
+  }
 }
