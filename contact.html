@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Contact VedaNexus for IT solutions and support." />
+  <title>VedaNexus - Contact Us</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html">
+        <img src="logo.png" alt="VedaNexus Logo" loading="lazy"/>
+      </a>
+      <h1>VedaNexus</h1>
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger" aria-label="Open navigation" tabindex="0" role="button">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+  <main>
+    <section id="contact" class="contact">
+      <h2>Contact Us</h2>
+      <form class="contact-form">
+        <input type="text" placeholder="Your Name" required/>
+        <input type="email" placeholder="Your Email" required/>
+        <textarea rows="4" placeholder="Your Message" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-socials">
+      <a href="#" aria-label="Facebook"><img src="fb-icon.png" alt="Facebook" loading="lazy"></a>
+      <a href="#" aria-label="Twitter"><img src="twitter-icon.png" alt="Twitter" loading="lazy"></a>
+      <a href="#" aria-label="LinkedIn"><img src="linkedin-icon.png" alt="LinkedIn" loading="lazy"></a>
+    </div>
+    <p>&copy; 2025 VedaNexus. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    hamburger.addEventListener('keydown', function(e) {
+      if (e.key === " " || e.key === "Enter") {
+        navLinks.classList.toggle('active');
+      }
+    });
+  </script>
+</body>
+</html>
