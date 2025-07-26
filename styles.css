@@ -10,9 +10,7 @@ body {
   color: #22223b;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 .navbar, footer {
   background: #22223b;
@@ -30,35 +28,13 @@ html {
   box-shadow: 0 2px 12px rgba(68, 63, 98, 0.16);
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-}
+.logo { display: flex; align-items: center; }
+.logo img { height: 40px; margin-right: 10px; }
+.logo a { color: #fff; text-decoration: none; }
+.logo h1 { font-size: 1.5em; user-select: none; }
 
-.logo img {
-  height: 40px;
-  margin-right: 10px;
-}
-
-.logo a {
-  color: #fff;
-  text-decoration: none;
-}
-
-.logo h1 {
-  font-size: 1.5em;
-  user-select: none;
-}
-
-.nav-links {
-  list-style: none;
-  display: flex;
-}
-
-.nav-links li {
-  margin-left: 20px;
-}
-
+.nav-links { list-style: none; display: flex; }
+.nav-links li { margin-left: 20px; }
 .nav-links a {
   color: #fff;
   text-decoration: none;
@@ -68,7 +44,6 @@ html {
   transition: color 0.3s, border-color 0.3s, background 0.2s;
   border-radius: 4px;
 }
-
 .nav-links a:hover,
 .nav-links a:focus,
 .nav-links a.active {
@@ -84,11 +59,7 @@ html {
   margin-left: 20px;
 }
 .hamburger span {
-  height: 3px;
-  width: 25px;
-  background: white;
-  margin: 4px 0;
-  border-radius: 2px;
+  height: 3px; width: 25px; background: white; margin: 4px 0; border-radius: 2px;
 }
 
 /* Hero Section */
@@ -109,7 +80,6 @@ html {
 }
 .cta-btn:hover { background: #22223b; color: #ff8e3c; }
 
-/* Shared Section Styles */
 .services, .about, .contact {
   background: #ffe5d9;
   padding: 50px 30px;
@@ -128,18 +98,12 @@ h3 {
   font-size: 1.12em;
   font-weight: bold;
 }
-
 .services > p, .about-intro, .contact > p {
-  color: #493657;
-  text-align: center;
-  font-size: 1.12em;
-  margin-bottom: 40px;
+  color: #493657; text-align: center; font-size: 1.12em; margin-bottom: 40px;
 }
 
 /* Bubble/Alternate Services Section */
-.bubble-services .bubble-container {
-  width: 95%; max-width: 950px; margin: 0 auto;
-}
+.bubble-services .bubble-container { width: 95%; max-width: 950px; margin: 0 auto; }
 .bubble-card {
   display: flex; align-items: flex-start; max-width: 620px;
   margin-bottom: 44px; background: #fff;
@@ -174,7 +138,6 @@ h3 {
 .team-member h4 { margin: 7px 0 3px 0; color: #ff8e3c; }
 .team-member span { color: #a16a5e; font-size: 0.97em; display: block; margin-bottom: 5px; }
 
-/* Contact Section */
 .contact { text-align: center; }
 .contact h2 { margin-bottom: 20px; }
 .contact p { margin-top: 36px; margin-bottom: 40px; }
@@ -199,13 +162,11 @@ h3 {
 .contact-details { margin-top: 30px; }
 .contact-details p { margin: 6px 0; font-size: 1em; }
 
-/* Footer Styles */
 footer { text-align: center; padding: 20px; }
 .footer-socials { margin-bottom: 10px; }
 .footer-socials a img { height: 28px; width: 28px; margin: 0 7px; filter: brightness(0) invert(1); transition: filter 0.3s; vertical-align: middle;}
 .footer-socials a:hover img { filter: brightness(0.8) invert(0.8) sepia(1) saturate(4) hue-rotate(15deg); }
 
-/* Responsive Styles */
 @media (max-width: 900px) {
   .about { max-width: 99%; }
   .team-grid { gap: 16px; }
