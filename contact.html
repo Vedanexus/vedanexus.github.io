@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-
   <nav class="navbar">
     <div class="logo">
       <a href="index.html">
@@ -41,34 +40,26 @@
         <button type="submit">Send</button>
       </form>
       <div class="contact-details">
-        <p><strong>Email:</strong> contact@vedanexus.com</p>
-        <p><strong>Phone:</strong> +91-9211506749</p>
+        <p><strong>Email:</strong> info@vedanexus.com</p>
+        <p><strong>Phone:</strong> +91-12345-67890</p>
         <p><strong>Address:</strong> 101, Tech Park, Mumbai, India</p>
       </div>
-      <!-- Optional: Embed Google Map here if needed -->
     </section>
   </main>
 
   <footer>
     <div class="footer-socials">
-      <a href="#" aria-label="Facebook"><img src="fb-icon.png" alt="Facebook" loading="lazy" /></a>
-      <a href="#" aria-label="Twitter"><img src="twitter-icon.png" alt="Twitter" loading="lazy" /></a>
-      <a href="#" aria-label="LinkedIn"><img src="linkedin-icon.png" alt="LinkedIn" loading="lazy" /></a>
+      <a href="#" aria-label="Facebook"><img src="fb-icon.png" alt="Facebook" loading="lazy"/></a>
+      <a href="#" aria-label="Twitter"><img src="twitter-icon.png" alt="Twitter" loading="lazy"/></a>
+      <a href="#" aria-label="LinkedIn"><img src="linkedin-icon.png" alt="LinkedIn" loading="lazy"/></a>
     </div>
     <p>&copy; 2025 VedaNexus. All rights reserved.</p>
   </footer>
-
   <script>
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('navLinks');
-    hamburger.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-    });
-    hamburger.addEventListener('keydown', (e) => {
-      if (e.key === " " || e.key === "Enter") {
-        navLinks.classList.toggle('active');
-      }
-    });
+    hamburger.addEventListener('click', () => { navLinks.classList.toggle('active'); });
+    hamburger.addEventListener('keydown', (e) => { if (e.key === " " || e.key === "Enter") { navLinks.classList.toggle('active'); }});
   </script>
 </body>
 </html>
