@@ -43,7 +43,8 @@
         <p><strong>Phone:</strong> +91-12345-67890</p>
         <p><strong>Address:</strong> 101, Tech Park, Mumbai, India</p>
       </div>
-      <!-- Optional: Embed a Google Map 
+      <!-- Optional: Embed a Google Map if needed -->
+      <!--
       <div style="margin-top:20px;">
         <iframe src="https://maps.google.com/maps?q=Tech Park, Mumbai&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
       </div>
@@ -63,11 +64,9 @@
   <script>
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('navLinks');
-
     hamburger.addEventListener('click', () => {
       navLinks.classList.toggle('active');
     });
-
     hamburger.addEventListener('keydown', function(e) {
       if (e.key === " " || e.key === "Enter") {
         navLinks.classList.toggle('active');
