@@ -167,18 +167,21 @@ html {
   max-width: 400px;
   margin: 0 auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: column;   /* Vertical stacking of form */
+  gap: 15px;                /* Space between fields */
+  align-items: stretch;     /* Make inputs full width */
 }
 
 .contact-form input,
 .contact-form textarea {
-  margin: 10px 0;
+  width: 100%;              /* Full width of container */
   padding: 10px;
+  margin: 0;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1em;
-  resize: vertical;
-  transition: border-color 0.3s;
+  box-sizing: border-box;
+  background: #fff;
 }
 
 .contact-form input:focus,
@@ -188,10 +191,13 @@ html {
 }
 
 .contact-form button {
+  width: fit-content;
+  align-self: flex-end;     /* Button aligned right */
+  padding: 10px 25px;
+  margin-top: 8px;
   background: #004080;
   color: white;
   border: none;
-  padding: 10px;
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
@@ -201,6 +207,12 @@ html {
 
 .contact-form button:hover {
   background: #002952;
+}
+
+/* Contact Details Styling */
+.contact-details p {
+  margin: 6px 0;
+  font-size: 1em;
 }
 
 /* Footer Styles */
