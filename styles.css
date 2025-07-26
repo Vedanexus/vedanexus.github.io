@@ -105,8 +105,8 @@ html {
 }
 
 .contact p {
-  margin-top: 10px;          /* Heading ke baad spacing */
-  margin-bottom: 30px;       /* Paragraph ke neeche spacing */
+  margin-top: 40px;          /* Paragraph ke upar extra space */
+  margin-bottom: 40px;       /* Paragraph ke neeche extra space */
 }
 
 .contact-form {
