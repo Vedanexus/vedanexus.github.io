@@ -105,7 +105,8 @@ html {
 }
 
 .contact p {
-  margin-bottom: 30px;       /* Paragraph ke neeche spacing (form se space) */
+  margin-top: 10px;          /* Heading ke baad spacing */
+  margin-bottom: 30px;       /* Paragraph ke neeche spacing */
 }
 
 .contact-form {
@@ -162,6 +163,7 @@ html {
   font-size: 1em;
 }
 
+/* Footer Styles */
 footer {
   background: #333;
   color: white;
