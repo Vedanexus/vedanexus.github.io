@@ -283,8 +283,12 @@ footer {
 .hero-ad-click {
   min-height: 92vh;
   background:
-    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+    linear-gradient(
+      rgba(0,0,0,0.75),
+      rgba(0,0,0,0.75)
+    ),
     url("hero-banner.png") center/cover no-repeat;
+}
   display: flex;
   align-items: center;
   padding: 0 8%;
