@@ -2,123 +2,97 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Affordable refurbished laptops under 10000 from VedaNexus" />
-  <title>VedaNexus | Refurbished Laptops Under ₹10,000</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VedaNexus | Websites & Refurbished Laptops</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="logo">
-    <a href="index.html">
-      <img src="logo.png" alt="VedaNexus Logo" />
-    </a>
-    <h1>VedaNexus</h1>
-  </div>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo">Veda<span>Nexus</span></div>
+    <nav>
+      <a href="#services">Services</a>
+      <a href="#why">Why Us</a>
+      <a href="#contact" class="btn">Talk to Us</a>
+    </nav>
+  </header>
 
-  <ul class="nav-links" id="navLinks">
-    <li>
-      <a href="index.html" class="active">Home</a>
-    </li>
-    <li>
-      <a href="contact.html">Book Laptop</a>
-    </li>
-  </ul>
-
-  <div class="hamburger" id="hamburger">
-    <span></span><span></span><span></span>
-  </div>
-</nav>
-
-<!-- HERO / SALES SECTION -->
-<section class="hero-ad-click">
-  <div class="hero-content-click">
-    <h1>
-      AFFORDABLE<br>
-      <span>REFURBISHED LAPTOPS</span><br>
-      <strong>UNDER ₹10,000</strong>
-    </h1>
-
-    <ul>
-      <li>✔ Delhi: Full Cash on Delivery</li>
-      <li>✔ PAN India: Courier Charge Advance + COD</li>
-      <li>✔ Tested & Certified Laptops</li>
-      <li>✔ Limited Stock Available</li>
-    </ul>
-
-    <!-- REAL CLICKABLE BUTTON -->
-    <a href="contact.html" class="hero-cta-btn">
-      Book Laptop Now
-    </a>
-  </div>
-</section>
-
-<!-- WHY CHOOSE SECTION -->
-<section class="services">
-  <h2>Why Choose VedaNexus?</h2>
-  <p>Smart buyers choose refurbished. Smart buyers choose us.</p>
-
-  <div class="bubble-services">
-    <div class="bubble-container">
-
-      <div class="bubble-card left">
-        <div class="bubble-icon">💻</div>
-        <div>
-          <h3>Affordable Pricing</h3>
-          <p>Quality refurbished laptops starting under ₹10,000.</p>
-        </div>
-      </div>
-
-      <div class="bubble-card right">
-        <div class="bubble-icon">✅</div>
-        <div>
-          <h3>Tested & Certified</h3>
-          <p>Every laptop is checked for performance & reliability.</p>
-        </div>
-      </div>
-
-      <div class="bubble-card left">
-        <div class="bubble-icon">⚡</div>
-        <div>
-          <h3>Ready to Use</h3>
-          <p>Pre-installed OS & basic software. Just open and work.</p>
-        </div>
-      </div>
-
-      <div class="bubble-card right">
-        <div class="bubble-icon">📞</div>
-        <div>
-          <h3>Direct Support</h3>
-          <p>Call or WhatsApp us directly. No middlemen.</p>
-        </div>
-      </div>
-
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Smart Websites.<br>Reliable Refurbished Laptops.</h1>
+    <p>Helping startups & businesses grow with clean web design and affordable IT hardware.</p>
+    <div class="hero-buttons">
+      <a href="#contact" class="btn">Get Website</a>
+      <a href="#contact" class="btn secondary">Buy Laptop</a>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- QUICK CTA -->
-<section class="contact">
-  <h2>Looking for a Laptop?</h2>
-  <p>
-    Tell us your requirement and we’ll suggest the best option for you.
-  </p>
+  <!-- SERVICES -->
+  <section id="services" class="services">
+    <h2>Our Services</h2>
 
-  <a href="https://wa.me/917987410213" target="_blank" class="cta-btn">
-    Chat on WhatsApp
-  </a>
-</section>
+    <div class="service-box">
+      <h3>Website Design</h3>
+      <p>Modern, fast and mobile-friendly websites built to create trust and generate leads.</p>
+      <ul>
+        <li>Clean UI/UX</li>
+        <li>Mobile & SEO friendly</li>
+        <li>Fast loading</li>
+      </ul>
+    </div>
 
-<footer>
-  <p>&copy; 2025 VedaNexus. All rights reserved.</p>
-</footer>
+    <div class="service-box">
+      <h3>Refurbished Laptops</h3>
+      <p>High-quality tested laptops for offices, startups and professionals.</p>
+      <ul>
+        <li>Fully tested devices</li>
+        <li>Budget friendly</li>
+        <li>Warranty available</li>
+      </ul>
+    </div>
+  </section>
 
-<script>
-  const hamburger = document.getElementById('hamburger');
-  const navLinks = document.getElementById('navLinks');
-  hamburger.addEventListener('click', () => navLinks.classList.toggle('active'));
-</script>
+  <!-- WHY US -->
+  <section id="why" class="why">
+    <h2>Why VedaNexus</h2>
+    <div class="why-grid">
+      <div>Transparent Pricing</div>
+      <div>Honest Support</div>
+      <div>Startup Friendly</div>
+      <div>Quality First</div>
+    </div>
+  </section>
 
+  <!-- CTA -->
+  <section class="cta">
+    <h2>Ready to grow your business?</h2>
+    <p>Let’s build your website or upgrade your IT setup.</p>
+    <a href="#contact" class="btn">Contact Now</a>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact">
+    <h2>Contact Us</h2>
+    <form>
+      <input type="text" placeholder="Your Name" required>
+      <input type="tel" placeholder="Phone Number" required>
+      <select>
+        <option>Website Design</option>
+        <option>Refurbished Laptop</option>
+      </select>
+      <button type="submit">Submit</button>
+    </form>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 VedaNexus. All rights reserved.</p>
+  </footer>
+
+  <!-- WhatsApp Floating Button -->
+  <a class="whatsapp" href="https://wa.me/91XXXXXXXXXX" target="_blank">💬</a>
+
+  <script src="script.js"></script>
 </body>
 </html>
