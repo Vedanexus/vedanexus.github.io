@@ -1,90 +1,160 @@
-section {
-  scroll-margin-top: 90px;
-}
-
 :root {
-  --bg:#fff; --text:#111; --blue:#1e3a8a; --yellow:#f5b301;
+  --bg:#ffffff;
+  --text:#111111;
+  --blue:#1e3a8a;
+  --yellow:#f5b301;
 }
-body.dark { --bg:#0f172a; --text:#e5e7eb; }
 
-* { margin:0; padding:0; box-sizing:border-box; font-family:Segoe UI,sans-serif; }
-body { background:var(--bg); color:var(--text); line-height:1.6; }
+body.dark {
+  --bg:#0f172a;
+  --text:#e5e7eb;
+}
 
+* {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Segoe UI, sans-serif;
+}
+
+body {
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  scroll-behavior:smooth;
+}
+
+/* HEADER */
 .header {
-  position: sticky;
-  top: 0;
-  height: 70px;              /* ADD THIS */
-  background: var(--bg);
-  display: flex;
-  align-items: center;       /* ADD THIS */
-  justify-content: space-between;
-  padding: 0 40px;           /* CHANGE padding */
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  z-index: 1000;             /* ADD THIS */
+  position:sticky;
+  top:0;
+  height:70px;
+  background:var(--bg);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 40px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+  z-index:1000;
 }
 
-.logo { font-size:24px; font-weight:bold; }
-.logo span { color:var(--yellow); }
+.logo {
+  font-size:24px;
+  font-weight:bold;
+}
+.logo span {
+  color:var(--yellow);
+}
 
 nav a, nav button {
-  margin-left:20px; border:none; background:none;
-  cursor:pointer; color:var(--text); text-decoration:none;
+  margin-left:20px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  color:var(--text);
+  text-decoration:none;
 }
 
+/* BUTTONS */
 .btn {
-  background:var(--blue); color:#fff;
-  padding:10px 18px; border-radius:6px;
+  background:var(--blue);
+  color:#fff;
+  padding:10px 18px;
+  border-radius:6px;
 }
-.btn.yellow { background:var(--yellow); color:#000; }
+.btn.yellow {
+  background:var(--yellow);
+  color:#000;
+}
 
-.hero { padding:90px 40px; text-align:center; }
-.hero h1 { font-size:42px; }
+/* HERO */
+.hero {
+  padding:90px 40px;
+  text-align:center;
+}
+.hero h1 {
+  font-size:42px;
+  min-height:55px;
+}
 
-.services, .why, .contact { padding:70px 40px; }
+/* SECTIONS */
+section {
+  scroll-margin-top:90px;
+}
+
+.services, .why, .contact {
+  padding:70px 40px;
+}
 
 .cards {
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:30px; max-width:1000px; margin:auto;
+  gap:30px;
+  max-width:1000px;
+  margin:auto;
 }
 
 .card {
-  padding:30px; background:rgba(0,0,0,.04);
-  border-radius:12px; transition:.3s;
+  background:rgba(0,0,0,0.04);
+  padding:30px;
+  border-radius:12px;
+  transition:0.3s;
 }
-.card:hover { transform:translateY(-6px); }
+.card:hover {
+  transform:translateY(-6px);
+}
 
+/* WHY GRID */
 .why-grid {
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
   gap:20px;
 }
 .why-grid div {
-  padding:25px; background:rgba(0,0,0,.05);
-  border-radius:10px; text-align:center;
+  padding:25px;
+  background:rgba(0,0,0,0.05);
+  border-radius:10px;
+  text-align:center;
 }
 
-.cta { background:var(--blue); color:#fff; text-align:center; padding:70px 40px; }
-
+/* CONTACT */
 .contact form {
-  max-width:450px; margin:auto;
-  display:flex; flex-direction:column;
+  max-width:450px;
+  margin:auto;
+  display:flex;
+  flex-direction:column;
 }
-.contact input, select, textarea, button {
-  margin-bottom:15px; padding:12px;
+.contact input,
+.contact select,
+.contact textarea,
+.contact button {
+  margin-bottom:15px;
+  padding:12px;
 }
 
-#successMsg { display:none; text-align:center; color:green; }
+#successMsg {
+  display:none;
+  text-align:center;
+  color:green;
+}
 
+/* FOOTER */
+footer {
+  text-align:center;
+  padding:20px;
+  background:rgba(0,0,0,0.05);
+}
+
+/* WHATSAPP */
 .whatsapp {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #25d366;
-  color: #fff;
-  font-size: 26px;
-  padding: 14px;
-  border-radius: 50%;
-  text-decoration: none;
-  z-index: 9999; /* VERY IMPORTANT */
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25d366;
+  color:#fff;
+  font-size:26px;
+  padding:14px;
+  border-radius:50%;
+  text-decoration:none;
+  z-index:9999;
 }
