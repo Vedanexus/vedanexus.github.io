@@ -7,9 +7,16 @@ body.dark { --bg:#0f172a; --text:#e5e7eb; }
 body { background:var(--bg); color:var(--text); line-height:1.6; }
 
 .header {
-  position:sticky; top:0; background:var(--bg);
-  display:flex; justify-content:space-between;
-  padding:15px 40px; box-shadow:0 2px 8px rgba(0,0,0,.05);
+  position: sticky;
+  top: 0;
+  height: 70px;              /* ADD THIS */
+  background: var(--bg);
+  display: flex;
+  align-items: center;       /* ADD THIS */
+  justify-content: space-between;
+  padding: 0 40px;           /* CHANGE padding */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  z-index: 1000;             /* ADD THIS */
 }
 
 .logo { font-size:24px; font-weight:bold; }
