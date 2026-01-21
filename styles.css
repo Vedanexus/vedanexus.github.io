@@ -1,3 +1,7 @@
+section {
+  scroll-margin-top: 90px;
+}
+
 :root {
   --bg:#fff; --text:#111; --blue:#1e3a8a; --yellow:#f5b301;
 }
