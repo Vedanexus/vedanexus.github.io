@@ -1,157 +1,24 @@
-:root {
-  --bg:#ffffff;
-  --text:#111;
-  --blue:#1e3a8a;
-  --yellow:#f5b301;
-  --light:#f5f7fb;
-}
-
-body.dark {
-  --bg:#0f172a;
-  --text:#e5e7eb;
-  --light:#1e293b;
-}
-
-* {
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Segoe UI, Arial, sans-serif;
-}
-
-body {
-  background:var(--bg);
-  color:var(--text);
-  line-height:1.6;
-  scroll-behavior:smooth;
-}
-
-/* HEADER */
+body { font-family: Arial; margin:0; }
 .header {
-  position:sticky;
-  top:0;
-  height:70px;
-  z-index:1000;
-  background:var(--bg);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 40px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.05);
-}
-
-.logo {
-  font-size:24px;
-  font-weight:700;
-}
-.logo span {
-  color:var(--yellow);
-}
-
-nav a, nav button {
-  margin-left:20px;
-  background:none;
-  border:none;
-  cursor:pointer;
-  color:var(--text);
-  text-decoration:none;
-  font-size:15px;
-}
-
-/* BUTTONS */
-.btn {
-  background:var(--blue);
+  padding:15px;
+  background:#1e3a8a;
   color:#fff;
-  padding:10px 18px;
-  border-radius:6px;
-}
-.btn.yellow {
-  background:var(--yellow);
-  color:#000;
-}
-
-/* HERO */
-.hero {
-  padding:90px 40px;
-  text-align:center;
-}
-.hero h1 {
-  font-size:42px;
-  min-height:55px;
-}
-
-/* SECTIONS */
-.section {
-  padding:70px 40px;
-}
-.section.light {
-  background:var(--light);
-}
-section {
-  scroll-margin-top:90px;
-}
-
-/* CARDS */
-.cards {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:30px;
-  max-width:1000px;
-  margin:auto;
-}
-.card {
-  background:rgba(0,0,0,0.04);
-  padding:30px;
-  border-radius:12px;
-}
-
-/* WHY */
-.why-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:20px;
-}
-.why-grid div {
-  padding:25px;
-  text-align:center;
-  background:rgba(0,0,0,0.05);
-  border-radius:10px;
-}
-
-/* CONTACT */
-form {
-  max-width:420px;
-  margin:auto;
   display:flex;
-  flex-direction:column;
+  justify-content:space-between;
 }
-input, select, textarea, button {
-  margin-bottom:15px;
-  padding:12px;
+.logo span { color:#f5b301; }
+.section { padding:40px; }
+.btn {
+  background:#f5b301;
+  padding:10px;
+  color:#000;
+  text-decoration:none;
 }
-#successMsg {
-  display:none;
-  text-align:center;
-  color:green;
+button {
+  padding:10px 15px;
 }
-
-/* FOOTER */
 footer {
   text-align:center;
   padding:20px;
-  background:var(--light);
-}
-
-/* WHATSAPP */
-.whatsapp {
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#25d366;
-  color:#fff;
-  font-size:26px;
-  padding:14px;
-  border-radius:50%;
-  z-index:9999;
-  text-decoration:none;
+  background:#eee;
 }
