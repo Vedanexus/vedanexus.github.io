@@ -65,7 +65,15 @@ nav a, nav button {
 #successMsg { display:none; text-align:center; color:green; }
 
 .whatsapp {
-  position:fixed; bottom:20px; right:20px;
-  background:#25d366; color:#fff;
-  font-size:26px; padding:14px; border-radius:50%;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #25d366;
+  color: #fff;
+  font-size: 26px;
+  padding: 14px;
+  border-radius: 50%;
+  text-decoration: none;
+  z-index: 9999; /* VERY IMPORTANT */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
