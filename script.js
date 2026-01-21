@@ -1,5 +1,23 @@
-document.querySelector("form").addEventListener("submit", function(e) {
+// Typing effect
+const text = "Smart Websites. Reliable Refurbished Laptops.";
+let i = 0;
+function typeEffect() {
+  if (i < text.length) {
+    document.querySelector(".typing").innerHTML += text.charAt(i);
+    i++;
+    setTimeout(typeEffect, 70);
+  }
+}
+typeEffect();
+
+// Dark mode
+document.getElementById("themeToggle").onclick = () => {
+  document.body.classList.toggle("dark");
+};
+
+// Form submit
+document.getElementById("contactForm").addEventListener("submit", function(e) {
   e.preventDefault();
-  alert("Thank you! VedaNexus will contact you shortly.");
+  document.getElementById("successMsg").style.display = "block";
   this.reset();
 });
