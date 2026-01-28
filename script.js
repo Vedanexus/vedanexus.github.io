@@ -21,3 +21,30 @@ document.getElementById("contactForm").addEventListener("submit", e => {
   document.getElementById("successMsg").style.display = "block";
   e.target.reset();
 });
+const API_URL = "http://localhost:5000";
+
+async function loadProducts() {
+  try {
+    const res = await fetch(`${API_URL}/api/products`);
+    const products = await res.json();
+
+    const list = document.getElementById("productList");
+    list.innerHTML = "";
+
+    products.forEach(p => {
+      const div = document.createElement("div");
+      div.innerHTML = `
+        <h3>${p.name}</h3>
+        <p>Price: ₹${p.price}</p>
+        <button onclick="buyNow('${p.name}', ${p.price})">
+          Buy Now
+        </button>
+      `;
+      list.appendChild(div);
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+loadProducts();
