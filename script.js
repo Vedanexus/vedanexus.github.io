@@ -30,3 +30,13 @@ function order(name, price) {
 }
 
 loadProducts();
+let currentSlide = 0;
+const slides = document.querySelectorAll(".slide");
+
+if (slides.length > 0) {
+  setInterval(() => {
+    slides[currentSlide].classList.remove("active");
+    currentSlide = (currentSlide + 1) % slides.length;
+    slides[currentSlide].classList.add("active");
+  }, 4000); // change every 4 seconds
+}
