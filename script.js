@@ -21,7 +21,7 @@ document.getElementById("contactForm").addEventListener("submit", e => {
   document.getElementById("successMsg").style.display = "block";
   e.target.reset();
 });
-const API_URL = "http://localhost:5000";
+const API_URL = "https://vedanexus-backend.onrender.com";
 
 async function loadProducts() {
   try {
