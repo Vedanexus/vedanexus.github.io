@@ -24,27 +24,32 @@ document.getElementById("contactForm").addEventListener("submit", e => {
 const API_URL = "https://vedanexus-backend.onrender.com";
 
 async function loadProducts() {
-  try {
-    const res = await fetch(`${API_URL}/api/products`);
-    const products = await res.json();
+  const res = await fetch(`${API_URL}/api/products`);
+  const products = await res.json();
 
-    const list = document.getElementById("productList");
-    list.innerHTML = "";
+  const list = document.getElementById("productList");
+  list.innerHTML = "";
 
-    products.forEach(p => {
-      const div = document.createElement("div");
-      div.innerHTML = `
-        <h3>${p.name}</h3>
-        <p>Price: ₹${p.price}</p>
-        <button onclick="buyNow('${p.name}', ${p.price})">
-          Buy Now
-        </button>
-      `;
-      list.appendChild(div);
-    });
-  } catch (err) {
-    console.error(err);
-  }
+  products.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.innerHTML = `
+      <img src="${p.image || 'https://via.placeholder.com/300x200'}" />
+      <h3>${p.name}</h3>
+      <p class="spec">${p.specs || 'Refurbished • Tested • Warranty'}</p>
+      <div class="price">₹${p.price}</div>
+      <button onclick="orderWhatsApp('${p.name}', ${p.price})">
+        Order on WhatsApp
+      </button>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function orderWhatsApp(name, price) {
+  const phone = "919644272777";
+  const msg = `Hello VedaNexus,%0AInterested in:%0A${name}%0APrice: ₹${price}`;
+  window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
 }
 
 loadProducts();
