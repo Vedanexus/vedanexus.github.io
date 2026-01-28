@@ -1,10 +1,11 @@
 body {
   margin: 0;
-  font-family: Inter, Arial;
+  font-family: Arial, sans-serif;
   background: #f8f8f8;
   color: #222;
 }
 
+/* NAVBAR */
 .navbar {
   background: #fff;
   padding: 18px 40px;
@@ -16,9 +17,11 @@ body {
 
 .logo {
   font-size: 22px;
-  font-weight: 700;
+  font-weight: bold;
 }
-.logo span { color: #f4c430; }
+.logo span {
+  color: #f4c430;
+}
 
 nav a {
   margin-left: 25px;
@@ -33,12 +36,15 @@ nav a {
   font-weight: bold;
 }
 
+/* HERO */
 .hero {
-  padding: 90px 40px;
   background: #fff;
+  padding: 90px 40px;
 }
 
-.hero h1 { font-size: 42px; }
+.hero h1 {
+  font-size: 42px;
+}
 
 .btn {
   display: inline-block;
@@ -50,6 +56,7 @@ nav a {
   text-decoration: none;
 }
 
+/* SECTIONS */
 .page {
   padding: 60px 40px;
 }
@@ -61,15 +68,32 @@ nav a {
   border-radius: 10px;
 }
 
+/* TRUST */
+.trust {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 20px;
+  padding: 40px;
+}
+
+.trust-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* PRODUCTS */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
   gap: 25px;
 }
 
+/* FOOTER */
 footer {
-  text-align: center;
-  padding: 30px;
   background: #111;
   color: #aaa;
+  text-align: center;
+  padding: 30px;
 }
