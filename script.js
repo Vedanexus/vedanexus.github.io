@@ -87,3 +87,68 @@ Please share payment details.`;
     "_blank"
   );
 }
+/* PRODUCT CARDS */
+.product-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  transition: transform .3s, box-shadow .3s;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.product-card img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.product-card h3 {
+  margin: 10px 0 5px;
+}
+
+.product-card .spec {
+  color: #666;
+  font-size: 14px;
+}
+
+.product-card .price {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.product-card button {
+  width: 100%;
+  padding: 12px;
+  background: #1f3c88;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add("show");
+  });
+});
+
+document.querySelectorAll("section, .product-card")
+  .forEach(el => {
+    el.classList.add("fade");
+    observer.observe(el);
+  });
+.fade {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all .6s ease;
+}
+.fade.show {
+  opacity: 1;
+  transform: translateY(0);
+}
