@@ -1,5 +1,58 @@
-/* ===== SLIDER ===== */
+/* =====================
+   GLOBAL
+===================== */
+* {
+  box-sizing: border-box;
+}
 
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f8f8f8;
+  color: #222;
+}
+
+/* =====================
+   NAVBAR
+===================== */
+.navbar {
+  background: #fff;
+  padding: 16px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.logo span {
+  color: #f4c430;
+}
+
+nav a {
+  margin-left: 25px;
+  text-decoration: none;
+  color: #222;
+  font-weight: 500;
+}
+
+nav a.cta {
+  background: #f4c430;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+/* =====================
+   HOME SLIDER
+===================== */
 .slider {
   position: relative;
   height: 75vh;
@@ -32,7 +85,52 @@
   opacity: 1;
 }
 
-/* ARROWS */
+/* =====================
+   SLIDER TEXT
+===================== */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  padding: 100px 40px;
+  max-width: 700px;
+}
+
+.hero-content h1 {
+  font-size: 44px;
+  margin-bottom: 10px;
+}
+
+.hero-content p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .hero-content {
+    padding: 60px 20px;
+  }
+  .hero-content h1 {
+    font-size: 28px;
+  }
+}
+
+/* =====================
+   BUTTON
+===================== */
+.btn {
+  display: inline-block;
+  background: #f4c430;
+  color: #111;
+  padding: 14px 22px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* =====================
+   ARROWS
+===================== */
 .arrow {
   position: absolute;
   top: 50%;
@@ -47,10 +145,17 @@
   border-radius: 50%;
 }
 
-.arrow.left { left: 15px; }
-.arrow.right { right: 15px; }
+.arrow.left {
+  left: 15px;
+}
 
-/* DOTS */
+.arrow.right {
+  right: 15px;
+}
+
+/* =====================
+   DOTS
+===================== */
 .dots {
   position: absolute;
   bottom: 20px;
@@ -73,30 +178,32 @@
   background: #f4c430;
 }
 
-/* TEXT */
-.hero-content {
-  position: relative;
-  z-index: 2;
-  color: #fff;
-  padding: 100px 40px;
-  max-width: 700px;
+/* =====================
+   PAGE SECTIONS
+===================== */
+.page {
+  padding: 60px 40px;
 }
 
-.hero-content h1 {
-  font-size: 44px;
-  margin-bottom: 10px;
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
 }
 
-.hero-content p {
-  font-size: 18px;
-  margin-bottom: 20px;
+.card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
-.btn {
-  background: #f4c430;
-  color: #111;
-  padding: 14px 22px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
+/* =====================
+   FOOTER
+===================== */
+footer {
+  background: #111;
+  color: #aaa;
+  text-align: center;
+  padding: 30px;
 }
