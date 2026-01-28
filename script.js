@@ -48,3 +48,24 @@ async function loadProducts() {
 }
 
 loadProducts();
+async function buyNow(product, amount) {
+  const res = await fetch(`${API_URL}/api/orders`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      product,
+      amount,
+      paymentId: "FRONTEND_TEST"
+    })
+  });
+
+  const data = await res.json();
+
+  if (data._id) {
+    alert("Order placed successfully! Invoice generated.");
+  } else {
+    alert("Something went wrong");
+  }
+}
