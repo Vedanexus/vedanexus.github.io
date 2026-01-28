@@ -43,11 +43,28 @@ nav a {
   font-weight: 500;
 }
 
-nav a.cta {
-  background: #f4c430;
-  padding: 10px 16px;
+/* NAVBAR LINKS – UNIFIED LOOK */
+nav a {
+  margin-left: 25px;
+  text-decoration: none;
+  color: #222;
+  font-weight: 500;
+  padding: 8px 12px;
   border-radius: 6px;
-  font-weight: bold;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* HOVER EFFECT (SUBTLE & PREMIUM) */
+nav a:hover {
+  background: #f2f2f2;
+  color: #000;
+}
+
+/* OPTIONAL: ACTIVE PAGE HIGHLIGHT */
+nav a.active {
+  background: #111;
+  color: #fff;
+
 }
 
 /* =====================
