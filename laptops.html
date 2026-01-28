@@ -1,34 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Laptops | VedaNexus</title>
+  <title>Refurbished Laptops | VedaNexus</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script defer src="script.js"></script>
 </head>
 <body>
 
-<section class="section">
-  <h2>Dell Latitude i5</h2>
-  <p>₹25,000</p>
-  <button onclick="payNow(25000)">Buy Now</button>
+<header class="navbar">...</header>
+
+<section class="page">
+  <h2>Available Laptops</h2>
+  <div id="productList" class="product-grid"></div>
 </section>
 
-<script>
-function payNow(amount){
-  var options = {
-    "key": "rzp_test_xxxxxxxx",  // Razorpay test key
-    "amount": amount * 100,
-    "currency": "INR",
-    "name": "VedaNexus",
-    "description": "Laptop Purchase",
-    "handler": function (response){
-      alert("Payment Successful: " + response.razorpay_payment_id);
-    }
-  };
-  var rzp = new Razorpay(options);
-  rzp.open();
-}
-</script>
+<footer>© 2026 VedaNexus</footer>
 
 </body>
 </html>
