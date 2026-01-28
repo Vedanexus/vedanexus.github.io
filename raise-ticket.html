@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Raise a Ticket | VedaNexus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo">Veda<span>Nexus</span></div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="laptops.html">Laptops</a>
+    <a href="raise-ticket.html" class="active">Raise Ticket</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<section class="page ticket-page">
+
+  <h2>Raise a Support Ticket</h2>
+  <p class="subtitle">
+    Facing an issue with a laptop or service?  
+    Submit a ticket and our team will assist you.
+  </p>
+
+  <form id="ticketForm" class="ticket-form">
+
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input type="tel" name="phone" required>
+    </div>
+
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" name="email">
+    </div>
+
+    <div class="form-group">
+      <label>Issue Category</label>
+      <select name="category" required>
+        <option value="">Select</option>
+        <option>Laptop Issue</option>
+        <option>Website Service</option>
+        <option>Warranty / Invoice</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Subject</label>
+      <input type="text" name="subject" required>
+    </div>
+
+    <div class="form-group">
+      <label>Describe your issue</label>
+      <textarea name="description" rows="5" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Attach File (optional)</label>
+      <input type="file" name="file">
+    </div>
+
+    <button type="submit" class="btn">Submit Ticket</button>
+
+    <p id="ticketResult" class="ticket-result"></p>
+
+  </form>
+
+</section>
+
+<footer>
+  © 2026 VedaNexus
+</footer>
+
+<script src="ticket.js"></script>
+</body>
+</html>
