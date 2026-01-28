@@ -69,3 +69,16 @@ async function buyNow(product, amount) {
     alert("Something went wrong");
   }
 }
+function buyNow(product, amount) {
+  const phone = "919644272777"; // apna WhatsApp number (91 ke saath)
+  const message = `Hello VedaNexus,%0A
+I want to order:%0A
+Product: ${product}%0A
+Price: ₹${amount}%0A
+Please share payment details.`;
+
+  window.open(
+    `https://wa.me/${phone}?text=${message}`,
+    "_blank"
+  );
+}
