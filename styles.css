@@ -410,3 +410,47 @@ footer {
 .cta-section p {
   color: #ccc;
 }
+/* =====================
+   TICKET PAGE
+===================== */
+
+.ticket-page {
+  max-width: 700px;
+  margin: auto;
+}
+
+.subtitle {
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.ticket-form {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.ticket-result {
+  margin-top: 15px;
+  font-weight: 500;
+}
