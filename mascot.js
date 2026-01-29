@@ -101,3 +101,13 @@ setTimeout(() => {
     addMessage("Hi 👋 I'm VedaNexus AI. How can I help you today?");
   }
 }, 1200);
+const mascotImg = document.querySelector("#mascot img");
+
+function setEmotion(emotion, duration = 1200) {
+  mascotImg.className = "";
+  mascotImg.classList.add(emotion);
+
+  setTimeout(() => {
+    mascotImg.className = "";
+  }, duration);
+}
