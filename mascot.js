@@ -17,6 +17,20 @@ function addMessage(text, sender = "bot") {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+function quickActions() {
+  addMessage(`
+    <br>
+    👉 <a href="raise-ticket.html">🎫 Raise Ticket</a><br>
+    👉 <a href="laptops.html">💻 View Laptops</a><br>
+    👉 <a href="contact.html">📞 Contact Support</a>
+  `);
+}
+else {
+  addMessage("Please choose an option below:");
+  quickActions();
+}
+
+
 /* send message */
 function sendMessage() {
   const input = document.getElementById("userInput");
