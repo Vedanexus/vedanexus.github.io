@@ -576,3 +576,45 @@ footer {
   color: #888;
   margin-bottom: 6px;
 }
+/* Emotion animations */
+
+.mascot-happy {
+  animation: bounce 0.6s ease-in-out;
+}
+
+.mascot-thinking {
+  animation: think 1.2s ease-in-out infinite;
+}
+
+.mascot-sleep {
+  opacity: 0.6;
+  animation: sleep 2s ease-in-out infinite;
+}
+
+.mascot-dance {
+  animation: dance 1s infinite;
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes think {
+  0% { transform: rotate(0); }
+  50% { transform: rotate(4deg); }
+  100% { transform: rotate(0); }
+}
+
+@keyframes sleep {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+
+@keyframes dance {
+  0% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+  100% { transform: rotate(-5deg); }
+}
