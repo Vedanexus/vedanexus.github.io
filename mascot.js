@@ -47,3 +47,6 @@ function sendMessage() {
     }
   }, 500);
 }
+setTimeout(() => {
+  addMessage("Hi 👋 I'm VedaNexus AI. How can I help you today?");
+}, 1500);
