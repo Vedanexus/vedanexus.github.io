@@ -2,6 +2,7 @@ const mascot = document.getElementById("mascot");
 const chatbox = document.getElementById("chatbox");
 const chatMessages = document.getElementById("chatMessages");
 
+/* toggle chatbox */
 mascot.addEventListener("click", () => {
   chatbox.style.display =
     chatbox.style.display === "flex" ? "none" : "flex";
@@ -10,26 +11,22 @@ mascot.addEventListener("click", () => {
 /* add message */
 function addMessage(text, sender = "bot") {
   const div = document.createElement("div");
-  div.innerHTML = sender === "bot"
-    ? `<strong>AI:</strong> ${text}`
-    : `<strong>You:</strong> ${text}`;
+  div.innerHTML =
+    sender === "bot"
+      ? `<strong>AI:</strong> ${text}`
+      : `<strong>You:</strong> ${text}`;
   chatMessages.appendChild(div);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+/* quick action buttons */
 function quickActions() {
   addMessage(`
-    <br>
     👉 <a href="raise-ticket.html">🎫 Raise Ticket</a><br>
     👉 <a href="laptops.html">💻 View Laptops</a><br>
     👉 <a href="contact.html">📞 Contact Support</a>
   `);
 }
-else {
-  addMessage("Please choose an option below:");
-  quickActions();
-}
-
 
 /* send message */
 function sendMessage() {
@@ -41,26 +38,44 @@ function sendMessage() {
   input.value = "";
 
   setTimeout(() => {
-    if (msg.includes("ticket") || msg.includes("complaint") || msg.includes("problem")) {
-  addMessage(`Aap yahan support ticket raise kar sakte ho 👇<br>
-    <a href="raise-ticket.html">Raise Ticket</a>`);
-}
-else if (msg.includes("laptop") || msg.includes("price") || msg.includes("budget")) {
-  addMessage(`Refurbished laptops yahan dekhiye 👇<br>
-    <a href="laptops.html">View Laptops</a>`);
-}
-else if (msg.includes("contact") || msg.includes("call") || msg.includes("number")) {
-  addMessage(`Humse yahan directly baat kar sakte ho 👇<br>
-    <a href="contact.html">Contact Page</a>`);
-}
-else {
-  addMessage(`Main in cheezon me madad kar sakta hoon:
-  <br>• Ticket / complaint
-  <br>• Laptop prices
-  <br>• Contact support`);
-}
+    if (
+      msg.includes("ticket") ||
+      msg.includes("complaint") ||
+      msg.includes("problem")
+    ) {
+      addMessage(
+        `Aap yahan support ticket raise kar sakte ho 👇<br>
+        <a href="raise-ticket.html">Raise Ticket</a>`
+      );
+    } 
+    else if (
+      msg.includes("laptop") ||
+      msg.includes("price") ||
+      msg.includes("budget")
+    ) {
+      addMessage(
+        `Refurbished laptops yahan dekhiye 👇<br>
+        <a href="laptops.html">View Laptops</a>`
+      );
+    } 
+    else if (
+      msg.includes("contact") ||
+      msg.includes("call") ||
+      msg.includes("number")
+    ) {
+      addMessage(
+        `Humse yahan directly baat kar sakte ho 👇<br>
+        <a href="contact.html">Contact Page</a>`
+      );
+    } 
+    else {
+      addMessage("Please choose an option below:");
+      quickActions();
+    }
   }, 500);
 }
+
+/* auto greeting */
 setTimeout(() => {
   addMessage("Hi 👋 I'm VedaNexus AI. How can I help you today?");
 }, 1500);
