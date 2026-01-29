@@ -456,7 +456,7 @@ footer {
   font-weight: 500;
 }
 /* =====================
-   AI MASCOT (FLOATING)
+   AI MASCOT – FINAL
 ===================== */
 
 #mascot {
@@ -473,11 +473,101 @@ footer {
   width: 100%;
   height: auto;
   display: block;
+  filter: drop-shadow(0 0 18px rgba(0, 200, 255, 0.6));
 }
 
-/* floating animation */
+/* Speech bubble */
+#mascotBubble {
+  position: absolute;
+  bottom: 105%;
+  right: 0;
+  background: #111;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 18px;
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: all 0.3s ease;
+}
+
+#mascot:hover #mascotBubble {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Floating animation */
 @keyframes mascotFloat {
   0% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
   100% { transform: translateY(0); }
+}
+
+/* =====================
+   CHAT BOX
+===================== */
+
+#chatbox {
+  position: fixed;
+  bottom: 130px;
+  right: 20px;
+  width: 280px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+  display: none;
+  flex-direction: column;
+  z-index: 9999;
+}
+
+#chatHeader {
+  background: #111;
+  color: #fff;
+  padding: 10px;
+  border-radius: 14px 14px 0 0;
+  font-weight: 600;
+}
+
+#chatMessages {
+  padding: 10px;
+  height: 220px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+#chatInput {
+  display: flex;
+  border-top: 1px solid #eee;
+}
+
+#chatInput input {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  outline: none;
+}
+
+#chatInput button {
+  background: #f4c430;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+/* =====================
+   MOBILE OPTIMISATION
+===================== */
+
+@media (max-width: 768px) {
+  #mascot {
+    width: 65px;
+    bottom: 15px;
+    right: 15px;
+  }
+
+  #chatbox {
+    width: 90%;
+    right: 5%;
+  }
 }
