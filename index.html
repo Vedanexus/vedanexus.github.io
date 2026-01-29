@@ -121,6 +121,92 @@
   </a>
 </section>
 
+<!-- 🤖 AI MASCOT -->
+<div id="mascot">
+  <img src="mascot.jpeg" alt="VedaNexus AI">
+</div>
+
+<div id="chatbox">
+  <div id="chatHeader">VedaNexus AI</div>
+  <div id="chatMessages"></div>
+
+  <div id="chatInput">
+    <input type="text" id="userInput" placeholder="Ask me anything...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<style>
+#mascot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 90px;
+  cursor: pointer;
+  z-index: 999;
+  animation: float 3s ease-in-out infinite;
+}
+#mascot img { width: 100%; }
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+#chatbox {
+  position: fixed;
+  bottom: 120px;
+  right: 20px;
+  width: 280px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  display: none;
+  flex-direction: column;
+  z-index: 999;
+}
+
+#chatHeader {
+  background: #111;
+  color: #fff;
+  padding: 10px;
+  border-radius: 12px 12px 0 0;
+  font-weight: bold;
+}
+
+#chatMessages {
+  padding: 10px;
+  height: 220px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+#chatMessages div {
+  margin-bottom: 8px;
+}
+
+#chatInput {
+  display: flex;
+  border-top: 1px solid #eee;
+}
+
+#chatInput input {
+  flex: 1;
+  border: none;
+  padding: 10px;
+}
+
+#chatInput button {
+  background: #f4c430;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+</style>
+
+<script src="mascot.js"></script>
+
   
 <footer>
   © 2025 VedaNexus
