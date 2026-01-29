@@ -2,11 +2,12 @@ const mascot = document.getElementById("mascot");
 const chatbox = document.getElementById("chatbox");
 const chatMessages = document.getElementById("chatMessages");
 
-mascot.onclick = () => {
+mascot.addEventListener("click", () => {
   chatbox.style.display =
     chatbox.style.display === "flex" ? "none" : "flex";
-};
+});
 
+/* add message */
 function addMessage(text, sender = "bot") {
   const div = document.createElement("div");
   div.innerHTML = sender === "bot"
@@ -16,33 +17,33 @@ function addMessage(text, sender = "bot") {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+/* send message */
 function sendMessage() {
   const input = document.getElementById("userInput");
-  const msg = input.value.toLowerCase();
+  const msg = input.value.trim().toLowerCase();
   if (!msg) return;
 
   addMessage(input.value, "user");
   input.value = "";
 
-  // 🧠 RULE-BASED INTELLIGENCE
   setTimeout(() => {
     if (msg.includes("ticket")) {
       addMessage(`You can raise a support ticket here 👇<br>
         <a href="raise-ticket.html">Raise Ticket</a>`);
     }
     else if (msg.includes("laptop") || msg.includes("price")) {
-      addMessage(`Check our refurbished laptops here 👇<br>
+      addMessage(`Explore our refurbished laptops 👇<br>
         <a href="laptops.html">View Laptops</a>`);
     }
     else if (msg.includes("contact") || msg.includes("call")) {
-      addMessage(`You can contact us directly 👇<br>
+      addMessage(`You can contact us here 👇<br>
         <a href="contact.html">Contact Page</a>`);
     }
     else {
       addMessage(`I can help you with:
-        <br>• Tickets
-        <br>• Laptops
+        <br>• Raise a ticket
+        <br>• Laptop prices
         <br>• Contact support`);
     }
-  }, 600);
+  }, 500);
 }
