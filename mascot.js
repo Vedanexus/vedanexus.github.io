@@ -27,24 +27,24 @@ function sendMessage() {
   input.value = "";
 
   setTimeout(() => {
-    if (msg.includes("ticket")) {
-      addMessage(`You can raise a support ticket here 👇<br>
-        <a href="raise-ticket.html">Raise Ticket</a>`);
-    }
-    else if (msg.includes("laptop") || msg.includes("price")) {
-      addMessage(`Explore our refurbished laptops 👇<br>
-        <a href="laptops.html">View Laptops</a>`);
-    }
-    else if (msg.includes("contact") || msg.includes("call")) {
-      addMessage(`You can contact us here 👇<br>
-        <a href="contact.html">Contact Page</a>`);
-    }
-    else {
-      addMessage(`I can help you with:
-        <br>• Raise a ticket
-        <br>• Laptop prices
-        <br>• Contact support`);
-    }
+    if (msg.includes("ticket") || msg.includes("complaint") || msg.includes("problem")) {
+  addMessage(`Aap yahan support ticket raise kar sakte ho 👇<br>
+    <a href="raise-ticket.html">Raise Ticket</a>`);
+}
+else if (msg.includes("laptop") || msg.includes("price") || msg.includes("budget")) {
+  addMessage(`Refurbished laptops yahan dekhiye 👇<br>
+    <a href="laptops.html">View Laptops</a>`);
+}
+else if (msg.includes("contact") || msg.includes("call") || msg.includes("number")) {
+  addMessage(`Humse yahan directly baat kar sakte ho 👇<br>
+    <a href="contact.html">Contact Page</a>`);
+}
+else {
+  addMessage(`Main in cheezon me madad kar sakta hoon:
+  <br>• Ticket / complaint
+  <br>• Laptop prices
+  <br>• Contact support`);
+}
   }, 500);
 }
 setTimeout(() => {
