@@ -30,19 +30,85 @@
 
 <!-- ===== HOME PAGE SLIDESHOW ===== -->
 <section class="slider">
-
   <div class="slides">
-    <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80"
-         class="slide active" alt="Tech team working">
-
-    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80"
-         class="slide" alt="Modern office workspace">
-
-    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80"
-         class="slide" alt="Laptop and code">
-
-    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80"
-         class="slide" alt="Business discussion">
+    <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80" class="slide active">
+    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80" class="slide">
+    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80" class="slide">
+    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80" class="slide">
   </div>
 
-  <button class="arrow
+  <button class="arrow left" onclick="prevSlide()">‹</button>
+  <button class="arrow right" onclick="nextSlide()">›</button>
+
+  <div class="hero-content">
+    <h1>Smart IT Solutions for Modern Businesses</h1>
+    <p>Websites • Refurbished Laptops • Trusted IT Partner</p>
+    <a href="laptops.html" class="btn">Browse Laptops</a>
+  </div>
+</section>
+
+<section class="home-section gray">
+  <h2>Need Help or Support?</h2>
+  <p>Facing any issue with your laptop or service? Raise a support ticket.</p>
+  <a href="raise-ticket.html" class="btn center-btn">Raise a Support Ticket</a>
+</section>
+
+<section class="home-section">
+  <h2>Why Choose VedaNexus</h2>
+  <div class="features">
+    <div class="feature-box">✔ Trusted Refurbished Laptops</div>
+    <div class="feature-box">✔ Startup Friendly Pricing</div>
+    <div class="feature-box">✔ WhatsApp First Support</div>
+    <div class="feature-box">✔ Honest Advice</div>
+  </div>
+</section>
+
+<section class="home-section gray">
+  <h2>What We Do</h2>
+  <div class="features">
+    <div class="feature-box">Website Development</div>
+    <div class="feature-box">Refurbished Business Laptops</div>
+    <div class="feature-box">IT Support & Consultation</div>
+  </div>
+</section>
+
+<section class="home-section">
+  <h2>Popular Laptops</h2>
+  <div class="features">
+    <div class="feature-box">Dell Latitude</div>
+    <div class="feature-box">HP EliteBook</div>
+    <div class="feature-box">Lenovo ThinkPad</div>
+  </div>
+</section>
+
+<!-- 🔥 FORM SECTION (VISIBLE GUARANTEED) -->
+<section class="home-section gray">
+  <h2>Get Best Refurbished Laptop Price</h2>
+  <p>Fill details and our expert will contact you.</p>
+
+  <div style="max-width:420px;margin:30px auto;background:#fff;padding:20px;border-radius:10px;">
+    <form
+      action="https://docs.google.com/forms/d/e/1H24hmO8VISWa85vClLrsBcfH0s6jixejYjmZxUAdY/formResponse"
+      method="POST"
+      target="_blank">
+
+      <input type="text" name="entry.1283925346" placeholder="Your Name" required style="width:100%;padding:12px;margin-bottom:10px;">
+      <input type="tel" name="entry.1125123117" placeholder="Mobile Number" required style="width:100%;padding:12px;margin-bottom:10px;">
+      <input type="text" name="entry.636147199" placeholder="City" required style="width:100%;padding:12px;margin-bottom:15px;">
+
+      <button type="submit" class="btn" style="width:100%;">Get Best Price</button>
+    </form>
+  </div>
+</section>
+
+<section class="home-section cta-section">
+  <h2>Need Help Now?</h2>
+  <a href="https://wa.me/919644272777" target="_blank" class="btn">Chat on WhatsApp</a>
+</section>
+
+<footer>
+  © 2025 VedaNexus
+</footer>
+
+</body>
+</html>
