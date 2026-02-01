@@ -1,43 +1,147 @@
-body {
-  font-family: system-ui, sans-serif;
-  margin: 0;
-  padding: 20px;
-  background: #ffffff;
-  color: #111;
-  line-height: 1.6;
+:root {
+  --primary: #0a4cff;
+  --bg: #ffffff;
+  --text: #111111;
+  --muted: #555555;
+  --card: #f7f8fa;
 }
 
-header {
-  margin-bottom: 30px;
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* Layout */
+header, section, footer {
+  max-width: 900px;
+  margin: auto;
+  padding: 32px 20px;
+}
+
+/* Header */
+header h1 {
+  font-size: 38px;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+header p {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 700px;
+}
+
+nav {
+  margin-top: 20px;
 }
 
 nav a {
-  margin-right: 15px;
-}
-
-section {
-  margin-bottom: 40px;
-}
-
-footer {
-  border-top: 1px solid #eee;
-  padding-top: 20px;
+  display: inline-block;
+  margin-right: 12px;
+  margin-bottom: 10px;
+  padding: 10px 16px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 6px;
   font-size: 14px;
-  color: #666;
+  text-decoration: none;
 }
 
+/* Sections */
+section {
+  border-top: 1px solid #eee;
+}
+
+section h2 {
+  font-size: 26px;
+  margin-bottom: 14px;
+}
+
+section p {
+  color: var(--muted);
+  max-width: 750px;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+ul li {
+  margin-bottom: 10px;
+}
+
+/* Highlight card feel */
+section:nth-of-type(even) {
+  background: var(--card);
+  border-radius: 12px;
+}
+
+/* Links */
+a {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Footer */
+footer {
+  font-size: 14px;
+  color: var(--muted);
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+/* Dark mode */
+.dark {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+.dark section:nth-of-type(even) {
+  background: #020617;
+}
+
+.dark p,
+.dark footer {
+  color: #9ca3af;
+}
+
+.dark nav a {
+  background: #2563eb;
+}
+
+/* Dark mode button */
 #darkToggle {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  padding: 10px;
-}
-
-.dark {
+  border: none;
+  padding: 12px 14px;
+  font-size: 18px;
+  border-radius: 50%;
   background: #111;
-  color: #eee;
+  color: #fff;
+  cursor: pointer;
 }
 
-.dark footer {
-  border-color: #333;
+.dark #darkToggle {
+  background: #fff;
+  color: #111;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  header h1 {
+    font-size: 30px;
+  }
+
+  section h2 {
+    font-size: 22px;
+  }
 }
