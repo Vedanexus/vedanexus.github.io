@@ -14,26 +14,37 @@ body{
   color:#0f172a;
 }
 
+/* HERO WITH IMAGE */
 header{
-  background:linear-gradient(135deg,#1d4ed8,#0f172a);
+  position:relative;
   color:#fff;
-  padding:70px 20px;
+  padding:80px 20px;
   text-align:center;
+  background:
+    linear-gradient(
+      rgba(15,23,42,0.75),
+      rgba(15,23,42,0.75)
+    ),
+    url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80");
+  background-size:cover;
+  background-position:center;
 }
 
 header h1{
-  font-size:34px;
-  margin-bottom:14px;
+  font-size:36px;
+  margin-bottom:16px;
 }
 
 header p{
   font-size:18px;
-  max-width:720px;
+  max-width:760px;
   margin:auto;
+  line-height:1.6;
 }
 
+/* CTA */
 .cta{
-  margin-top:24px;
+  margin-top:26px;
 }
 
 .cta a{
@@ -47,13 +58,14 @@ header p{
   margin:6px;
 }
 
+/* VISUAL BOX */
 .hero-box{
-  max-width:720px;
+  max-width:760px;
   margin:40px auto 0;
   background:#ffffff;
-  border-radius:14px;
-  padding:24px;
-  box-shadow:0 12px 30px rgba(0,0,0,.15);
+  border-radius:16px;
+  padding:26px;
+  box-shadow:0 12px 30px rgba(0,0,0,.25);
   color:#0f172a;
 }
 
@@ -61,6 +73,7 @@ header p{
   margin-bottom:14px;
 }
 
+/* GRID */
 .grid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
@@ -72,8 +85,10 @@ header p{
   padding:14px;
   border-radius:10px;
   font-weight:bold;
+  font-size:15px;
 }
 
+/* CONTENT */
 section{
   max-width:900px;
   margin:auto;
@@ -94,6 +109,7 @@ li{
   font-size:16px;
 }
 
+/* FOOTER */
 footer{
   background:#020617;
   color:#cbd5f5;
@@ -103,8 +119,8 @@ footer{
 }
 
 @media(max-width:600px){
-  .grid{grid-template-columns:1fr}
   header h1{font-size:28px}
+  .grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -150,7 +166,7 @@ footer{
   <ul>
     <li>Less frustration after office hours</li>
     <li>No unnecessary running around</li>
-    <li>Daily life becomes predictable</li>
+    <li>Daily life becomes more predictable</li>
   </ul>
 </section>
 
