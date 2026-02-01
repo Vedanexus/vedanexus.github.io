@@ -13,6 +13,7 @@
       --accent: #facc15;
       --dark: #0f172a;
       --light: #f8fafc;
+      --card: #ffffff;
       --text: #020617;
       --muted: #475569;
     }
@@ -25,7 +26,7 @@
     }
 
     body {
-      background: var(--light);
+      background: linear-gradient(180deg, #eef2ff 0%, #f8fafc 100%);
       color: var(--text);
       line-height: 1.7;
     }
@@ -33,34 +34,24 @@
     /* HERO */
     .hero {
       min-height: 100vh;
-      background:
-        linear-gradient(
-          rgba(2,6,23,0.65),
-          rgba(2,6,23,0.65)
-        ),
-        url("https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1600&q=80");
-      background-size: cover;
-      background-position: center;
-      color: #fff;
-      display: flex;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
       align-items: center;
-      padding: 40px 20px;
-    }
-
-    .hero-content {
-      max-width: 900px;
+      max-width: 1100px;
       margin: auto;
+      padding: 80px 20px;
     }
 
     .badge {
       display: inline-block;
-      background: rgba(250,204,21,0.15);
-      color: var(--accent);
-      padding: 6px 12px;
-      border-radius: 20px;
+      background: rgba(29,78,216,0.1);
+      color: var(--primary);
+      padding: 6px 14px;
+      border-radius: 999px;
       font-size: 14px;
-      margin-bottom: 16px;
       font-weight: 600;
+      margin-bottom: 16px;
     }
 
     h1 {
@@ -69,124 +60,4 @@
       margin-bottom: 18px;
     }
 
-    .hero p {
-      font-size: 19px;
-      max-width: 720px;
-      color: #e5e7eb;
-      margin-bottom: 28px;
-    }
-
-    .cta a {
-      display: inline-block;
-      background: var(--primary);
-      color: #fff;
-      padding: 14px 22px;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 700;
-      text-decoration: none;
-      margin-right: 14px;
-      margin-bottom: 14px;
-    }
-
-    .cta a.secondary {
-      background: transparent;
-      border: 2px solid #fff;
-    }
-
-    section {
-      max-width: 900px;
-      margin: auto;
-      padding: 64px 20px;
-    }
-
-    section h2 {
-      font-size: 30px;
-      margin-bottom: 16px;
-    }
-
-    section p {
-      color: var(--muted);
-      max-width: 760px;
-      margin-bottom: 16px;
-      font-size: 17px;
-    }
-
-    ul {
-      padding-left: 20px;
-      margin-top: 12px;
-    }
-
-    ul li {
-      margin-bottom: 10px;
-      font-size: 16px;
-    }
-
-    .card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 28px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      margin-top: 30px;
-    }
-
-    footer {
-      background: var(--dark);
-      color: #cbd5f5;
-      text-align: center;
-      padding: 40px 20px;
-      font-size: 14px;
-    }
-
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 32px;
-      }
-      .hero p {
-        font-size: 17px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="hero">
-    <div class="hero-content">
-      <div class="badge">For Busy People</div>
-
-      <h1>Roz ke kaam me time waste ho raha hai?</h1>
-
-      <p>
-        Ye website un logon ke liye hai jo
-        laundry, documents, repair jaise kaamon me
-        galat jagah jaakar apna time barbaad nahi karna chahte.
-      </p>
-
-      <div class="cta">
-        <a href="busy-people.html">Dekho log sabse zyada galti kahan karte hain</a>
-        <a href="indore.html" class="secondary">Indore ke shortcuts dekho</a>
-      </div>
-    </div>
-  </div>
-
-  <section>
-    <h2>Ye website kya karti hai?</h2>
-    <div class="card">
-      <ul>
-        <li>Daily life ke time-wasting kaamon ko identify karti hai</li>
-        <li>Batati hai kaunse decisions log commonly galat lete hain</li>
-        <li>Help karti hai unnecessary running avoid karne me</li>
-      </ul>
-    </div>
-  </section>
-
-  <footer>
-    <p>
-      VedaNexus ek information-based platform hai.  
-      Ye services sell nahi karti — sirf time bachane ki clarity deti hai.
-    </p>
-  </footer>
-
-</body>
-</html>
+    .hero
