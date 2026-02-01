@@ -2,62 +2,150 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>VedaNexus – Time Bachane Ka Smart Tarika</title>
+  <title>VedaNexus – Busy People Guide</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Busy logon ke liye daily life shortcuts. Galat jagah jaakar time waste mat karo.">
 
   <style>
-    :root {
-      --primary: #1d4ed8;
-      --accent: #facc15;
-      --dark: #0f172a;
-      --light: #f8fafc;
-      --card: #ffffff;
-      --text: #020617;
-      --muted: #475569;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
     body {
-      background: linear-gradient(180deg, #eef2ff 0%, #f8fafc 100%);
-      color: var(--text);
-      line-height: 1.7;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      line-height: 1.6;
     }
 
-    /* HERO */
-    .hero {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 40px;
-      align-items: center;
-      max-width: 1100px;
+    header {
+      background: #1d4ed8;
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 32px;
+      margin-bottom: 15px;
+    }
+
+    header p {
+      font-size: 18px;
+      max-width: 700px;
       margin: auto;
-      padding: 80px 20px;
     }
 
-    .badge {
+    .cta {
+      margin-top: 25px;
+    }
+
+    .cta a {
       display: inline-block;
-      background: rgba(29,78,216,0.1);
-      color: var(--primary);
-      padding: 6px 14px;
-      border-radius: 999px;
+      background: #facc15;
+      color: #000;
+      padding: 12px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 6px;
+    }
+
+    section {
+      max-width: 900px;
+      margin: auto;
+      padding: 50px 20px;
+    }
+
+    section h2 {
+      font-size: 26px;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    ul li {
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      flex: 1 1 200px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      font-size: 16px;
+    }
+
+    footer {
+      background: #0f172a;
+      color: #cbd5f5;
+      text-align: center;
+      padding: 30px 20px;
       font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 16px;
     }
+  </style>
+</head>
 
-    h1 {
-      font-size: 44px;
-      line-height: 1.15;
-      margin-bottom: 18px;
-    }
+<body>
 
-    .hero
+<header>
+  <h1>Roz ke kaam me time waste ho raha hai?</h1>
+  <p>
+    Ye website un logon ke liye hai jo
+    laundry, documents, repair jaise daily kaamon me
+    galat jagah jaakar apna time barbaad nahi karna chahte.
+  </p>
+
+  <div class="cta">
+    <a href="busy-people.html">Busy log kahan atakte hain</a>
+    <a href="indore.html">Indore shortcuts dekho</a>
+  </div>
+</header>
+
+<section>
+  <h2>Ye website kya karti hai?</h2>
+  <ul>
+    <li>Batati hai kaunse kaamon me log sabse zyada time waste karte hain</li>
+    <li>Samjhati hai Google yahan poori madad kyun nahi karta</li>
+    <li>Help karti hai galat decisions avoid karne me</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Daily life ke common problems</h2>
+
+  <div class="cards">
+    <div class="card">🧺 Laundry ke chakkar</div>
+    <div class="card">📄 Documents & courier</div>
+    <div class="card">🔧 Repair aur servicing</div>
+    <div class="card">⏱️ Time pressure</div>
+  </div>
+</section>
+
+<section>
+  <h2>Iska fayda kya hai?</h2>
+  <ul>
+    <li>Office ke baad frustration kam hoti hai</li>
+    <li>Wrong jagah ke chakkar band hote hain</li>
+    <li>Daily life thodi predictable ho jaati hai</li>
+  </ul>
+</section>
+
+<footer>
+  <p>
+    VedaNexus ek information-based platform hai.  
+    Ye services sell nahi karta — sirf clarity deta hai.
+  </p>
+</footer>
+
+</body>
+</html>
