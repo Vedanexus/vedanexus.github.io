@@ -17,7 +17,7 @@
     }
 
     header {
-      background: #1d4ed8;
+      background: linear-gradient(135deg, #1d4ed8, #0f172a);
       color: white;
       padding: 60px 20px;
       text-align: center;
@@ -25,7 +25,7 @@
 
     header h1 {
       font-size: 32px;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
     header p {
@@ -35,7 +35,7 @@
     }
 
     .cta {
-      margin-top: 25px;
+      margin-top: 22px;
     }
 
     .cta a {
@@ -47,6 +47,35 @@
       text-decoration: none;
       font-weight: bold;
       margin: 6px;
+    }
+
+    /* Illustration */
+    .illustration {
+      max-width: 600px;
+      margin: 40px auto 0;
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      color: #0f172a;
+    }
+
+    .icons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .icon-box {
+      background: #eef2ff;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     section {
@@ -69,22 +98,6 @@
       font-size: 16px;
     }
 
-    .cards {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 8px;
-      padding: 20px;
-      flex: 1 1 200px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-      font-size: 16px;
-    }
-
     footer {
       background: #0f172a;
       color: #cbd5f5;
@@ -99,6 +112,7 @@
 
 <header>
   <h1>Roz ke kaam me time waste ho raha hai?</h1>
+
   <p>
     Ye website un logon ke liye hai jo
     laundry, documents, repair jaise daily kaamon me
@@ -109,6 +123,18 @@
     <a href="busy-people.html">Busy log kahan atakte hain</a>
     <a href="indore.html">Indore shortcuts dekho</a>
   </div>
+
+  <!-- SAFE ILLUSTRATION -->
+  <div class="illustration">
+    <strong>Daily life me sabse zyada time yahin jata hai:</strong>
+
+    <div class="icons">
+      <div class="icon-box">🧺 Laundry ke chakkar</div>
+      <div class="icon-box">📄 Documents & courier</div>
+      <div class="icon-box">🔧 Repair aur servicing</div>
+      <div class="icon-box">⏱️ Time pressure</div>
+    </div>
+  </div>
 </header>
 
 <section>
@@ -118,17 +144,6 @@
     <li>Samjhati hai Google yahan poori madad kyun nahi karta</li>
     <li>Help karti hai galat decisions avoid karne me</li>
   </ul>
-</section>
-
-<section>
-  <h2>Daily life ke common problems</h2>
-
-  <div class="cards">
-    <div class="card">🧺 Laundry ke chakkar</div>
-    <div class="card">📄 Documents & courier</div>
-    <div class="card">🔧 Repair aur servicing</div>
-    <div class="card">⏱️ Time pressure</div>
-  </div>
 </section>
 
 <section>
