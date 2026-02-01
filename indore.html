@@ -1,48 +1,160 @@
-<p>
-  Ye page batata hai ki <strong>is city me kaunse kaam
-  kis time aur kis tarah fast nipat jaate hain</strong>,
-  aur kaunse kaam avoid karne chahiye.
-</p>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>indore Local Shortcuts – VedaNexus</title>
-<meta name="description" content="indore me office aur daily life ke liye local shortcuts.">
+<title>Indore Local Shortcuts – VedaNexus</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style.css">
+<meta name="description" content="Local shortcuts for Indore to help busy people save time on daily errands.">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#f4f6fb;
+  color:#0f172a;
+}
+
+/* HERO */
+header{
+  background:
+    linear-gradient(rgba(15,23,42,0.8),rgba(15,23,42,0.8)),
+    url("https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=1600&q=80");
+  background-size:cover;
+  background-position:center;
+  color:#fff;
+  padding:80px 20px;
+  text-align:center;
+}
+
+header h1{
+  font-size:36px;
+  margin-bottom:14px;
+}
+
+header p{
+  font-size:18px;
+  max-width:780px;
+  margin:auto;
+}
+
+nav{
+  margin-top:24px;
+}
+
+nav a{
+  display:inline-block;
+  background:#facc15;
+  color:#000;
+  padding:12px 20px;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:bold;
+  margin:6px;
+}
+
+/* CONTENT */
+section{
+  max-width:900px;
+  margin:auto;
+  padding:60px 20px;
+}
+
+section h2{
+  font-size:28px;
+  margin-bottom:14px;
+}
+
+.card{
+  background:#ffffff;
+  border-radius:14px;
+  padding:26px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.15);
+  margin-top:20px;
+}
+
+ul{
+  padding-left:20px;
+}
+
+li{
+  margin-bottom:10px;
+  font-size:16px;
+}
+
+/* FOOTER */
+footer{
+  background:#020617;
+  color:#cbd5f5;
+  text-align:center;
+  padding:30px 20px;
+  font-size:14px;
+}
+
+@media(max-width:600px){
+  header h1{font-size:28px}
+}
+</style>
 </head>
+
 <body>
 
 <header>
-  <h1>indore – Local Shortcuts</h1>
-  <p>Office log kaise time bachate hain.</p>
+  <h1>Indore Local Shortcuts</h1>
+
+  <p>
+    This page helps busy people in Indore complete daily tasks faster
+    by avoiding common mistakes and peak-time problems.
+  </p>
+
+  <nav>
+    <a href="/">Home</a>
+    <a href="busy-people.html">Busy People Guide</a>
+  </nav>
 </header>
 
 <section>
-  <h2>Common indore Problems</h2>
-  <ul>
-    <li>Office timing me errands</li>
-    <li>Vehicle related runs</li>
-    <li>Document submissions</li>
-  </ul>
+  <h2>Common problems in Indore</h2>
+
+  <div class="card">
+    <ul>
+      <li>Heavy traffic during office hours</li>
+      <li>Long queues for documents and services</li>
+      <li>Confusion about timings</li>
+      <li>Wasted trips due to incomplete information</li>
+    </ul>
+  </div>
 </section>
 
 <section>
-  <h2>Local Wisdom</h2>
-  <p>
-    Morning slots me kaam fast hota hai.  
-    Peak hours avoid karna best hai.
-  </p>
+  <h2>Practical local insights</h2>
+
+  <div class="card">
+    <ul>
+      <li>Early mornings are best for most errands</li>
+      <li>Avoid peak lunch hours</li>
+      <li>Weekdays are usually faster than weekends</li>
+      <li>Plan multiple tasks in a single route</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>What to avoid</h2>
+
+  <div class="card">
+    <ul>
+      <li>Last-minute office-hour visits</li>
+      <li>Peak traffic zones during rush hours</li>
+      <li>Unverified shortcuts suggested online</li>
+    </ul>
+  </div>
 </section>
 
 <footer>
-  <p>More cities coming soon.</p>
+  <p>
+    VedaNexus uses local knowledge to save time — not ads or promotions.
+  </p>
 </footer>
 
-<button id="darkToggle">🌙</button>
-<script src="script.js"></script>
 </body>
 </html>
