@@ -1,146 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>VedaNexus – Busy People Guide</title>
+<meta charset="UTF-8">
+<title>VedaNexus – Busy People Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Busy logon ke liye daily life shortcuts. Galat jagah jaakar time waste mat karo.">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Busy logon ke liye daily life shortcuts. Galat jagah jaakar time waste mat karo.">
+<style>
+:root{
+  --blue1:#1d4ed8;
+  --blue2:#0f172a;
+  --yellow:#facc15;
+  --white:#ffffff;
+}
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f8fafc;
-      color: #0f172a;
-      line-height: 1.6;
-    }
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto;
+}
 
-    header {
-      background: linear-gradient(135deg, #1d4ed8, #0f172a);
-      color: white;
-      padding: 60px 20px;
-      text-align: center;
-    }
+body{
+  background:#f8fafc;
+  color:#0f172a;
+  overflow-x:hidden;
+}
 
-    header h1 {
-      font-size: 32px;
-      margin-bottom: 12px;
-    }
+/* ===== MOTION HERO ===== */
+.hero{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:#fff;
+  padding:60px 20px;
+  position:relative;
+  background:linear-gradient(
+    -45deg,
+    var(--blue1),
+    #2563eb,
+    var(--blue2),
+    #020617
+  );
+  background-size:400% 400%;
+  animation:bgMove 12s ease infinite;
+}
 
-    header p {
-      font-size: 18px;
-      max-width: 700px;
-      margin: auto;
-    }
+@keyframes bgMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
 
-    .cta {
-      margin-top: 22px;
-    }
+.hero-content{
+  max-width:850px;
+  z-index:2;
+}
 
-    .cta a {
-      display: inline-block;
-      background: #facc15;
-      color: #000;
-      padding: 12px 20px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
-      margin: 6px;
-    }
+.hero h1{
+  font-size:42px;
+  margin-bottom:18px;
+}
 
-    /* Illustration */
-    .illustration {
-      max-width: 600px;
-      margin: 40px auto 0;
-      background: white;
-      border-radius: 14px;
-      padding: 24px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      color: #0f172a;
-    }
+.hero p{
+  font-size:18px;
+  max-width:720px;
+  margin:0 auto 30px;
+  opacity:.95;
+}
 
-    .icons {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      margin-top: 10px;
-    }
+/* CTA */
+.cta a{
+  display:inline-block;
+  background:var(--yellow);
+  color:#000;
+  padding:14px 22px;
+  border-radius:10px;
+  font-weight:700;
+  text-decoration:none;
+  margin:8px;
+}
 
-    .icon-box {
-      background: #eef2ff;
-      border-radius: 10px;
-      padding: 14px;
-      font-size: 15px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+/* ===== FLOATING CARDS ===== */
+.float-area{
+  margin-top:50px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
+  max-width:600px;
+  margin-left:auto;
+  margin-right:auto;
+}
 
-    section {
-      max-width: 900px;
-      margin: auto;
-      padding: 50px 20px;
-    }
+.float-card{
+  background:#ffffff;
+  color:#0f172a;
+  padding:16px;
+  border-radius:14px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  box-shadow:0 15px 30px rgba(0,0,0,.15);
+  animation:float 4s ease-in-out infinite;
+}
 
-    section h2 {
-      font-size: 26px;
-      margin-bottom: 15px;
-    }
+.float-card:nth-child(2){animation-delay:.5s}
+.float-card:nth-child(3){animation-delay:1s}
+.float-card:nth-child(4){animation-delay:1.5s}
 
-    ul {
-      padding-left: 20px;
-    }
+@keyframes float{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+  100%{transform:translateY(0)}
+}
 
-    ul li {
-      margin-bottom: 10px;
-      font-size: 16px;
-    }
+/* ===== CONTENT ===== */
+section{
+  max-width:900px;
+  margin:auto;
+  padding:70px 20px;
+}
 
-    footer {
-      background: #0f172a;
-      color: #cbd5f5;
-      text-align: center;
-      padding: 30px 20px;
-      font-size: 14px;
-    }
-  </style>
+section h2{
+  font-size:28px;
+  margin-bottom:16px;
+}
+
+section ul{
+  padding-left:20px;
+}
+
+section li{
+  margin-bottom:10px;
+  font-size:16px;
+}
+
+/* FOOTER */
+footer{
+  background:#020617;
+  color:#cbd5f5;
+  text-align:center;
+  padding:40px 20px;
+  font-size:14px;
+}
+
+/* MOBILE */
+@media(max-width:700px){
+  .hero h1{font-size:32px}
+  .float-area{grid-template-columns:1fr}
+}
+</style>
 </head>
 
 <body>
 
-<header>
-  <h1>Roz ke kaam me time waste ho raha hai?</h1>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
 
-  <p>
-    Ye website un logon ke liye hai jo
-    laundry, documents, repair jaise daily kaamon me
-    galat jagah jaakar apna time barbaad nahi karna chahte.
-  </p>
+    <h1>Roz ke kaam me time waste ho raha hai?</h1>
 
-  <div class="cta">
-    <a href="busy-people.html">Busy log kahan atakte hain</a>
-    <a href="indore.html">Indore shortcuts dekho</a>
-  </div>
+    <p>
+      Ye website un busy logon ke liye hai jo
+      laundry, documents, repair jaise daily kaamon me
+      galat jagah jaakar apna time barbaad nahi karna chahte.
+    </p>
 
-  <!-- SAFE ILLUSTRATION -->
-  <div class="illustration">
-    <strong>Daily life me sabse zyada time yahin jata hai:</strong>
-
-    <div class="icons">
-      <div class="icon-box">🧺 Laundry ke chakkar</div>
-      <div class="icon-box">📄 Documents & courier</div>
-      <div class="icon-box">🔧 Repair aur servicing</div>
-      <div class="icon-box">⏱️ Time pressure</div>
+    <div class="cta">
+      <a href="busy-people.html">Busy log kahan atakte hain</a>
+      <a href="indore.html">Indore shortcuts dekho</a>
     </div>
+
+    <!-- FLOATING MOTION BLOCK -->
+    <div class="float-area">
+      <div class="float-card">🧺 Laundry ke chakkar</div>
+      <div class="float-card">📄 Documents & courier</div>
+      <div class="float-card">🔧 Repair & servicing</div>
+      <div class="float-card">⏱️ Time pressure</div>
+    </div>
+
   </div>
-</header>
+</div>
 
 <section>
   <h2>Ye website kya karti hai?</h2>
   <ul>
-    <li>Batati hai kaunse kaamon me log sabse zyada time waste karte hain</li>
+    <li>Batati hai kaunse daily kaamon me log sabse zyada time waste karte hain</li>
     <li>Samjhati hai Google yahan poori madad kyun nahi karta</li>
     <li>Help karti hai galat decisions avoid karne me</li>
   </ul>
@@ -150,15 +198,15 @@
   <h2>Iska fayda kya hai?</h2>
   <ul>
     <li>Office ke baad frustration kam hoti hai</li>
-    <li>Wrong jagah ke chakkar band hote hain</li>
-    <li>Daily life thodi predictable ho jaati hai</li>
+    <li>Unnecessary running band hoti hai</li>
+    <li>Daily life zyada predictable hoti hai</li>
   </ul>
 </section>
 
 <footer>
   <p>
     VedaNexus ek information-based platform hai.  
-    Ye services sell nahi karta — sirf clarity deta hai.
+    No booking. No calls. Sirf practical guidance.
   </p>
 </footer>
 
