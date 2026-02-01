@@ -1,124 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>VedaNexus – Local Shortcuts for Busy People</title>
+  <meta charset="UTF-8">
+  <title>VedaNexus – Time Bachane Ka Smart Tarika</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Busy people ke liye local shortcuts. Time bachao, galat jagah avoid karo. No booking. No selling. Just clarity." />
-  <meta name="robots" content="index, follow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Busy logon ke liye daily life shortcuts. Galat jagah jaakar time waste mat karo.">
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    :root {
+      --primary: #1d4ed8;
+      --accent: #facc15;
+      --dark: #0f172a;
+      --light: #f8fafc;
+      --text: #020617;
+      --muted: #475569;
+    }
 
-  <!-- Favicon (optional) -->
-  <link rel="icon" href="favicon.ico" />
-  <meta name="theme-color" content="#1d4ed8">
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
 
+    body {
+      background: var(--light);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      background:
+        linear-gradient(
+          rgba(2,6,23,0.65),
+          rgba(2,6,23,0.65)
+        ),
+        url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80");
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .hero-content {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(250,204,21,0.15);
+      color: var(--accent);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: 44px;
+      line-height: 1.15;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      font-size: 19px;
+      max-width: 720px;
+      color: #e5e7eb;
+      margin-bottom: 28px;
+    }
+
+    .cta a {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      margin-right: 14px;
+      margin-bottom: 14px;
+    }
+
+    .cta a.secondary {
+      background: transparent;
+      border: 2px solid #fff;
+    }
+
+    /* SECTIONS */
+    section {
+      max-width: 900px;
+      margin: auto;
+      padding: 64px 20px;
+    }
+
+    section h2 {
+      font-size: 30px;
+      margin-bottom: 16px;
+    }
+
+    section p {
+      color: var(--muted);
+      max-width: 760px;
+      margin-bottom: 16px;
+      font-size: 17px;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin-top: 12px;
+    }
+
+    ul li {
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      margin-top: 30px;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--dark);
+      color: #cbd5f5;
+      text-align: center;
+      padding: 40px 20px;
+      font-size: 14px;
+    }
+
+    footer p {
+      max-width: 700px;
+      margin: auto;
+    }
+
+    /* MOBILE */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 32px;
+      }
+
+      .hero p {
+        font-size: 17px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header>
-  <h1>Roz ke kaam me time waste ho raha hai?</h1>
-  <p>
-    Ye website busy logon ke liye hai jo
-    laundry, documents, repair jaise kaamon me
-    galat jagah jaakar time aur energy waste nahi karna chahte.
-  </p>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="badge">For Busy People</div>
 
-  <p><strong>Yahan sirf ek kaam karo:</strong></p>
+      <h1>
+        Roz ke kaam me time waste ho raha hai?
+      </h1>
 
-  <nav>
-    <a href="busy-people.html">👉 Dekho log sabse zyada galti kahan karte hain</a>
-  </nav>
-</header>
+      <p>
+        Ye website un logon ke liye hai jo
+        laundry, documents, repair jaise kaamon me
+        galat jagah jaakar apna time aur energy barbaad nahi karna chahte.
+      </p>
 
+      <div class="cta">
+        <a href="busy-people.html">Dekho log sabse zyada galti kahan karte hain</a>
+        <a href="indore.html" class="secondary">Indore ke shortcuts dekho</a>
+      </div>
+    </div>
+  </div>
 
-  <!-- INTRO -->
+  <!-- WHAT THIS IS -->
   <section>
-    <h2>VedaNexus kya karta hai?</h2>
+    <h2>Ye website kya karti hai?</h2>
+
     <p>
-      VedaNexus koi service booking platform nahi hai.  
+      VedaNexus koi service booking platform nahi hai.
       Yahan koi delivery, koi phone calls, koi selling nahi hoti.
     </p>
 
-    <ul>
-      <li>Daily life ke common problems highlight karta hai</li>
-      <li>Batata hai kaunse decisions usually galat hote hain</li>
-      <li>Local wisdom share karta hai jo Google nahi batata</li>
-    </ul>
+    <div class="card">
+      <ul>
+        <li>Batati hai kaunse daily kaamon me log sabse zyada time waste karte hain</li>
+        <li>Explain karti hai Google yahan kyun kaam ka nahi hota</li>
+        <li>Help karti hai galat decisions avoid karne me</li>
+      </ul>
+    </div>
   </section>
 
-  <!-- PROBLEMS -->
+  <!-- WHY IMPORTANT -->
   <section>
-    <h2>Roz ke kaam jahan log phans jaate hain</h2>
-    <ul>
-      <li>Laundry / dry cleaning ke chakkar</li>
-      <li>Documents & courier ka confusion</li>
-      <li>Repair aur servicing me time waste</li>
-      <li>Emergency me galat jagah jaana</li>
-    </ul>
+    <h2>Iska fayda kya hai?</h2>
 
     <p>
-      In sab ka common reason hota hai:  
-      <strong>galat jagah, galat time, galat expectation.</strong>
-    </p>
-  </section>
-
-  <!-- WHY DIFFERENT -->
-  <section>
-    <h2>Google yahan poora kaam kyun nahi karta?</h2>
-    <p>
-      Google reviews aur stars dikhata hai,  
-      par ye nahi batata:
+      Problem paisa nahi hoti.
+      Problem hota hai <strong>time loss</strong>.
+      Aur time wapas nahi aata.
     </p>
 
-    <ul>
-      <li>Kaam actually kitne time me hota hai</li>
-      <li>Office timing ke liye kya best hai</li>
-      <li>Kya cheez avoid karni chahiye</li>
-    </ul>
-
-    <p>
-      Ye knowledge sirf local experience se aati hai.
-    </p>
-  </section>
-
-  <!-- CTA -->
-  <section>
-    <h2>Yahin se shuru karo</h2>
-    <p>
-      Agar tum busy ho aur galti ka time nahi hai,  
-      to pehle ye page padho:
-    </p>
-
-    <p>
-      👉 <a href="busy-people.html">Busy People Guide</a>
-    </p>
-
-    <p>
-      City-wise shortcuts ke liye:
-      👉 <a href="Delhi.html">Delhi Local Shortcuts</a>
-    </p>
+    <div class="card">
+      <ul>
+        <li>Office ke baad frustration kam hoti hai</li>
+        <li>Wrong places ke chakkar band hote hain</li>
+        <li>Daily life thodi predictable ho jaati hai</li>
+      </ul>
+    </div>
   </section>
 
   <!-- FOOTER -->
   <footer>
     <p>
-      © 2026 VedaNexus  
-      <br />
-      Information based platform · No services · No guarantees
+      VedaNexus ek information-based platform hai.  
+      Ye website services sell nahi karti — sirf clarity deti hai.
     </p>
   </footer>
 
-  <!-- DARK MODE BUTTON -->
-  <button id="darkToggle" title="Toggle dark mode">🌙</button>
-
-  <!-- Script -->
-  <script src="script.js"></script>
-
 </body>
 </html>
-<script src="script.js"></script>
