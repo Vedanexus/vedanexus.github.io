@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Stack Drop</title>
+<title>Stack Hero</title>
 
 <style>
 html, body {
   margin: 0;
   padding: 0;
-  background: linear-gradient(#0f0f1a, #050510);
   overflow: hidden;
   touch-action: manipulation;
   font-family: system-ui, sans-serif;
@@ -26,37 +25,78 @@ const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
 let W, H;
-function resize() {
+function resize(){
   W = canvas.width = window.innerWidth;
   H = canvas.height = window.innerHeight;
 }
 window.addEventListener("resize", resize);
 resize();
 
+/* ===== BACKGROUND ===== */
+let bgShift = 0;
+function drawBackground(){
+  bgShift += 0.1;
+  const grad = ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0, `hsl(${220+bgShift},60%,30%)`);
+  grad.addColorStop(1, `hsl(${260+bgShift},60%,10%)`);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,W,H);
+}
+
+/* ===== GAME STATE ===== */
 let blocks = [];
 let current;
 let speed = 2;
 let score = 0;
 let gameOver = false;
 
-function startGame() {
+/* ===== HERO ===== */
+const hero = {
+  x: 0,
+  y: 0,
+  r: 12,
+  bounce: 0
+};
+
+function drawHero(){
+  hero.bounce += 0.1;
+  const by = Math.sin(hero.bounce)*3;
+
+  // head
+  ctx.beginPath();
+  ctx.arc(hero.x, hero.y-hero.r+by, hero.r, 0, Math.PI*2);
+  ctx.fillStyle = "#ffd166";
+  ctx.fill();
+
+  // body
+  ctx.fillStyle = "#ffd166";
+  ctx.fillRect(hero.x-6, hero.y+by, 12, 18);
+}
+
+/* ===== BLOCKS ===== */
+function randomColor(){
+  const hues=[180,210,260,320,140];
+  return `hsl(${hues[Math.floor(Math.random()*hues.length)]},80%,60%)`;
+}
+
+function startGame(){
   blocks = [{
-    x: W/2 - 60,
-    y: H - 60,
+    x: W/2-60,
+    y: H-80,
     w: 120,
     h: 30,
     color: randomColor()
   }];
-  current = spawnBlock();
   score = 0;
   speed = 2;
   gameOver = false;
+  current = spawnBlock();
 }
 
-function spawnBlock() {
+function spawnBlock(){
   return {
     x: 0,
-    y: blocks[blocks.length-1].y - 35,
+    y: blocks[blocks.length-1].y-40,
     w: blocks[blocks.length-1].w,
     h: 30,
     dir: 1,
@@ -64,32 +104,26 @@ function spawnBlock() {
   };
 }
 
-function randomColor() {
-  const hues = [200, 260, 320, 140, 30];
-  return `hsl(${hues[Math.floor(Math.random()*hues.length)]},80%,60%)`;
-}
-
 canvas.addEventListener("click", drop);
 canvas.addEventListener("touchstart", drop);
 
-function drop() {
-  if (gameOver) {
+function drop(){
+  if(gameOver){
     startGame();
     return;
   }
 
   const last = blocks[blocks.length-1];
   const overlap =
-    Math.min(current.x + current.w, last.x + last.w) -
-    Math.max(current.x, last.x);
+    Math.min(current.x+current.w,last.x+last.w) -
+    Math.max(current.x,last.x);
 
-  if (overlap <= 0) {
-    gameOver = true;
+  if(overlap<=0){
+    gameOver=true;
     return;
   }
 
-  const cut = current.w - overlap;
-  current.x = Math.max(current.x, last.x);
+  current.x = Math.max(current.x,last.x);
   current.w = overlap;
 
   blocks.push({
@@ -102,34 +136,43 @@ function drop() {
 
   score++;
   speed += 0.15;
-
   current = spawnBlock();
 }
 
-function drawBlock(b) {
+function drawBlock(b){
   ctx.fillStyle = b.color;
-  ctx.fillRect(b.x, b.y, b.w, b.h);
+  ctx.fillRect(b.x,b.y,b.w,b.h);
+  ctx.shadowBlur = 15;
+  ctx.shadowColor = b.color;
 }
 
-function loop() {
-  ctx.clearRect(0,0,W,H);
+/* ===== LOOP ===== */
+function loop(){
+  drawBackground();
 
-  for (let b of blocks) drawBlock(b);
+  blocks.forEach(drawBlock);
 
-  if (!gameOver) {
-    current.x += speed * current.dir;
-    if (current.x <= 0 || current.x + current.w >= W) {
+  if(!gameOver){
+    current.x += speed*current.dir;
+    if(current.x<=0 || current.x+current.w>=W){
       current.dir *= -1;
     }
     drawBlock(current);
   }
 
-  ctx.fillStyle = "#fff";
-  ctx.font = "16px system-ui";
-  ctx.fillText("Score: " + score, 10, 24);
+  // hero position
+  const top = blocks[blocks.length-1];
+  hero.x = top.x + top.w/2;
+  hero.y = top.y - 10;
+  drawHero();
 
-  if (gameOver) {
-    ctx.fillText("TAP TO RESTART", W/2 - 60, H/2);
+  // UI
+  ctx.fillStyle="#fff";
+  ctx.font="16px system-ui";
+  ctx.fillText("Score: "+score,12,24);
+
+  if(gameOver){
+    ctx.fillText("TAP TO RESTART",W/2-70,H/2);
   }
 
   requestAnimationFrame(loop);
