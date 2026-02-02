@@ -3,67 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Perfect Tap</title>
+<title>Color Merge</title>
 
 <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: #0b0b0f;
-    overflow: hidden;
-    touch-action: manipulation;
-    font-family: system-ui, sans-serif;
-    color: #ffffff;
-  }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(circle at top, #1b1f3b, #090b18);
+  overflow: hidden;
+  touch-action: manipulation;
+  font-family: system-ui, sans-serif;
+}
 
-  canvas {
-    display: block;
-  }
-
-  .hud {
-    position: fixed;
-    top: 12px;
-    width: 100%;
-    text-align: center;
-    font-size: 16px;
-    opacity: 0.9;
-    pointer-events: none;
-  }
-
-  .hud span {
-    margin: 0 12px;
-  }
-
-  .overlay {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    background: rgba(11,11,15,0.9);
-    cursor: pointer;
-    user-select: none;
-  }
+canvas {
+  display: block;
+}
 </style>
 </head>
 
 <body>
-
-<div class="hud">
-  <span id="score">Score: 0</span>
-  <span id="best">Best: 0</span>
-</div>
-
-<div class="overlay" id="overlay">TAP TO PLAY</div>
-
 <canvas id="game"></canvas>
 
 <script>
-/* ===== GAME SETUP ===== */
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
-const overlay = document.getElementById("overlay");
 
 let W, H;
 function resize() {
@@ -73,118 +36,96 @@ function resize() {
 window.addEventListener("resize", resize);
 resize();
 
-/* ===== STATE ===== */
-let playing = false;
-let score = 0;
-let best = localStorage.getItem("bestScore") || 0;
+const COLORS = ["#ff4d6d", "#ffd166", "#4cc9f0", "#9b5de5", "#06d6a0"];
+const R = 22;
+const GAP = 6;
+const COLS = Math.floor(W / (R * 2 + GAP));
+const ROWS = Math.floor(H / (R * 2 + GAP));
 
-document.getElementById("best").textContent = "Best: " + best;
+let grid = [];
 
-let markerY = 0;
-let speed = 3;
-let direction = 1;
-
-let targetHeight = 80;
-let targetY = 0;
-
-/* ===== START / RESET ===== */
-function resetGame() {
-  score = 0;
-  speed = 3;
-  targetHeight = 80;
-  targetY = H * 0.65;
-
-  // START BALL INSIDE TARGET (VERY IMPORTANT)
-  markerY = targetY + targetHeight / 2;
-  direction = 1;
-
-  playing = true;
-  overlay.style.display = "none";
-  document.getElementById("score").textContent = "Score: 0";
-}
-
-/* ===== TAP HANDLER ===== */
-function tap() {
-  if (!playing) {
-    resetGame();
-    return;
-  }
-
-  const center = markerY;
-  const top = targetY;
-  const bottom = targetY + targetHeight;
-
-  if (center >= top && center <= bottom) {
-    const distance = Math.abs(center - (top + targetHeight / 2));
-
-    if (distance < targetHeight * 0.15) {
-      score += 10;
-      flash("#00ff9c");
-    } else {
-      score += 5;
-      flash("#ffd000");
+function initGrid() {
+  grid = [];
+  for (let r = 0; r < ROWS; r++) {
+    let row = [];
+    for (let c = 0; c < COLS; c++) {
+      row.push({
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        alive: true
+      });
     }
-
-    speed *= 1.05;
-    targetHeight *= 0.97;
-  } else {
-    playing = false;
-    flash("#ff3b3b");
-
-    if (score > best) {
-      best = score;
-      localStorage.setItem("bestScore", best);
-      document.getElementById("best").textContent = "Best: " + best;
-    }
-
-    overlay.textContent = "PLAY AGAIN";
-    overlay.style.display = "flex";
+    grid.push(row);
   }
-
-  document.getElementById("score").textContent = "Score: " + score;
 }
 
-/* ===== INPUT ===== */
-canvas.addEventListener("click", tap);
-canvas.addEventListener("touchstart", tap);
+initGrid();
 
-overlay.addEventListener("click", tap);
-overlay.addEventListener("touchstart", tap);
-
-/* ===== FEEDBACK ===== */
-function flash(color) {
-  document.body.style.background = color;
-  setTimeout(() => {
-    document.body.style.background = "#0b0b0f";
-  }, 80);
-}
-
-/* ===== GAME LOOP ===== */
-function loop() {
+function draw() {
   ctx.clearRect(0, 0, W, H);
-
-  // Target zone
-  ctx.fillStyle = "#00c8ff";
-  ctx.fillRect(W * 0.25, targetY, W * 0.5, targetHeight);
-
-  // Marker
-  ctx.beginPath();
-  ctx.arc(W / 2, markerY, 14, 0, Math.PI * 2);
-  ctx.fillStyle = "#ffffff";
-  ctx.fill();
-
-  if (playing) {
-    markerY += speed * direction;
-    if (markerY > H - 20 || markerY < 20) {
-      direction *= -1;
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const cell = grid[r][c];
+      if (!cell.alive) continue;
+      const x = c * (R * 2 + GAP) + R + GAP;
+      const y = r * (R * 2 + GAP) + R + GAP;
+      ctx.beginPath();
+      ctx.arc(x, y, R, 0, Math.PI * 2);
+      ctx.fillStyle = cell.color;
+      ctx.fill();
     }
   }
+}
 
+function getCellAt(x, y) {
+  const c = Math.floor(x / (R * 2 + GAP));
+  const r = Math.floor(y / (R * 2 + GAP));
+  if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return null;
+  return { r, c };
+}
+
+function floodFill(r, c, color, visited = {}) {
+  const key = r + "," + c;
+  if (visited[key]) return [];
+  visited[key] = true;
+
+  const cell = grid[r][c];
+  if (!cell || !cell.alive || cell.color !== color) return [];
+
+  let cells = [{ r, c }];
+  const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+
+  for (let [dr, dc] of dirs) {
+    const nr = r + dr, nc = c + dc;
+    if (grid[nr] && grid[nr][nc]) {
+      cells = cells.concat(floodFill(nr, nc, color, visited));
+    }
+  }
+  return cells;
+}
+
+canvas.addEventListener("click", e => {
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const cellPos = getCellAt(x, y);
+  if (!cellPos) return;
+
+  const { r, c } = cellPos;
+  const cell = grid[r][c];
+  if (!cell || !cell.alive) return;
+
+  const cluster = floodFill(r, c, cell.color);
+  if (cluster.length < 3) return;
+
+  cluster.forEach(p => grid[p.r][p.c].alive = false);
+});
+
+function loop() {
+  draw();
   requestAnimationFrame(loop);
 }
 
 loop();
 </script>
-
 </body>
 </html>
