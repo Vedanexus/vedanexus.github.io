@@ -1,200 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Upside Realm</title>
+<title>Dark Dodge</title>
 
 <style>
 html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: #020204;
-  touch-action: none;
-  font-family: system-ui, sans-serif;
+  background: black;
 }
-canvas { display: block; }
+video {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+canvas {
+  position: fixed;
+  inset: 0;
+}
 </style>
 </head>
 
 <body>
+
+<!-- REAL VIDEO BACKGROUND -->
+<video id="bg" autoplay muted loop playsinline>
+  <source src="bg.mp4" type="video/mp4">
+</video>
+
 <canvas id="game"></canvas>
 
-<!-- AUDIO (LOCAL STYLE, RELIABLE) -->
-<audio id="ambient" preload="auto">
-  <source src="https://assets.mixkit.co/music/preview/mixkit-dark-mystery-ambience-189.mp3">
-</audio>
-<audio id="hit" preload="auto">
-  <source src="https://assets.mixkit.co/sfx/preview/mixkit-impact-soft-735.mp3">
-</audio>
+<!-- REAL AUDIO -->
+<audio id="music" src="music.mp3" loop></audio>
+<audio id="hit" src="hit.mp3"></audio>
 
 <script>
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-let W, H;
-function resize(){
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
-window.addEventListener("resize", resize);
-resize();
-
-/* ===== SOUND CONTROL (GUARANTEED) ===== */
-let soundStarted = false;
-const ambient = document.getElementById("ambient");
-const hitSound = document.getElementById("hit");
-
-function startSound(){
-  if(soundStarted) return;
-  ambient.loop = true;
-  ambient.volume = 0.4;
-  ambient.play().catch(()=>{});
-  soundStarted = true;
-}
-
-/* ===== BACKGROUND (UPSIDE WORLD EFFECT) ===== */
-let bgOffset = 0;
-function drawBackground(){
-  bgOffset += 0.3;
-
-  const grad = ctx.createLinearGradient(0,0,0,H);
-  grad.addColorStop(0, "#120000");
-  grad.addColorStop(1, "#000000");
-  ctx.fillStyle = grad;
-  ctx.fillRect(0,0,W,H);
-
-  // drifting particles (fog)
-  ctx.fillStyle = "rgba(255,0,0,0.05)";
-  for(let i=0;i<40;i++){
-    const x = (i*80 + bgOffset*2) % W;
-    const y = (i*120 + bgOffset*3) % H;
-    ctx.beginPath();
-    ctx.arc(x,y,60,0,Math.PI*2);
-    ctx.fill();
-  }
-}
-
-/* ===== PLAYER (HUMAN CHARACTER) ===== */
-const player = {
-  x: W/2,
-  y: H-100,
-  vx: 0
+let W = canvas.width = innerWidth;
+let H = canvas.height = innerHeight;
+onresize = () => {
+  W = canvas.width = innerWidth;
+  H = canvas.height = innerHeight;
 };
 
-function drawPlayer(){
-  // aura
-  ctx.beginPath();
-  ctx.arc(player.x, player.y-20, 30, 0, Math.PI*2);
-  ctx.fillStyle = "rgba(255,80,80,0.25)";
-  ctx.fill();
+/* LOAD REAL IMAGES */
+const heroImg = new Image();
+heroImg.src = "hero.png";
 
-  // head
-  ctx.beginPath();
-  ctx.arc(player.x, player.y-30, 10, 0, Math.PI*2);
-  ctx.fillStyle = "#ffd6a5";
-  ctx.fill();
+const enemyImg = new Image();
+enemyImg.src = "enemy.png";
 
-  // body
-  ctx.fillStyle = "#333";
-  ctx.fillRect(player.x-6, player.y-20, 12, 24);
+/* SOUND */
+const music = document.getElementById("music");
+const hit = document.getElementById("hit");
+let soundStarted = false;
 
-  // arms
-  ctx.fillRect(player.x-16, player.y-18, 10, 4);
-  ctx.fillRect(player.x+6, player.y-18, 10, 4);
-}
+/* PLAYER */
+const player = { x: W/2, y: H-120, w: 50, h: 80 };
 
-/* ===== ENEMIES (SHADOW CREATURES) ===== */
+/* ENEMIES */
 let enemies = [];
-let speed = 2.5;
+let speed = 3;
 let score = 0;
 let gameOver = false;
 
-function spawnEnemy(){
-  enemies.push({
-    x: Math.random()*W,
-    y: -80,
-    r: 28,
-    wobble: Math.random()*Math.PI
-  });
-}
-
-/* ===== INPUT ===== */
+/* INPUT */
 let dragging = false;
 
 document.addEventListener("pointerdown", e => {
-  startSound();
+  if (!soundStarted) {
+    music.volume = 0.4;
+    music.play().catch(()=>{});
+    soundStarted = true;
+  }
 
-  if(gameOver){
+  if (gameOver) {
     enemies = [];
-    speed = 2.5;
+    speed = 3;
     score = 0;
     gameOver = false;
     return;
   }
+
   dragging = true;
-  player.x = e.clientX;
+  player.x = e.clientX - player.w/2;
 });
 
 document.addEventListener("pointermove", e => {
-  if(dragging) player.x = e.clientX;
+  if (dragging) player.x = e.clientX - player.w/2;
 });
-document.addEventListener("pointerup", ()=> dragging=false);
+document.addEventListener("pointerup", () => dragging = false);
 
-/* ===== UPDATE ===== */
+/* SPAWN */
+function spawnEnemy(){
+  enemies.push({
+    x: Math.random()*(W-60),
+    y: -100,
+    w: 60,
+    h: 80
+  });
+}
+
+/* LOOP */
 function update(){
-  if(gameOver) return;
+  if (gameOver) return;
 
-  if(Math.random()<0.025) spawnEnemy();
+  if (Math.random() < 0.03) spawnEnemy();
 
-  enemies.forEach(en=>{
+  enemies.forEach(en => {
     en.y += speed;
-    en.wobble += 0.05;
-    en.x += Math.sin(en.wobble)*1.2;
 
-    const d = Math.hypot(player.x-en.x, (player.y-20)-en.y);
-    if(d < en.r+18){
-      hitSound.play().catch(()=>{});
+    if (
+      player.x < en.x + en.w &&
+      player.x + player.w > en.x &&
+      player.y < en.y + en.h &&
+      player.y + player.h > en.y
+    ) {
+      hit.play().catch(()=>{});
       gameOver = true;
     }
   });
 
-  enemies = enemies.filter(e=>e.y<H+100);
-
-  speed += 0.0015;
+  enemies = enemies.filter(e => e.y < H+200);
+  speed += 0.002;
   score++;
 }
 
-/* ===== DRAW ===== */
 function draw(){
-  drawBackground();
+  ctx.clearRect(0,0,W,H);
 
-  // enemies
-  enemies.forEach(en=>{
-    ctx.beginPath();
-    ctx.arc(en.x,en.y,en.r,0,Math.PI*2);
-    ctx.fillStyle="#2b0000";
-    ctx.shadowBlur=30;
-    ctx.shadowColor="#ff0000";
-    ctx.fill();
+  enemies.forEach(en => {
+    ctx.drawImage(enemyImg, en.x, en.y, en.w, en.h);
   });
 
-  drawPlayer();
+  ctx.drawImage(heroImg, player.x, player.y, player.w, player.h);
 
-  // UI
-  ctx.shadowBlur=0;
-  ctx.fillStyle="#fff";
-  ctx.font="16px system-ui";
-  ctx.fillText("Survival: "+score,10,22);
+  ctx.fillStyle = "white";
+  ctx.fillText("Survival: "+score, 10, 20);
 
-  if(gameOver){
-    ctx.fillText("YOU WERE CONSUMED",W/2-90,H/2);
-    ctx.fillText("TAP TO TRY AGAIN",W/2-85,H/2+24);
+  if (gameOver) {
+    ctx.fillText("GAME OVER - TAP TO RESTART", W/2-120, H/2);
   }
 }
 
-/* ===== LOOP ===== */
 function loop(){
   update();
   draw();
