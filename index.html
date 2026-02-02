@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Upside Realm</title>
 
@@ -12,43 +12,33 @@ html, body {
   overflow: hidden;
   background: #000;
   touch-action: none;
+  font-family: system-ui, sans-serif;
 }
 
-/* BACKGROUND IMAGE */
-body::before {
-  content: "";
+/* VIDEO BACKGROUND */
+video#bg {
   position: fixed;
   inset: 0;
-  background:
-    radial-gradient(circle at center, rgba(120,0,0,0.35), rgba(0,0,0,0.9)),
-    url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80");
-  background-size: cover;
-  background-position: center;
-  filter: contrast(1.2) saturate(1.3);
-  animation: drift 20s linear infinite;
-  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.2) saturate(1.3) brightness(0.6);
+  z-index: -3;
 }
 
-/* FOG MOTION */
+/* RED FOG OVERLAY */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
-  background:
-    repeating-radial-gradient(circle, rgba(255,0,0,0.04) 0 2px, transparent 2px 6px);
-  opacity: 0.35;
+  background: radial-gradient(circle, rgba(255,0,0,0.25), rgba(0,0,0,0.85));
   animation: pulse 4s ease-in-out infinite;
-  z-index: -1;
-}
-
-@keyframes drift {
-  from { transform: scale(1) translateY(0); }
-  to { transform: scale(1.1) translateY(-40px); }
+  z-index: -2;
 }
 
 @keyframes pulse {
-  0%,100% { opacity: 0.25; }
-  50% { opacity: 0.45; }
+  0%,100% { opacity: 0.3; }
+  50% { opacity: 0.55; }
 }
 
 canvas {
@@ -58,11 +48,28 @@ canvas {
 </head>
 
 <body>
+
+<!-- VIDEO BACKGROUND -->
+<video id="bg" autoplay muted loop playsinline>
+  <source src="https://cdn.coverr.co/videos/coverr-dark-fog-5934/1080p.mp4" type="video/mp4">
+</video>
+
 <canvas id="game"></canvas>
+
+<!-- AUDIO -->
+<audio id="ambient" loop>
+  <source src="https://assets.mixkit.co/music/preview/mixkit-dark-mystery-ambience-189.mp3">
+</audio>
+
+<audio id="hit">
+  <source src="https://assets.mixkit.co/sfx/preview/mixkit-impact-soft-735.mp3">
+</audio>
 
 <script>
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
+const ambient = document.getElementById("ambient");
+const hitSound = document.getElementById("hit");
 
 let W, H;
 function resize(){
@@ -72,15 +79,23 @@ function resize(){
 window.addEventListener("resize", resize);
 resize();
 
+/* START AUDIO ON FIRST TOUCH */
+document.addEventListener("pointerdown", () => {
+  ambient.volume = 0.4;
+  ambient.play().catch(()=>{});
+}, { once:true });
+
 /* PLAYER – TELEKINETIC GIRL */
 const player = {
   x: W/2,
   y: H - 90,
-  r: 16
+  r: 16,
+  pulse: 0
 };
 
-/* ENEMIES – SHADOW BEASTS */
+/* ENEMIES */
 let enemies = [];
+let boss = null;
 let speed = 3;
 let score = 0;
 let gameOver = false;
@@ -108,14 +123,25 @@ function spawnEnemy(){
   enemies.push({
     x: Math.random() * (W-50),
     y: -60,
-    r: 22,
+    r: 20,
     wobble: Math.random()*Math.PI
   });
+}
+
+/* SPAWN BOSS */
+function spawnBoss(){
+  boss = {
+    x: W/2,
+    y: -200,
+    r: 90,
+    hp: 300
+  };
 }
 
 /* RESTART */
 function restart(){
   enemies = [];
+  boss = null;
   speed = 3;
   score = 0;
   gameOver = false;
@@ -130,16 +156,27 @@ function update(){
   enemies.forEach(e => {
     e.y += speed;
     e.wobble += 0.05;
-    e.x += Math.sin(e.wobble)*0.6;
+    e.x += Math.sin(e.wobble)*0.8;
 
-    // collision
-    const d = Math.hypot(player.x-e.x, player.y-e.y);
-    if(d < player.r + e.r){
+    if(Math.hypot(player.x-e.x, player.y-e.y) < player.r+e.r){
+      hitSound.play();
       gameOver = true;
     }
   });
 
   enemies = enemies.filter(e => e.y < H+80);
+
+  if(score > 500 && !boss) spawnBoss();
+
+  if(boss){
+    boss.y += 0.4;
+    boss.x += Math.sin(score*0.02)*1.5;
+
+    if(Math.hypot(player.x-boss.x, player.y-boss.y) < player.r+boss.r){
+      hitSound.play();
+      gameOver = true;
+    }
+  }
 
   speed += 0.002;
   score++;
@@ -153,17 +190,30 @@ function draw(){
   enemies.forEach(e => {
     ctx.beginPath();
     ctx.arc(e.x, e.y, e.r, 0, Math.PI*2);
-    ctx.fillStyle = "#8b0000";
+    ctx.fillStyle = "#7a0000";
     ctx.shadowBlur = 25;
     ctx.shadowColor = "#ff0000";
     ctx.fill();
   });
 
-  // PLAYER (TELEKINETIC GIRL)
+  // BOSS
+  if(boss){
+    ctx.beginPath();
+    ctx.arc(boss.x, boss.y, boss.r, 0, Math.PI*2);
+    ctx.fillStyle = "#300000";
+    ctx.shadowBlur = 60;
+    ctx.shadowColor = "#ff0000";
+    ctx.fill();
+  }
+
+  // PLAYER (ANIMATED)
+  player.pulse += 0.1;
+  const pr = player.r + Math.sin(player.pulse)*2;
+
   ctx.beginPath();
-  ctx.arc(player.x, player.y, player.r, 0, Math.PI*2);
+  ctx.arc(player.x, player.y, pr, 0, Math.PI*2);
   ctx.fillStyle = "#ffe066";
-  ctx.shadowBlur = 30;
+  ctx.shadowBlur = 40;
   ctx.shadowColor = "#ff4444";
   ctx.fill();
 
