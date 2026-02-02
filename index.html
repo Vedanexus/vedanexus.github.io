@@ -11,14 +11,10 @@ html, body {
   padding: 0;
   overflow: hidden;
 }
-
-/* BACKGROUND IMAGE */
 body {
   background: url("bg.jpg") no-repeat center center fixed;
   background-size: cover;
 }
-
-/* DARK VIGNETTE OVERLAY */
 body::after {
   content: "";
   position: fixed;
@@ -30,8 +26,6 @@ body::after {
   );
   pointer-events: none;
 }
-
-/* CANVAS */
 canvas {
   position: fixed;
   inset: 0;
@@ -43,7 +37,6 @@ canvas {
 
 <canvas id="game"></canvas>
 
-<!-- AUDIO -->
 <audio id="music" src="music.mp3" loop preload="auto" playsinline></audio>
 <audio id="hit" src="hit.mp3" preload="auto" playsinline></audio>
 
@@ -60,11 +53,9 @@ window.addEventListener("resize", resize);
 resize();
 
 /* IMAGES */
-const heroImg = new Image();
-heroImg.src = "hero.png";
-
-const enemyImg = new Image();
-enemyImg.src = "enemy.png";
+const heroImg = new Image(); heroImg.src = "hero.png";
+const enemyImg = new Image(); enemyImg.src = "enemy.png";
+const bulletImg = new Image(); bulletImg.src = "bullet.png"; // optional
 
 /* AUDIO */
 const music = document.getElementById("music");
@@ -81,32 +72,32 @@ const player = {
 
 /* GAME STATE */
 let enemies = [];
+let bullets = [];
 let speed = 3;
 let score = 0;
 let gameOver = false;
-
-/* INPUT */
 let dragging = false;
 
-/* START MUSIC ON FIRST TAP (MOBILE SAFE) */
+/* START MUSIC */
 function startMusic(){
   if(musicStarted) return;
-
   music.muted = true;
-  music.play().then(() => {
-    setTimeout(() => {
+  music.play().then(()=>{
+    setTimeout(()=>{
       music.muted = false;
       music.volume = 0.35;
-    }, 300);
+    },300);
     musicStarted = true;
   }).catch(()=>{});
 }
 
+/* INPUT */
 document.addEventListener("pointerdown", e => {
   startMusic();
 
   if(gameOver){
     enemies = [];
+    bullets = [];
     speed = 3;
     score = 0;
     gameOver = false;
@@ -115,6 +106,15 @@ document.addEventListener("pointerdown", e => {
 
   dragging = true;
   player.x = e.clientX - player.w/2;
+
+  // 🔫 SHOOT
+  bullets.push({
+    x: player.x + player.w/2 - 6,
+    y: player.y,
+    w: 12,
+    h: 20,
+    speed: 10
+  });
 });
 
 document.addEventListener("pointermove", e => {
@@ -122,7 +122,7 @@ document.addEventListener("pointermove", e => {
     player.x = e.clientX - player.w/2;
   }
 });
-document.addEventListener("pointerup", () => dragging = false);
+document.addEventListener("pointerup", ()=> dragging = false);
 
 /* SPAWN ENEMY */
 function spawnEnemy(){
@@ -138,13 +138,29 @@ function spawnEnemy(){
 function update(){
   if(gameOver) return;
 
-  if(Math.random() < 0.03){
-    spawnEnemy();
-  }
+  if(Math.random() < 0.03) spawnEnemy();
 
+  enemies.forEach(en => en.y += speed);
+  bullets.forEach(b => b.y -= b.speed);
+
+  // COLLISIONS
+  bullets.forEach((b, bi) => {
+    enemies.forEach((en, ei) => {
+      if(
+        b.x < en.x + en.w &&
+        b.x + b.w > en.x &&
+        b.y < en.y + en.h &&
+        b.y + b.h > en.y
+      ){
+        enemies.splice(ei,1);
+        bullets.splice(bi,1);
+        score += 50;
+      }
+    });
+  });
+
+  // ENEMY HIT HERO
   enemies.forEach(en => {
-    en.y += speed;
-
     if(
       player.x < en.x + en.w &&
       player.x + player.w > en.x &&
@@ -158,6 +174,8 @@ function update(){
   });
 
   enemies = enemies.filter(e => e.y < H + 200);
+  bullets = bullets.filter(b => b.y > -50);
+
   speed += 0.002;
   score++;
 }
@@ -166,7 +184,7 @@ function update(){
 function draw(){
   ctx.clearRect(0,0,W,H);
 
-  /* 🔦 HERO SPOTLIGHT */
+  // HERO SPOTLIGHT
   const g = ctx.createRadialGradient(
     player.x + player.w/2,
     player.y + player.h,
@@ -175,37 +193,36 @@ function draw(){
     player.y + player.h,
     140
   );
-  g.addColorStop(0, "rgba(255,255,255,0.18)");
-  g.addColorStop(1, "rgba(255,255,255,0)");
+  g.addColorStop(0,"rgba(255,255,255,0.18)");
+  g.addColorStop(1,"rgba(255,255,255,0)");
   ctx.fillStyle = g;
   ctx.beginPath();
-  ctx.arc(
-    player.x + player.w/2,
-    player.y + player.h,
-    140,
-    0,
-    Math.PI * 2
-  );
+  ctx.arc(player.x + player.w/2, player.y + player.h, 140, 0, Math.PI*2);
   ctx.fill();
 
-  /* ENEMIES (RED AURA) */
-  enemies.forEach(en => {
+  // BULLETS
+  bullets.forEach(b=>{
+    ctx.fillStyle = "rgba(180,220,255,0.9)";
+    ctx.fillRect(b.x, b.y, b.w, b.h);
+  });
+
+  // ENEMIES
+  enemies.forEach(en=>{
     ctx.shadowBlur = 35;
     ctx.shadowColor = "rgba(255,0,0,0.9)";
     ctx.drawImage(enemyImg, en.x, en.y, en.w, en.h);
   });
 
-  /* HERO (WHITE RIM LIGHT) */
+  // HERO
   ctx.shadowBlur = 25;
   ctx.shadowColor = "rgba(255,255,255,0.85)";
   ctx.drawImage(heroImg, player.x, player.y, player.w, player.h);
-
   ctx.shadowBlur = 0;
 
-  /* UI */
+  // UI
   ctx.fillStyle = "white";
   ctx.font = "16px system-ui";
-  ctx.fillText("Survival: " + score, 12, 22);
+  ctx.fillText("Score: " + score, 12, 22);
 
   if(gameOver){
     ctx.fillText("YOU WERE CONSUMED", W/2 - 90, H/2);
