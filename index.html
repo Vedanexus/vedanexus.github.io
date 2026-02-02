@@ -92,9 +92,12 @@ function resetGame() {
   score = 0;
   speed = 3;
   targetHeight = 80;
-  markerY = 20;
-  direction = 1;
   targetY = H * 0.65;
+
+  // START BALL INSIDE TARGET (VERY IMPORTANT)
+  markerY = targetY + targetHeight / 2;
+  direction = 1;
+
   playing = true;
   overlay.style.display = "none";
   document.getElementById("score").textContent = "Score: 0";
