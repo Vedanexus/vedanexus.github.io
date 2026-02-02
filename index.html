@@ -79,12 +79,15 @@ let keys = {};
 window.addEventListener("keydown", e => keys[e.key] = true);
 window.addEventListener("keyup", e => keys[e.key] = false);
 
-canvas.addEventListener("touchstart", () => {
-  if(gameOver){
+document.addEventListener("pointerdown", (e) => {
+  // restart
+  if (gameOver) {
     initGame();
     return;
   }
-  if(hero.onGround){
+
+  // jump
+  if (hero.onGround) {
     hero.vy = JUMP;
     hero.onGround = false;
   }
