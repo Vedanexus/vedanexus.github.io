@@ -44,8 +44,8 @@ canvas {
 <canvas id="game"></canvas>
 
 <!-- AUDIO -->
-<audio id="music" src="music.mp3" loop></audio>
-<audio id="hit" src="hit.mp3"></audio>
+<audio id="music" src="music.mp3" loop preload="auto" playsinline></audio>
+<audio id="hit" src="hit.mp3" preload="auto" playsinline></audio>
 
 <script>
 const canvas = document.getElementById("game");
@@ -62,14 +62,30 @@ resize();
 /* LOAD IMAGES */
 const heroImg = new Image();
 heroImg.src = "hero.png";
-
 const enemyImg = new Image();
 enemyImg.src = "enemy.png";
 
-/* AUDIO */
+/* AUDIO ELEMENTS */
 const music = document.getElementById("music");
 const hit = document.getElementById("hit");
-let soundStarted = false;
+
+/* 🔓 AUDIO CONTEXT (MOBILE FIX) */
+let audioCtx = null;
+let soundUnlocked = false;
+
+function unlockAudio(){
+  if(soundUnlocked) return;
+
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const source = audioCtx.createMediaElementSource(music);
+  source.connect(audioCtx.destination);
+
+  audioCtx.resume().then(() => {
+    music.volume = 0.4;
+    music.play().catch(()=>{});
+    soundUnlocked = true;
+  });
+}
 
 /* PLAYER */
 const player = {
@@ -85,17 +101,13 @@ let speed = 3;
 let score = 0;
 let gameOver = false;
 
-/* INPUT + SOUND START */
+/* INPUT */
 let dragging = false;
 
 document.addEventListener("pointerdown", e => {
 
-  // 🔊 START SOUND ON FIRST TAP
-  if(!soundStarted){
-    music.volume = 0.4;
-    music.play().catch(()=>{});
-    soundStarted = true;
-  }
+  // 🔊 UNLOCK AUDIO (CRITICAL FOR MOBILE)
+  unlockAudio();
 
   // 🔁 RESTART
   if(gameOver){
@@ -159,25 +171,16 @@ function update(){
 function draw(){
   ctx.clearRect(0,0,W,H);
 
-  // ENEMIES
   enemies.forEach(en => {
     if(enemyImg.complete){
       ctx.drawImage(enemyImg, en.x, en.y, en.w, en.h);
-    } else {
-      ctx.fillStyle = "red";
-      ctx.fillRect(en.x, en.y, en.w, en.h);
     }
   });
 
-  // PLAYER
   if(heroImg.complete){
     ctx.drawImage(heroImg, player.x, player.y, player.w, player.h);
-  } else {
-    ctx.fillStyle = "lime";
-    ctx.fillRect(player.x, player.y, player.w, player.h);
   }
 
-  // UI
   ctx.fillStyle = "white";
   ctx.font = "16px system-ui";
   ctx.fillText("Survival: " + score, 12, 22);
