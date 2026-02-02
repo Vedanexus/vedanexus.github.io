@@ -25,13 +25,15 @@ canvas{position:fixed;inset:0}
 
 <script>
 const c=document.getElementById("game"),x=c.getContext("2d");
-let W,H,shake=0,t=0;
+let W,H,shake=0;
 function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
 addEventListener("resize",resize);resize();
 
 /* ASSETS */
 const hero=new Image(); hero.src="hero.png";
 const enemyImg=new Image(); enemyImg.src="enemy.png";
+const bossImg=new Image(); bossImg.src="boss.png";
+
 const music=document.getElementById("music");
 const hit=document.getElementById("hit");
 
@@ -67,7 +69,11 @@ addEventListener("pointerup",()=>drag=false);
 
 /* SHOOT */
 function shoot(){
- bullets.push({x:player.x+player.w/2-4,y:player.y,w:8,h:16,v:rapidFire?14:10});
+ bullets.push({
+   x:player.x+player.w/2-4,
+   y:player.y,
+   w:8,h:16,v:rapidFire?14:10
+ });
 }
 
 /* SPAWN */
@@ -77,13 +83,19 @@ function spawnEnemy(){
 
 /* BOSS */
 function spawnBoss(){
- boss={x:W/2,y:-120,r:90,hp:30};
- shake=40; vibrate(200);
+ boss={
+   x:W/2-120,
+   y:-220,
+   w:240,
+   h:240,
+   hp:30
+ };
+ shake=40;
+ vibrate(200);
 }
 
 /* UPDATE */
 function update(){
- t++;
  if(gameOver) return;
 
  if(storyTimer>0){storyTimer--;return;}
@@ -94,59 +106,82 @@ function update(){
 
  enemies.forEach(e=>e.y+=speed);
  bullets.forEach(b=>b.y-=b.v);
- if(boss && boss.y<120) boss.y+=0.6;
+ if(boss && boss.y<60) boss.y+=0.6;
 
+ // BULLET HIT
  bullets.forEach((b,bi)=>{
   enemies.forEach((e,ei)=>{
    if(hitBox(b,e)){
-    enemies.splice(ei,1);bullets.splice(bi,1);
-    score+=50;vibrate(40);
+    enemies.splice(ei,1);
+    bullets.splice(bi,1);
+    score+=50;
+    vibrate(40);
    }
   });
-  if(boss && circleHit(b,boss)){
-   bullets.splice(bi,1);
-   boss.hp--; shake=10; vibrate(80);
-   if(boss.hp<=0){boss=null;score+=1200;}
+  if(boss && hitBox(b,boss)){
+    bullets.splice(bi,1);
+    boss.hp--;
+    shake=10;
+    vibrate(80);
+    if(boss.hp<=0){
+      boss=null;
+      score+=1200;
+    }
   }
  });
 
+ // ENEMY HIT PLAYER
  enemies.forEach(e=>{
   if(hitBox(player,e)){
-   if(player.shield){player.shield=false;e.y=H+200;}
-   else die();
+   if(player.shield){
+     player.shield=false;
+     e.y=H+200;
+   } else die();
   }
  });
 
- if(boss && circleHit(player,boss)){
-  if(player.shield){player.shield=false;}
+ if(boss && hitBox(player,boss)){
+  if(player.shield) player.shield=false;
   else die();
  }
 
  enemies=enemies.filter(e=>e.y<H+200);
  bullets=bullets.filter(b=>b.y>-50);
 
- speed+=.002; score++; if(rapidFire>0) rapidFire--;
+ speed+=.002;
+ score++;
+ if(rapidFire>0) rapidFire--;
 }
 
 /* DRAW */
 function draw(){
  x.setTransform(1,0,0,1,0,0);
- if(shake>0){x.translate(Math.random()*shake,Math.random()*shake);shake--}
+ if(shake>0){
+   x.translate(Math.random()*shake,Math.random()*shake);
+   shake--;
+ }
  x.clearRect(0,0,W,H);
 
+ // STORY
  if(storyTimer>0){
-  x.fillStyle="white";x.font="22px system-ui";
+  x.fillStyle="white";
+  x.font="22px system-ui";
   x.fillText("The forest remembers.",W/2-110,H/2-10);
   x.fillText("You should not be here.",W/2-130,H/2+20);
   return;
  }
 
  // HERO SPOTLIGHT
- let g=x.createRadialGradient(player.x+32,player.y+96,10,player.x+32,player.y+96,140);
+ let g=x.createRadialGradient(
+   player.x+32,player.y+96,10,
+   player.x+32,player.y+96,140
+ );
  g.addColorStop(0,"rgba(255,255,255,.18)");
  g.addColorStop(1,"rgba(255,255,255,0)");
- x.fillStyle=g;x.beginPath();
- x.arc(player.x+32,player.y+96,140,0,Math.PI*2);x.fill();
+ x.fillStyle=g;
+ x.beginPath();
+ x.arc(player.x+32,player.y+96,140,0,Math.PI*2);
+ x.fill();
 
  // BULLETS
  x.fillStyle="rgba(180,220,255,.9)";
@@ -154,41 +189,26 @@ function draw(){
 
  // ENEMIES
  enemies.forEach(e=>{
-  x.shadowBlur=30;x.shadowColor="red";
+  x.shadowBlur=30;
+  x.shadowColor="red";
   x.drawImage(enemyImg,e.x,e.y,e.w,e.h);
  });
 
- // 🧟 ORGANIC BOSS (NOT A BOX)
+ // 👹 BOSS IMAGE (NOT BOX)
  if(boss){
-  x.save();
-  x.translate(boss.x,boss.y);
-
-  x.shadowBlur=60;
+  x.shadowBlur=45;
   x.shadowColor="rgba(180,0,255,.9)";
-  x.fillStyle="rgba(90,0,120,.85)";
-
-  x.beginPath();
-  for(let i=0;i<8;i++){
-   let ang=(Math.PI*2/8)*i;
-   let rr=boss.r+Math.sin(t*0.1+i)*18;
-   let px=Math.cos(ang)*rr;
-   let py=Math.sin(ang)*rr;
-   i===0?x.moveTo(px,py):x.lineTo(px,py);
-  }
-  x.closePath(); x.fill();
-
-  // core
-  x.shadowBlur=25;
-  x.fillStyle="rgba(255,50,50,.9)";
-  x.beginPath();
-  x.arc(0,0,boss.r*0.35,0,Math.PI*2);
-  x.fill();
-
-  x.restore();
+  x.drawImage(bossImg,boss.x,boss.y,boss.w,boss.h);
 
   // HP BAR
+  x.shadowBlur=0;
   x.fillStyle="red";
-  x.fillRect(boss.x-boss.r,boss.y-boss.r-15,(boss.hp/30)*(boss.r*2),6);
+  x.fillRect(
+    boss.x,
+    boss.y-12,
+    boss.w*(boss.hp/30),
+    6
+  );
  }
 
  // HERO
@@ -198,7 +218,8 @@ function draw(){
  x.shadowBlur=0;
 
  // UI
- x.fillStyle="white";x.font="16px system-ui";
+ x.fillStyle="white";
+ x.font="16px system-ui";
  x.fillText("Score: "+score,12,22);
 
  if(gameOver){
@@ -209,29 +230,37 @@ function draw(){
 
 /* HELPERS */
 function hitBox(a,b){
- return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
-}
-function circleHit(a,b){
- let cx=b.x,cy=b.y;
- let ax=a.x+a.w/2,ay=a.y+a.h/2;
- return Math.hypot(ax-cx,ay-cy)<b.r;
+ return a.x<b.x+b.w && a.x+a.w>b.x &&
+        a.y<b.y+b.h && a.y+a.h>b.y;
 }
 function die(){
- hit.currentTime=0;hit.play();
- vibrate(200);shake=50;gameOver=true;
+ hit.currentTime=0;
+ hit.play().catch(()=>{});
+ vibrate(200);
+ shake=50;
+ gameOver=true;
 }
 function vibrate(ms){
  if(navigator.vibrate) navigator.vibrate(ms);
 }
 function reset(){
- enemies=[];bullets=[];
- boss=null;score=0;speed=3;
- gameOver=false;storyTimer=180;
- player.shield=false;rapidFire=0;
+ enemies=[];
+ bullets=[];
+ boss=null;
+ score=0;
+ speed=3;
+ gameOver=false;
+ storyTimer=180;
+ player.shield=false;
+ rapidFire=0;
 }
 
 /* LOOP */
-(function loop(){update();draw();requestAnimationFrame(loop)})();
+(function loop(){
+ update();
+ draw();
+ requestAnimationFrame(loop);
+})();
 </script>
 </body>
 </html>
