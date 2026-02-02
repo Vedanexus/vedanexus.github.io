@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Perfect Tap</title>
 
 <style>
@@ -41,8 +41,9 @@
     align-items: center;
     justify-content: center;
     font-size: 28px;
-    background: rgba(11,11,15,0.85);
+    background: rgba(11,11,15,0.9);
     cursor: pointer;
+    user-select: none;
   }
 </style>
 </head>
@@ -59,8 +60,10 @@
 <canvas id="game"></canvas>
 
 <script>
+/* ===== GAME SETUP ===== */
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
+const overlay = document.getElementById("overlay");
 
 let W, H;
 function resize() {
@@ -70,10 +73,11 @@ function resize() {
 window.addEventListener("resize", resize);
 resize();
 
-// GAME STATE
+/* ===== STATE ===== */
 let playing = false;
 let score = 0;
 let best = localStorage.getItem("bestScore") || 0;
+
 document.getElementById("best").textContent = "Best: " + best;
 
 let markerY = 0;
@@ -83,19 +87,20 @@ let direction = 1;
 let targetHeight = 80;
 let targetY = 0;
 
-// INIT ROUND
+/* ===== START / RESET ===== */
 function resetGame() {
   score = 0;
   speed = 3;
   targetHeight = 80;
-  markerY = 0;
+  markerY = 20;
   direction = 1;
   targetY = H * 0.65;
   playing = true;
-  document.getElementById("overlay").style.display = "none";
+  overlay.style.display = "none";
+  document.getElementById("score").textContent = "Score: 0";
 }
 
-// TAP HANDLER
+/* ===== TAP HANDLER ===== */
 function tap() {
   if (!playing) {
     resetGame();
@@ -107,7 +112,6 @@ function tap() {
   const bottom = targetY + targetHeight;
 
   if (center >= top && center <= bottom) {
-    // HIT
     const distance = Math.abs(center - (top + targetHeight / 2));
 
     if (distance < targetHeight * 0.15) {
@@ -120,9 +124,7 @@ function tap() {
 
     speed *= 1.05;
     targetHeight *= 0.97;
-
   } else {
-    // MISS
     playing = false;
     flash("#ff3b3b");
 
@@ -132,31 +134,37 @@ function tap() {
       document.getElementById("best").textContent = "Best: " + best;
     }
 
-    document.getElementById("overlay").textContent = "PLAY AGAIN";
-    document.getElementById("overlay").style.display = "flex";
+    overlay.textContent = "PLAY AGAIN";
+    overlay.style.display = "flex";
   }
 
   document.getElementById("score").textContent = "Score: " + score;
 }
 
+/* ===== INPUT ===== */
 canvas.addEventListener("click", tap);
 canvas.addEventListener("touchstart", tap);
 
-// FLASH EFFECT
+overlay.addEventListener("click", tap);
+overlay.addEventListener("touchstart", tap);
+
+/* ===== FEEDBACK ===== */
 function flash(color) {
-  canvas.style.background = color;
-  setTimeout(() => canvas.style.background = "#0b0b0f", 80);
+  document.body.style.background = color;
+  setTimeout(() => {
+    document.body.style.background = "#0b0b0f";
+  }, 80);
 }
 
-// GAME LOOP
+/* ===== GAME LOOP ===== */
 function loop() {
   ctx.clearRect(0, 0, W, H);
 
-  // TARGET ZONE
+  // Target zone
   ctx.fillStyle = "#00c8ff";
   ctx.fillRect(W * 0.25, targetY, W * 0.5, targetHeight);
 
-  // MARKER
+  // Marker
   ctx.beginPath();
   ctx.arc(W / 2, markerY, 14, 0, Math.PI * 2);
   ctx.fillStyle = "#ffffff";
