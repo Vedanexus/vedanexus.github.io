@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Ripple Satisfy</title>
+<title>Stack Drop</title>
 
 <style>
 html, body {
   margin: 0;
   padding: 0;
-  background: #050510;
+  background: linear-gradient(#0f0f1a, #050510);
   overflow: hidden;
   touch-action: manipulation;
+  font-family: system-ui, sans-serif;
 }
-canvas {
-  display: block;
-}
+canvas { display: block; }
 </style>
 </head>
 
@@ -34,42 +33,110 @@ function resize() {
 window.addEventListener("resize", resize);
 resize();
 
-let ripples = [];
+let blocks = [];
+let current;
+let speed = 2;
+let score = 0;
+let gameOver = false;
 
-canvas.addEventListener("pointerdown", e => {
-  ripples.push({
-    x: e.clientX,
-    y: e.clientY,
-    r: 0,
-    alpha: 1,
-    hue: Math.random() * 360
-  });
-});
-
-function draw() {
-  ctx.fillStyle = "rgba(5,5,16,0.25)";
-  ctx.fillRect(0, 0, W, H);
-
-  for (let i = ripples.length - 1; i >= 0; i--) {
-    const p = ripples[i];
-    p.r += 2.5;
-    p.alpha -= 0.008;
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.strokeStyle = `hsla(${p.hue},100%,65%,${p.alpha})`;
-    ctx.lineWidth = 3;
-    ctx.shadowBlur = 20;
-    ctx.shadowColor = `hsla(${p.hue},100%,65%,${p.alpha})`;
-    ctx.stroke();
-
-    if (p.alpha <= 0) ripples.splice(i, 1);
-  }
-
-  requestAnimationFrame(draw);
+function startGame() {
+  blocks = [{
+    x: W/2 - 60,
+    y: H - 60,
+    w: 120,
+    h: 30,
+    color: randomColor()
+  }];
+  current = spawnBlock();
+  score = 0;
+  speed = 2;
+  gameOver = false;
 }
 
-draw();
+function spawnBlock() {
+  return {
+    x: 0,
+    y: blocks[blocks.length-1].y - 35,
+    w: blocks[blocks.length-1].w,
+    h: 30,
+    dir: 1,
+    color: randomColor()
+  };
+}
+
+function randomColor() {
+  const hues = [200, 260, 320, 140, 30];
+  return `hsl(${hues[Math.floor(Math.random()*hues.length)]},80%,60%)`;
+}
+
+canvas.addEventListener("click", drop);
+canvas.addEventListener("touchstart", drop);
+
+function drop() {
+  if (gameOver) {
+    startGame();
+    return;
+  }
+
+  const last = blocks[blocks.length-1];
+  const overlap =
+    Math.min(current.x + current.w, last.x + last.w) -
+    Math.max(current.x, last.x);
+
+  if (overlap <= 0) {
+    gameOver = true;
+    return;
+  }
+
+  const cut = current.w - overlap;
+  current.x = Math.max(current.x, last.x);
+  current.w = overlap;
+
+  blocks.push({
+    x: current.x,
+    y: current.y,
+    w: current.w,
+    h: current.h,
+    color: current.color
+  });
+
+  score++;
+  speed += 0.15;
+
+  current = spawnBlock();
+}
+
+function drawBlock(b) {
+  ctx.fillStyle = b.color;
+  ctx.fillRect(b.x, b.y, b.w, b.h);
+}
+
+function loop() {
+  ctx.clearRect(0,0,W,H);
+
+  for (let b of blocks) drawBlock(b);
+
+  if (!gameOver) {
+    current.x += speed * current.dir;
+    if (current.x <= 0 || current.x + current.w >= W) {
+      current.dir *= -1;
+    }
+    drawBlock(current);
+  }
+
+  ctx.fillStyle = "#fff";
+  ctx.font = "16px system-ui";
+  ctx.fillText("Score: " + score, 10, 24);
+
+  if (gameOver) {
+    ctx.fillText("TAP TO RESTART", W/2 - 60, H/2);
+  }
+
+  requestAnimationFrame(loop);
+}
+
+startGame();
+loop();
 </script>
 </body>
 </html>
