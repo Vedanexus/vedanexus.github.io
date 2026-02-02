@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Dark Dodge</title>
+<title>Dark Forest Dodge</title>
 
 <style>
 html, body {
@@ -11,21 +11,27 @@ html, body {
   padding: 0;
   overflow: hidden;
 }
+
+/* BACKGROUND IMAGE */
 body {
   background: url("bg.jpg") no-repeat center center fixed;
   background-size: cover;
 }
+
+/* DARK VIGNETTE OVERLAY */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   background: radial-gradient(
     circle at center,
-    rgba(0,0,0,0.25),
-    rgba(0,0,0,0.75)
+    rgba(0,0,0,0.15),
+    rgba(0,0,0,0.85)
   );
   pointer-events: none;
 }
+
+/* CANVAS */
 canvas {
   position: fixed;
   inset: 0;
@@ -56,19 +62,19 @@ resize();
 /* IMAGES */
 const heroImg = new Image();
 heroImg.src = "hero.png";
+
 const enemyImg = new Image();
 enemyImg.src = "enemy.png";
 
 /* AUDIO */
 const music = document.getElementById("music");
 const hit = document.getElementById("hit");
-
 let musicStarted = false;
 
 /* PLAYER */
 const player = {
   x: W/2 - 32,
-  y: H - 140,
+  y: H - 150,
   w: 64,
   h: 96
 };
@@ -82,27 +88,22 @@ let gameOver = false;
 /* INPUT */
 let dragging = false;
 
-/* 🔊 START MUSIC — MOBILE SAFE */
+/* START MUSIC ON FIRST TAP (MOBILE SAFE) */
 function startMusic(){
   if(musicStarted) return;
 
-  // STEP 1: play muted
   music.muted = true;
   music.play().then(() => {
-
-    // STEP 2: unmute after play starts
     setTimeout(() => {
       music.muted = false;
       music.volume = 0.35;
     }, 300);
-
     musicStarted = true;
   }).catch(()=>{});
 }
 
 document.addEventListener("pointerdown", e => {
-
-  startMusic(); // 🔥 critical
+  startMusic();
 
   if(gameOver){
     enemies = [];
@@ -126,10 +127,10 @@ document.addEventListener("pointerup", () => dragging = false);
 /* SPAWN ENEMY */
 function spawnEnemy(){
   enemies.push({
-    x: Math.random() * (W - 60),
+    x: Math.random() * (W - 70),
     y: -120,
-    w: 60,
-    h: 80
+    w: 70,
+    h: 90
   });
 }
 
@@ -165,22 +166,50 @@ function update(){
 function draw(){
   ctx.clearRect(0,0,W,H);
 
+  /* 🔦 HERO SPOTLIGHT */
+  const g = ctx.createRadialGradient(
+    player.x + player.w/2,
+    player.y + player.h,
+    10,
+    player.x + player.w/2,
+    player.y + player.h,
+    140
+  );
+  g.addColorStop(0, "rgba(255,255,255,0.18)");
+  g.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(
+    player.x + player.w/2,
+    player.y + player.h,
+    140,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
+
+  /* ENEMIES (RED AURA) */
   enemies.forEach(en => {
-    if(enemyImg.complete){
-      ctx.drawImage(enemyImg, en.x, en.y, en.w, en.h);
-    }
+    ctx.shadowBlur = 35;
+    ctx.shadowColor = "rgba(255,0,0,0.9)";
+    ctx.drawImage(enemyImg, en.x, en.y, en.w, en.h);
   });
 
-  if(heroImg.complete){
-    ctx.drawImage(heroImg, player.x, player.y, player.w, player.h);
-  }
+  /* HERO (WHITE RIM LIGHT) */
+  ctx.shadowBlur = 25;
+  ctx.shadowColor = "rgba(255,255,255,0.85)";
+  ctx.drawImage(heroImg, player.x, player.y, player.w, player.h);
 
+  ctx.shadowBlur = 0;
+
+  /* UI */
   ctx.fillStyle = "white";
   ctx.font = "16px system-ui";
   ctx.fillText("Survival: " + score, 12, 22);
 
   if(gameOver){
-    ctx.fillText("GAME OVER - TAP TO RESTART", W/2 - 120, H/2);
+    ctx.fillText("YOU WERE CONSUMED", W/2 - 90, H/2);
+    ctx.fillText("TAP TO TRY AGAIN", W/2 - 80, H/2 + 24);
   }
 }
 
