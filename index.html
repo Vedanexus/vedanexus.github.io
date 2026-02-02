@@ -1,82 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>VedaNexus – Save Time in Daily Life</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="A global guide for busy people to save time on daily tasks.">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no" />
+<title>Perfect Tap</title>
 
 <style>
-body{
-  margin:0;
-  font-family:Arial, Helvetica, sans-serif;
-  background:#f4f6fb;
-  color:#0f172a;
-}
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #0b0b0f;
+    overflow: hidden;
+    touch-action: manipulation;
+    font-family: system-ui, sans-serif;
+    color: #ffffff;
+  }
 
-header{
-  background:
-    linear-gradient(rgba(15,23,42,0.75),rgba(15,23,42,0.75)),
-    url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80");
-  background-size:cover;
-  background-position:center;
-  color:#fff;
-  padding:90px 20px;
-  text-align:center;
-}
+  canvas {
+    display: block;
+  }
 
-header h1{
-  font-size:36px;
-  margin-bottom:16px;
-}
+  .hud {
+    position: fixed;
+    top: 12px;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    opacity: 0.9;
+    pointer-events: none;
+  }
 
-header p{
-  font-size:18px;
-  max-width:800px;
-  margin:auto;
-  line-height:1.6;
-}
+  .hud span {
+    margin: 0 12px;
+  }
 
-.primary-btn{
-  display:inline-block;
-  background:#facc15;
-  color:#000;
-  padding:16px 28px;
-  border-radius:10px;
-  font-weight:700;
-  text-decoration:none;
-  margin-top:30px;
-}
-
-.secondary-link{
-  display:block;
-  margin-top:18px;
-  color:#c7d2fe;
-  text-decoration:underline;
-  font-size:15px;
-}
+  .overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    background: rgba(11,11,15,0.85);
+    cursor: pointer;
+  }
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>Are you wasting time on daily tasks?</h1>
+<div class="hud">
+  <span id="score">Score: 0</span>
+  <span id="best">Best: 0</span>
+</div>
 
-  <p>
-    VedaNexus is a global guide for busy people who want to avoid
-    wasting time by going to the wrong places for everyday work
-    like laundry, documents, repairs, and errands.
-  </p>
+<div class="overlay" id="overlay">TAP TO PLAY</div>
 
-  <a class="primary-btn" href="busy-people.html">
-    Understand where busy people get stuck
-  </a>
+<canvas id="game"></canvas>
 
-  <a class="secondary-link" href="indore.html">
-    See how this works in a real city
-  </a>
-</header>
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+let W, H;
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resize);
+resize();
+
+// GAME STATE
+let playing = false;
+let score = 0;
+let best = localStorage.getItem("bestScore") || 0;
+document.getElementById("best").textContent = "Best: " + best;
+
+let markerY = 0;
+let speed = 3;
+let direction = 1;
+
+let targetHeight = 80;
+let targetY = 0;
+
+// INIT ROUND
+function resetGame() {
+  score = 0;
+  speed = 3;
+  targetHeight = 80;
+  markerY = 0;
+  direction = 1;
+  targetY = H * 0.65;
+  playing = true;
+  document.getElementById("overlay").style.display = "none";
+}
+
+// TAP HANDLER
+function tap() {
+  if (!playing) {
+    resetGame();
+    return;
+  }
+
+  const center = markerY;
+  const top = targetY;
+  const bottom = targetY + targetHeight;
+
+  if (center >= top && center <= bottom) {
+    // HIT
+    const distance = Math.abs(center - (top + targetHeight / 2));
+
+    if (distance < targetHeight * 0.15) {
+      score += 10;
+      flash("#00ff9c");
+    } else {
+      score += 5;
+      flash("#ffd000");
+    }
+
+    speed *= 1.05;
+    targetHeight *= 0.97;
+
+  } else {
+    // MISS
+    playing = false;
+    flash("#ff3b3b");
+
+    if (score > best) {
+      best = score;
+      localStorage.setItem("bestScore", best);
+      document.getElementById("best").textContent = "Best: " + best;
+    }
+
+    document.getElementById("overlay").textContent = "PLAY AGAIN";
+    document.getElementById("overlay").style.display = "flex";
+  }
+
+  document.getElementById("score").textContent = "Score: " + score;
+}
+
+canvas.addEventListener("click", tap);
+canvas.addEventListener("touchstart", tap);
+
+// FLASH EFFECT
+function flash(color) {
+  canvas.style.background = color;
+  setTimeout(() => canvas.style.background = "#0b0b0f", 80);
+}
+
+// GAME LOOP
+function loop() {
+  ctx.clearRect(0, 0, W, H);
+
+  // TARGET ZONE
+  ctx.fillStyle = "#00c8ff";
+  ctx.fillRect(W * 0.25, targetY, W * 0.5, targetHeight);
+
+  // MARKER
+  ctx.beginPath();
+  ctx.arc(W / 2, markerY, 14, 0, Math.PI * 2);
+  ctx.fillStyle = "#ffffff";
+  ctx.fill();
+
+  if (playing) {
+    markerY += speed * direction;
+    if (markerY > H - 20 || markerY < 20) {
+      direction *= -1;
+    }
+  }
+
+  requestAnimationFrame(loop);
+}
+
+loop();
+</script>
 
 </body>
 </html>
