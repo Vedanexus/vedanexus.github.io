@@ -7,14 +7,11 @@
 
 <style>
 html,body{margin:0;padding:0;overflow:hidden}
-body{
-  background:url("bg.jpg") center/cover fixed no-repeat;
-}
+body{background:url("bg.jpg") center/cover fixed no-repeat}
 body::after{
-  content:"";
-  position:fixed;inset:0;
-  background:radial-gradient(circle,rgba(0,0,0,.15),rgba(0,0,0,.85));
-  pointer-events:none;
+ content:"";position:fixed;inset:0;
+ background:radial-gradient(circle,rgba(0,0,0,.15),rgba(0,0,0,.85));
+ pointer-events:none;
 }
 canvas{position:fixed;inset:0}
 </style>
@@ -28,7 +25,7 @@ canvas{position:fixed;inset:0}
 
 <script>
 const c=document.getElementById("game"),x=c.getContext("2d");
-let W,H,shake=0;
+let W,H,shake=0,t=0;
 function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
 addEventListener("resize",resize);resize();
 
@@ -77,21 +74,16 @@ function shoot(){
 function spawnEnemy(){
  enemies.push({x:Math.random()*(W-70),y:-100,w:70,h:90});
 }
-function spawnPower(){
- powerups.push({
-   x:Math.random()*(W-40),y:-50,type:Math.random()<.5?"rapid":"shield"
- });
-}
 
 /* BOSS */
 function spawnBoss(){
- boss={x:W/2-100,y:-200,w:200,h:200,hp:20};
- shake=30;
- vibrate(200);
+ boss={x:W/2,y:-120,r:90,hp:30};
+ shake=40; vibrate(200);
 }
 
 /* UPDATE */
 function update(){
+ t++;
  if(gameOver) return;
 
  if(storyTimer>0){storyTimer--;return;}
@@ -99,14 +91,11 @@ function update(){
  if(!boss && score>1500) spawnBoss();
 
  if(Math.random()<.03 && !boss) spawnEnemy();
- if(Math.random()<.005) spawnPower();
 
  enemies.forEach(e=>e.y+=speed);
  bullets.forEach(b=>b.y-=b.v);
- powerups.forEach(p=>p.y+=3);
- if(boss && boss.y<50) boss.y+=1;
+ if(boss && boss.y<120) boss.y+=0.6;
 
- // BULLET HIT
  bullets.forEach((b,bi)=>{
   enemies.forEach((e,ei)=>{
    if(hitBox(b,e)){
@@ -114,39 +103,27 @@ function update(){
     score+=50;vibrate(40);
    }
   });
-  if(boss && hitBox(b,boss)){
-    bullets.splice(bi,1);
-    boss.hp--;shake=10;vibrate(80);
-    if(boss.hp<=0){boss=null;score+=1000;}
+  if(boss && circleHit(b,boss)){
+   bullets.splice(bi,1);
+   boss.hp--; shake=10; vibrate(80);
+   if(boss.hp<=0){boss=null;score+=1200;}
   }
  });
 
- // POWERUP PICK
- powerups.forEach((p,pi)=>{
-  if(hitBox(player,p)){
-   if(p.type==="rapid") rapidFire=300;
-   if(p.type==="shield") player.shield=true;
-   powerups.splice(pi,1);
-   vibrate(60);
-  }
- });
-
- // ENEMY HIT PLAYER
  enemies.forEach(e=>{
   if(hitBox(player,e)){
-   if(player.shield){player.shield=false;e.y=H+100;}
-   else{die();}
+   if(player.shield){player.shield=false;e.y=H+200;}
+   else die();
   }
  });
 
- if(boss && hitBox(player,boss)){
+ if(boss && circleHit(player,boss)){
   if(player.shield){player.shield=false;}
   else die();
  }
 
  enemies=enemies.filter(e=>e.y<H+200);
  bullets=bullets.filter(b=>b.y>-50);
- powerups=powerups.filter(p=>p.y<H+50);
 
  speed+=.002; score++; if(rapidFire>0) rapidFire--;
 }
@@ -157,7 +134,6 @@ function draw(){
  if(shake>0){x.translate(Math.random()*shake,Math.random()*shake);shake--}
  x.clearRect(0,0,W,H);
 
- // STORY
  if(storyTimer>0){
   x.fillStyle="white";x.font="22px system-ui";
   x.fillText("The forest remembers.",W/2-110,H/2-10);
@@ -165,7 +141,7 @@ function draw(){
   return;
  }
 
- // SPOTLIGHT
+ // HERO SPOTLIGHT
  let g=x.createRadialGradient(player.x+32,player.y+96,10,player.x+32,player.y+96,140);
  g.addColorStop(0,"rgba(255,255,255,.18)");
  g.addColorStop(1,"rgba(255,255,255,0)");
@@ -176,25 +152,43 @@ function draw(){
  x.fillStyle="rgba(180,220,255,.9)";
  bullets.forEach(b=>x.fillRect(b.x,b.y,b.w,b.h));
 
- // POWERUPS
- powerups.forEach(p=>{
-  x.fillStyle=p.type==="rapid"?"cyan":"lime";
-  x.fillRect(p.x,p.y,30,30);
- });
-
  // ENEMIES
  enemies.forEach(e=>{
   x.shadowBlur=30;x.shadowColor="red";
   x.drawImage(enemyImg,e.x,e.y,e.w,e.h);
  });
 
- // BOSS
+ // 🧟 ORGANIC BOSS (NOT A BOX)
  if(boss){
-  x.shadowBlur=40;x.shadowColor="purple";
-  x.fillStyle="rgba(120,0,120,.8)";
-  x.fillRect(boss.x,boss.y,boss.w,boss.h);
+  x.save();
+  x.translate(boss.x,boss.y);
+
+  x.shadowBlur=60;
+  x.shadowColor="rgba(180,0,255,.9)";
+  x.fillStyle="rgba(90,0,120,.85)";
+
+  x.beginPath();
+  for(let i=0;i<8;i++){
+   let ang=(Math.PI*2/8)*i;
+   let rr=boss.r+Math.sin(t*0.1+i)*18;
+   let px=Math.cos(ang)*rr;
+   let py=Math.sin(ang)*rr;
+   i===0?x.moveTo(px,py):x.lineTo(px,py);
+  }
+  x.closePath(); x.fill();
+
+  // core
+  x.shadowBlur=25;
+  x.fillStyle="rgba(255,50,50,.9)";
+  x.beginPath();
+  x.arc(0,0,boss.r*0.35,0,Math.PI*2);
+  x.fill();
+
+  x.restore();
+
+  // HP BAR
   x.fillStyle="red";
-  x.fillRect(boss.x,boss.y-10,boss.w*(boss.hp/20),6);
+  x.fillRect(boss.x-boss.r,boss.y-boss.r-15,(boss.hp/30)*(boss.r*2),6);
  }
 
  // HERO
@@ -206,7 +200,6 @@ function draw(){
  // UI
  x.fillStyle="white";x.font="16px system-ui";
  x.fillText("Score: "+score,12,22);
- if(rapidFire) x.fillText("RAPID FIRE",12,42);
 
  if(gameOver){
   x.fillText("THE FOREST TOOK YOU",W/2-120,H/2);
@@ -218,15 +211,20 @@ function draw(){
 function hitBox(a,b){
  return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 }
+function circleHit(a,b){
+ let cx=b.x,cy=b.y;
+ let ax=a.x+a.w/2,ay=a.y+a.h/2;
+ return Math.hypot(ax-cx,ay-cy)<b.r;
+}
 function die(){
  hit.currentTime=0;hit.play();
- vibrate(200);shake=40;gameOver=true;
+ vibrate(200);shake=50;gameOver=true;
 }
 function vibrate(ms){
  if(navigator.vibrate) navigator.vibrate(ms);
 }
 function reset(){
- enemies=[];bullets=[];powerups=[];
+ enemies=[];bullets=[];
  boss=null;score=0;speed=3;
  gameOver=false;storyTimer=180;
  player.shield=false;rapidFire=0;
