@@ -61,14 +61,15 @@ function startMusic(){
 let highScore=Number(localStorage.getItem("highScore")||0);
 
 /* ===== STATE ===== */
-let player={x:W/2-32,y:H-150,w:64,h:96,shield:false};
+let player={x:W/2-32,y:H-150,w:64,h:96};
 let enemies=[],bullets=[],bossBullets=[];
 let boss=null;
 let score=0,level=1,speed=3;
+let nextBossLevel=3;
 let gameOver=false,paused=false;
 let dragging=false;
 let specialCharge=0,specialReady=true;
-let storyTimer=160;
+let storyTimer=120;
 
 /* ===== INPUT ===== */
 addEventListener("pointerdown",e=>{
@@ -92,26 +93,18 @@ addEventListener("pointermove",e=>{
 });
 
 /* ===== PAUSE ===== */
-document.getElementById("pauseBtn").onclick=()=>{
-  paused=!paused;
-};
+document.getElementById("pauseBtn").onclick=()=>paused=!paused;
 
 /* ===== SHOOT ===== */
 function shoot(){
   bullets.push({x:player.x+30,y:player.y,w:6,h:14,v:10});
 }
 
-/* ===== SPECIAL ATTACK ===== */
+/* ===== SPECIAL ===== */
 function fireSpecial(){
-  bullets.push({
-    x:player.x-40,
-    y:player.y-200,
-    w:120,h:400,
-    v:0,
-    special:true
-  });
+  bullets.push({x:player.x-40,y:player.y-200,w:120,h:400,v:0,special:true});
   specialReady=false;
-  setTimeout(()=>specialReady=true,8000); // cooldown
+  setTimeout(()=>specialReady=true,8000);
 }
 
 /* ===== SPAWN ===== */
@@ -119,11 +112,8 @@ function spawnEnemy(){
   enemies.push({x:Math.random()*(W-70),y:-100,w:70,h:90});
 }
 function spawnBoss(){
-  boss={
-    x:W/2-120,y:40,w:240,h:240,
-    hp:50,dir:1,phase:1
-  };
-  shake=40; vibrate(200);
+  boss={x:W/2-120,y:40,w:240,h:240,hp:50,dir:1,phase:1};
+  shake=40;
 }
 
 /* ===== UPDATE ===== */
@@ -131,38 +121,35 @@ function update(){
   if(paused||gameOver) return;
   if(storyTimer>0){storyTimer--;return;}
 
-  level=Math.floor(score/900)+1;
-  speed=3+level*0.4;
+  level=Math.floor(score/800)+1;
+  speed=3+level*0.3;
 
-  if(!boss && score>1200*level) spawnBoss();
+  if(!boss && level>=nextBossLevel){
+    spawnBoss();
+    nextBossLevel+=3;
+  }
+
   if(!boss && Math.random()<.03) spawnEnemy();
 
   enemies.forEach(e=>e.y+=speed);
   bullets.forEach(b=>b.y-=b.v);
 
-  /* Boss movement */
   if(boss){
     boss.x+=boss.dir*(boss.phase===2?3:2);
     if(boss.x<20||boss.x+boss.w>W-20) boss.dir*=-1;
     if(boss.hp<25) boss.phase=2;
-  }
-
-  /* Boss shooting */
-  if(boss && Math.random()<(boss.phase===2?.04:.02)){
-    bossBullets.push({
-      x:boss.x+boss.w/2-6,
-      y:boss.y+boss.h,
-      w:12,h:18,v: boss.phase===2?8:5
-    });
+    if(Math.random()<(boss.phase===2?.04:.02)){
+      bossBullets.push({x:boss.x+boss.w/2-6,y:boss.y+boss.h,w:12,h:18,v: boss.phase===2?8:5});
+    }
   }
 
   bossBullets.forEach(b=>b.y+=b.v);
 
-  /* Collisions */
   bullets.forEach((b,bi)=>{
     enemies.forEach((e,ei)=>{
       if(hitBox(b,e)){
-        enemies.splice(ei,1);bullets.splice(bi,1);
+        enemies.splice(ei,1);
+        bullets.splice(bi,1);
         score+=50;
       }
     });
@@ -173,13 +160,8 @@ function update(){
     }
   });
 
-  bossBullets.forEach(b=>{
-    if(hitBox(player,b)) die();
-  });
-
-  enemies.forEach(e=>{
-    if(hitBox(player,e)) die();
-  });
+  enemies.forEach(e=>{ if(hitBox(player,e)) die(); });
+  bossBullets.forEach(b=>{ if(hitBox(player,b)) die(); });
 
   enemies=enemies.filter(e=>e.y<H+200);
   bullets=bullets.filter(b=>b.y>-500);
@@ -193,13 +175,6 @@ function draw(){
   ctx.setTransform(1,0,0,1,0,0);
   if(shake>0){ctx.translate(Math.random()*shake,Math.random()*shake);shake--}
   ctx.clearRect(0,0,W,H);
-
-  if(storyTimer>0){
-    ctx.fillStyle="white";
-    ctx.font="22px system-ui";
-    ctx.fillText("The forest remembers.",W/2-110,H/2);
-    return;
-  }
 
   bullets.forEach(b=>{
     ctx.fillStyle=b.special?"rgba(0,255,255,.4)":"rgba(180,220,255,.9)";
@@ -232,12 +207,8 @@ function draw(){
   ctx.fillStyle="white";
   ctx.font="16px system-ui";
   ctx.fillText("Score: "+score,12,22);
-  ctx.fillText("High: "+highScore,12,42);
-  ctx.fillText("Level: "+level,12,62);
+  ctx.fillText("Level: "+level,12,42);
 
-  if(paused){
-    ctx.fillText("PAUSED",W/2-30,H/2);
-  }
   if(gameOver){
     ctx.fillText("YOU DIED",W/2-40,H/2);
     ctx.fillText("TAP TO RESTART",W/2-70,H/2+24);
@@ -254,25 +225,18 @@ function die(){
     highScore=score;
     localStorage.setItem("highScore",highScore);
   }
-  vibrate(200);
   shake=40;
   gameOver=true;
-}
-function vibrate(ms){
-  if(navigator.vibrate) navigator.vibrate(ms);
 }
 function reset(){
   enemies=[];bullets=[];bossBullets=[];
   boss=null;score=0;level=1;
+  nextBossLevel=3;
   gameOver=false;storyTimer=120;
 }
 
 /* ===== LOOP ===== */
-(function loop(){
-  update();
-  draw();
-  requestAnimationFrame(loop);
-})();
+(function loop(){update();draw();requestAnimationFrame(loop)})();
 </script>
 </body>
 </html>
