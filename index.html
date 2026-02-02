@@ -59,33 +59,16 @@ function resize(){
 window.addEventListener("resize", resize);
 resize();
 
-/* LOAD IMAGES */
+/* IMAGES */
 const heroImg = new Image();
 heroImg.src = "hero.png";
 const enemyImg = new Image();
 enemyImg.src = "enemy.png";
 
-/* AUDIO ELEMENTS */
+/* AUDIO */
 const music = document.getElementById("music");
 const hit = document.getElementById("hit");
-
-/* 🔓 AUDIO CONTEXT (MOBILE FIX) */
-let audioCtx = null;
-let soundUnlocked = false;
-
-function unlockAudio(){
-  if(soundUnlocked) return;
-
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const source = audioCtx.createMediaElementSource(music);
-  source.connect(audioCtx.destination);
-
-  audioCtx.resume().then(() => {
-    music.volume = 0.4;
-    music.play().catch(()=>{});
-    soundUnlocked = true;
-  });
-}
+let musicStarted = false;
 
 /* PLAYER */
 const player = {
@@ -104,12 +87,19 @@ let gameOver = false;
 /* INPUT */
 let dragging = false;
 
+/* 🔹 START MUSIC (FIRST USER TAP ONLY) */
+function startMusic(){
+  if(musicStarted) return;
+  music.volume = 0.4;
+  music.play().catch(()=>{});
+  musicStarted = true;
+}
+
+/* POINTER EVENTS */
 document.addEventListener("pointerdown", e => {
 
-  // 🔊 UNLOCK AUDIO (CRITICAL FOR MOBILE)
-  unlockAudio();
+  startMusic(); // 🔊 always try to start music first
 
-  // 🔁 RESTART
   if(gameOver){
     enemies = [];
     speed = 3;
@@ -127,7 +117,10 @@ document.addEventListener("pointermove", e => {
     player.x = e.clientX - player.w/2;
   }
 });
-document.addEventListener("pointerup", () => dragging = false);
+
+document.addEventListener("pointerup", () => {
+  dragging = false;
+});
 
 /* SPAWN ENEMY */
 function spawnEnemy(){
