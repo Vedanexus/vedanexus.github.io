@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -10,16 +10,28 @@ html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: black;
 }
-video {
+
+/* BACKGROUND IMAGE */
+body {
+  background: url("bg.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* DARK OVERLAY (for cinematic feel) */
+body::after {
+  content: "";
   position: fixed;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -2;
+  background: radial-gradient(
+    circle at center,
+    rgba(0,0,0,0.2),
+    rgba(0,0,0,0.7)
+  );
+  pointer-events: none;
 }
+
+/* GAME CANVAS */
 canvas {
   position: fixed;
   inset: 0;
@@ -29,42 +41,34 @@ canvas {
 
 <body>
 
-<!-- REAL VIDEO BACKGROUND -->
-<video id="bg" autoplay muted loop playsinline>
-  <source src="bg.mp4" type="video/mp4">
-</video>
-
 <canvas id="game"></canvas>
-
-<!-- REAL AUDIO -->
-<audio id="music" src="music.mp3" loop></audio>
-<audio id="hit" src="hit.mp3"></audio>
 
 <script>
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-let W = canvas.width = innerWidth;
-let H = canvas.height = innerHeight;
-onresize = () => {
-  W = canvas.width = innerWidth;
-  H = canvas.height = innerHeight;
-};
+let W, H;
+function resize(){
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resize);
+resize();
 
-/* LOAD REAL IMAGES */
+/* LOAD IMAGES */
 const heroImg = new Image();
 heroImg.src = "hero.png";
 
 const enemyImg = new Image();
 enemyImg.src = "enemy.png";
 
-/* SOUND */
-const music = document.getElementById("music");
-const hit = document.getElementById("hit");
-let soundStarted = false;
-
 /* PLAYER */
-const player = { x: W/2, y: H-120, w: 50, h: 80 };
+const player = {
+  x: W/2 - 32,
+  y: H - 140,
+  w: 64,
+  h: 96
+};
 
 /* ENEMIES */
 let enemies = [];
@@ -76,81 +80,93 @@ let gameOver = false;
 let dragging = false;
 
 document.addEventListener("pointerdown", e => {
-  if (!soundStarted) {
-    music.volume = 0.4;
-    music.play().catch(()=>{});
-    soundStarted = true;
-  }
-
-  if (gameOver) {
+  if(gameOver){
     enemies = [];
     speed = 3;
     score = 0;
     gameOver = false;
     return;
   }
-
   dragging = true;
   player.x = e.clientX - player.w/2;
 });
 
 document.addEventListener("pointermove", e => {
-  if (dragging) player.x = e.clientX - player.w/2;
+  if(dragging){
+    player.x = e.clientX - player.w/2;
+  }
 });
 document.addEventListener("pointerup", () => dragging = false);
 
-/* SPAWN */
+/* SPAWN ENEMY */
 function spawnEnemy(){
   enemies.push({
-    x: Math.random()*(W-60),
+    x: Math.random() * (W - 60),
     y: -100,
     w: 60,
     h: 80
   });
 }
 
-/* LOOP */
+/* UPDATE */
 function update(){
-  if (gameOver) return;
+  if(gameOver) return;
 
-  if (Math.random() < 0.03) spawnEnemy();
+  if(Math.random() < 0.03){
+    spawnEnemy();
+  }
 
   enemies.forEach(en => {
     en.y += speed;
 
-    if (
+    if(
       player.x < en.x + en.w &&
       player.x + player.w > en.x &&
       player.y < en.y + en.h &&
       player.y + player.h > en.y
-    ) {
-      hit.play().catch(()=>{});
+    ){
       gameOver = true;
     }
   });
 
-  enemies = enemies.filter(e => e.y < H+200);
+  enemies = enemies.filter(e => e.y < H + 200);
   speed += 0.002;
   score++;
 }
 
+/* DRAW */
 function draw(){
   ctx.clearRect(0,0,W,H);
 
+  // enemies
   enemies.forEach(en => {
-    ctx.drawImage(enemyImg, en.x, en.y, en.w, en.h);
+    if(enemyImg.complete){
+      ctx.drawImage(enemyImg, en.x, en.y, en.w, en.h);
+    } else {
+      ctx.fillStyle = "red";
+      ctx.fillRect(en.x, en.y, en.w, en.h);
+    }
   });
 
-  ctx.drawImage(heroImg, player.x, player.y, player.w, player.h);
+  // player
+  if(heroImg.complete){
+    ctx.drawImage(heroImg, player.x, player.y, player.w, player.h);
+  } else {
+    ctx.fillStyle = "lime";
+    ctx.fillRect(player.x, player.y, player.w, player.h);
+  }
 
+  // UI
   ctx.fillStyle = "white";
-  ctx.fillText("Survival: "+score, 10, 20);
+  ctx.font = "16px system-ui";
+  ctx.fillText("Survival: " + score, 12, 22);
 
-  if (gameOver) {
-    ctx.fillText("GAME OVER - TAP TO RESTART", W/2-120, H/2);
+  if(gameOver){
+    ctx.fillText("GAME OVER - TAP TO RESTART", W/2 - 120, H/2);
   }
 }
 
+/* LOOP */
 function loop(){
   update();
   draw();
@@ -158,5 +174,6 @@ function loop(){
 }
 loop();
 </script>
+
 </body>
 </html>
