@@ -3,16 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Color Merge</title>
+<title>Flow Orbs</title>
 
 <style>
 html, body {
   margin: 0;
   padding: 0;
-  background: radial-gradient(circle at top, #1b1f3b, #090b18);
+  background: radial-gradient(circle at top, #0f2027, #000);
   overflow: hidden;
-  touch-action: manipulation;
-  font-family: system-ui, sans-serif;
+  touch-action: none;
 }
 
 canvas {
@@ -36,92 +35,103 @@ function resize() {
 window.addEventListener("resize", resize);
 resize();
 
-const COLORS = ["#ff4d6d", "#ffd166", "#4cc9f0", "#9b5de5", "#06d6a0"];
-const R = 22;
-const GAP = 6;
-const COLS = Math.floor(W / (R * 2 + GAP));
-const ROWS = Math.floor(H / (R * 2 + GAP));
+const COLORS = ["#00f5d4", "#ff4d6d", "#ffd166", "#9b5de5"];
+const ORB_RADIUS = 20;
+const ORB_COUNT = 25;
 
-let grid = [];
+let orbs = [];
+let chain = [];
+let currentColor = null;
+let drawing = false;
+let score = 0;
 
-function initGrid() {
-  grid = [];
-  for (let r = 0; r < ROWS; r++) {
-    let row = [];
-    for (let c = 0; c < COLS; c++) {
-      row.push({
-        color: COLORS[Math.floor(Math.random() * COLORS.length)],
-        alive: true
-      });
-    }
-    grid.push(row);
+function createOrb() {
+  return {
+    x: Math.random() * W,
+    y: Math.random() * H,
+    r: ORB_RADIUS,
+    color: COLORS[Math.floor(Math.random() * COLORS.length)]
+  };
+}
+
+function init() {
+  orbs = [];
+  for (let i = 0; i < ORB_COUNT; i++) {
+    orbs.push(createOrb());
+  }
+}
+init();
+
+function drawOrbs() {
+  for (let o of orbs) {
+    ctx.beginPath();
+    ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
+    ctx.fillStyle = o.color;
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = o.color;
+    ctx.fill();
   }
 }
 
-initGrid();
-
-function draw() {
-  ctx.clearRect(0, 0, W, H);
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      const cell = grid[r][c];
-      if (!cell.alive) continue;
-      const x = c * (R * 2 + GAP) + R + GAP;
-      const y = r * (R * 2 + GAP) + R + GAP;
-      ctx.beginPath();
-      ctx.arc(x, y, R, 0, Math.PI * 2);
-      ctx.fillStyle = cell.color;
-      ctx.fill();
-    }
-  }
+function drawChain() {
+  if (chain.length < 2) return;
+  ctx.beginPath();
+  ctx.moveTo(chain[0].x, chain[0].y);
+  for (let p of chain) ctx.lineTo(p.x, p.y);
+  ctx.strokeStyle = currentColor;
+  ctx.lineWidth = 6;
+  ctx.lineCap = "round";
+  ctx.shadowBlur = 15;
+  ctx.shadowColor = currentColor;
+  ctx.stroke();
 }
 
-function getCellAt(x, y) {
-  const c = Math.floor(x / (R * 2 + GAP));
-  const r = Math.floor(y / (R * 2 + GAP));
-  if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return null;
-  return { r, c };
+function getOrbAt(x, y) {
+  return orbs.find(o => Math.hypot(o.x - x, o.y - y) < o.r);
 }
 
-function floodFill(r, c, color, visited = {}) {
-  const key = r + "," + c;
-  if (visited[key]) return [];
-  visited[key] = true;
-
-  const cell = grid[r][c];
-  if (!cell || !cell.alive || cell.color !== color) return [];
-
-  let cells = [{ r, c }];
-  const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
-
-  for (let [dr, dc] of dirs) {
-    const nr = r + dr, nc = c + dc;
-    if (grid[nr] && grid[nr][nc]) {
-      cells = cells.concat(floodFill(nr, nc, color, visited));
-    }
-  }
-  return cells;
-}
-
-canvas.addEventListener("click", e => {
-  const rect = canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  const cellPos = getCellAt(x, y);
-  if (!cellPos) return;
-
-  const { r, c } = cellPos;
-  const cell = grid[r][c];
-  if (!cell || !cell.alive) return;
-
-  const cluster = floodFill(r, c, cell.color);
-  if (cluster.length < 3) return;
-
-  cluster.forEach(p => grid[p.r][p.c].alive = false);
+canvas.addEventListener("pointerdown", e => {
+  const orb = getOrbAt(e.clientX, e.clientY);
+  if (!orb) return;
+  drawing = true;
+  chain = [orb];
+  currentColor = orb.color;
 });
 
+canvas.addEventListener("pointermove", e => {
+  if (!drawing) return;
+  const orb = getOrbAt(e.clientX, e.clientY);
+  if (!orb) return;
+  if (orb.color !== currentColor) return;
+  if (chain.includes(orb)) return;
+  const last = chain[chain.length - 1];
+  if (Math.hypot(orb.x - last.x, orb.y - last.y) < 50) {
+    chain.push(orb);
+  }
+});
+
+canvas.addEventListener("pointerup", () => {
+  if (chain.length >= 2) {
+    score += chain.length * 10;
+    orbs = orbs.filter(o => !chain.includes(o));
+    while (orbs.length < ORB_COUNT) orbs.push(createOrb());
+  }
+  chain = [];
+  drawing = false;
+  currentColor = null;
+});
+
+function drawScore() {
+  ctx.fillStyle = "#fff";
+  ctx.font = "16px system-ui";
+  ctx.fillText("Score: " + score, 12, 24);
+}
+
 function loop() {
-  draw();
+  ctx.clearRect(0, 0, W, H);
+  drawOrbs();
+  drawChain();
+  drawScore();
   requestAnimationFrame(loop);
 }
 
