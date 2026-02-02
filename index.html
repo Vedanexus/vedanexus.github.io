@@ -3,15 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Mini Platformer</title>
+<title>Dodge Rush</title>
 
 <style>
 html, body {
   margin: 0;
   padding: 0;
+  background: radial-gradient(circle at top, #0f2027, #000);
   overflow: hidden;
-  background: linear-gradient(#87ceeb, #e0f7ff);
   touch-action: none;
+  font-family: system-ui, sans-serif;
 }
 canvas { display: block; }
 </style>
@@ -32,151 +33,109 @@ function resize(){
 window.addEventListener("resize", resize);
 resize();
 
-/* ===== CONSTANTS ===== */
-const GRAVITY = 0.8;
-const JUMP = -14;
-const SPEED = 4;
+/* ===== PLAYER ===== */
+const player = {
+  x: W/2,
+  y: H - 80,
+  r: 14
+};
 
-/* ===== GAME STATE ===== */
-let hero, platforms, coins, camX, score, gameOver;
-
-/* ===== INIT ===== */
-function initGame(){
-  camX = 0;
-  score = 0;
-  gameOver = false;
-
-  hero = {
-    x: 50,
-    y: H - 120,   // HARD SAFE SPAWN
-    w: 32,
-    h: 40,
-    vx: 0,
-    vy: 0,
-    onGround: true
-  };
-
-  platforms = [
-    {x: 0,   y: H-80, w: 3000, h: 80},
-    {x: 300, y: H-180, w: 140, h: 20},
-    {x: 650, y: H-240, w: 140, h: 20},
-    {x: 1000,y: H-200, w: 160, h: 20},
-    {x: 1400,y: H-260, w: 160, h: 20}
-  ];
-
-  coins = [
-    {x: 330, y: H-210},
-    {x: 680, y: H-270},
-    {x: 1030,y: H-230},
-    {x: 1430,y: H-290}
-  ];
-}
-
-initGame();
+/* ===== BLOCKS ===== */
+let blocks = [];
+let speed = 3;
+let score = 0;
+let gameOver = false;
 
 /* ===== INPUT ===== */
-let keys = {};
-window.addEventListener("keydown", e => keys[e.key] = true);
-window.addEventListener("keyup", e => keys[e.key] = false);
+let dragging = false;
 
-document.addEventListener("pointerdown", (e) => {
-  // restart
-  if (gameOver) {
-    initGame();
+document.addEventListener("pointerdown", e => {
+  if(gameOver){
+    restart();
     return;
   }
+  dragging = true;
+  player.x = e.clientX;
+});
 
-  // jump
-  if (hero.onGround) {
-    hero.vy = JUMP;
-    hero.onGround = false;
+document.addEventListener("pointermove", e => {
+  if(dragging){
+    player.x = e.clientX;
   }
 });
 
-/* ===== UPDATE ===== */
-function update(){
-  if(gameOver) return;
+document.addEventListener("pointerup", () => dragging = false);
 
-  // Horizontal
-  hero.vx = 0;
-  if(keys["ArrowRight"]) hero.vx = SPEED;
-  if(keys["ArrowLeft"]) hero.vx = -SPEED;
-  hero.x += hero.vx;
-
-  // Gravity
-  hero.vy += GRAVITY;
-  hero.y += hero.vy;
-  hero.onGround = false;
-
-  // Platform collision (simple + safe)
-  for(let p of platforms){
-    if(
-      hero.x < p.x + p.w &&
-      hero.x + hero.w > p.x &&
-      hero.y + hero.h > p.y &&
-      hero.y + hero.h - hero.vy <= p.y
-    ){
-      hero.y = p.y - hero.h;
-      hero.vy = 0;
-      hero.onGround = true;
-    }
-  }
-
-  // Camera follow
-  camX = hero.x - 100;
-
-  // Coins
-  coins = coins.filter(c => {
-    const hit =
-      hero.x < c.x + 16 &&
-      hero.x + hero.w > c.x &&
-      hero.y < c.y + 16 &&
-      hero.y + hero.h > c.y;
-    if(hit) score++;
-    return !hit;
+/* ===== SPAWN ===== */
+function spawnBlock(){
+  blocks.push({
+    x: Math.random() * (W-40),
+    y: -40,
+    w: 40,
+    h: 40
   });
-
-  // Fall death (ONLY when fully gone)
-  if(hero.y > H + 200){
-    gameOver = true;
-  }
 }
 
-/* ===== DRAW ===== */
-function draw(){
-  ctx.clearRect(0,0,W,H);
-  ctx.save();
-  ctx.translate(-camX,0);
-
-  // Platforms
-  ctx.fillStyle="#654321";
-  platforms.forEach(p => ctx.fillRect(p.x,p.y,p.w,p.h));
-
-  // Coins
-  ctx.fillStyle="gold";
-  coins.forEach(c => {
-    ctx.beginPath();
-    ctx.arc(c.x+8,c.y+8,8,0,Math.PI*2);
-    ctx.fill();
-  });
-
-  // Hero
-  ctx.fillStyle="#ff4757";
-  ctx.fillRect(hero.x,hero.y,hero.w,hero.h);
-
-  ctx.restore();
-
-  // UI
-  ctx.fillStyle="#000";
-  ctx.font="16px system-ui";
-  ctx.fillText("Coins: "+score,10,20);
-
-  if(gameOver){
-    ctx.fillText("GAME OVER - TAP TO RESTART",W/2-110,H/2);
-  }
+/* ===== RESTART ===== */
+function restart(){
+  blocks = [];
+  speed = 3;
+  score = 0;
+  gameOver = false;
 }
 
 /* ===== LOOP ===== */
+function update(){
+  if(gameOver) return;
+
+  if(Math.random() < 0.03){
+    spawnBlock();
+  }
+
+  for(let b of blocks){
+    b.y += speed;
+
+    // collision
+    if(
+      Math.hypot(player.x - (b.x+b.w/2), player.y - (b.y+b.h/2))
+      < player.r + 20
+    ){
+      gameOver = true;
+    }
+  }
+
+  blocks = blocks.filter(b => b.y < H+50);
+
+  speed += 0.002;
+  score++;
+}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+
+  // blocks
+  ctx.fillStyle = "#ff3b3b";
+  blocks.forEach(b => ctx.fillRect(b.x,b.y,b.w,b.h));
+
+  // player
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, player.r, 0, Math.PI*2);
+  ctx.fillStyle = "#00f5d4";
+  ctx.shadowBlur = 20;
+  ctx.shadowColor = "#00f5d4";
+  ctx.fill();
+
+  // score
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = "#fff";
+  ctx.font = "16px system-ui";
+  ctx.fillText("Score: "+score, 10, 20);
+
+  if(gameOver){
+    ctx.fillText("GAME OVER - TAP TO RESTART", W/2-120, H/2);
+  }
+}
+
 function loop(){
   update();
   draw();
