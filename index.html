@@ -3,16 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Runner Boy</title>
+<title>Mini Platformer</title>
 
 <style>
 html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: linear-gradient(#7ec8ff, #e0f7ff);
+  background: linear-gradient(#87ceeb, #e0f7ff);
   touch-action: none;
-  font-family: system-ui, sans-serif;
 }
 canvas { display: block; }
 </style>
@@ -34,58 +33,48 @@ window.addEventListener("resize", resize);
 resize();
 
 /* ===== CONSTANTS ===== */
-const GRAVITY = 0.6;
-let GROUND_Y;
+const GRAVITY = 0.8;
+const JUMP = -14;
+const SPEED = 4;
 
 /* ===== GAME STATE ===== */
-let hero, camX, platforms, coins, enemy, score, gameOver;
+let hero, platforms, coins, camX, score, gameOver;
 
-/* ===== INIT / RESTART ===== */
+/* ===== INIT ===== */
 function initGame(){
-  GROUND_Y = H - 80;
+  camX = 0;
+  score = 0;
+  gameOver = false;
 
   hero = {
     x: 50,
-    y: GROUND_Y - 40, // FIXED
-    w: 30,
+    y: H - 120,   // HARD SAFE SPAWN
+    w: 32,
     h: 40,
     vx: 0,
     vy: 0,
-    onGround: false
+    onGround: true
   };
 
-  camX = 0;
-
   platforms = [
-    {x:0, y:GROUND_Y, w:3000, h:80},
-    {x:300, y:GROUND_Y-120, w:120, h:20},
-    {x:600, y:GROUND_Y-180, w:120, h:20},
-    {x:900, y:GROUND_Y-140, w:120, h:20},
-    {x:1200, y:GROUND_Y-200, w:150, h:20}
+    {x: 0,   y: H-80, w: 3000, h: 80},
+    {x: 300, y: H-180, w: 140, h: 20},
+    {x: 650, y: H-240, w: 140, h: 20},
+    {x: 1000,y: H-200, w: 160, h: 20},
+    {x: 1400,y: H-260, w: 160, h: 20}
   ];
 
   coins = [
-    {x:330, y:GROUND_Y-160, r:10},
-    {x:630, y:GROUND_Y-220, r:10},
-    {x:930, y:GROUND_Y-180, r:10},
-    {x:1230, y:GROUND_Y-240, r:10}
+    {x: 330, y: H-210},
+    {x: 680, y: H-270},
+    {x: 1030,y: H-230},
+    {x: 1430,y: H-290}
   ];
-
-  enemy = {
-    x:800,
-    y:GROUND_Y-30,
-    w:30,
-    h:30,
-    dir:1
-  };
-
-  score = 0;
-  gameOver = false;
 }
 
 initGame();
 
-/* ===== CONTROLS ===== */
+/* ===== INPUT ===== */
 let keys = {};
 window.addEventListener("keydown", e => keys[e.key] = true);
 window.addEventListener("keyup", e => keys[e.key] = false);
@@ -95,13 +84,9 @@ canvas.addEventListener("touchstart", () => {
     initGame();
     return;
   }
-  if(hero.onGround) hero.vy = -12;
-});
-
-canvas.addEventListener("click", () => {
-  if(gameOver){
-    initGame();
-    return;
+  if(hero.onGround){
+    hero.vy = JUMP;
+    hero.onGround = false;
   }
 });
 
@@ -109,53 +94,49 @@ canvas.addEventListener("click", () => {
 function update(){
   if(gameOver) return;
 
-  // Movement
-  if(keys["ArrowRight"]) hero.vx = 4;
-  else if(keys["ArrowLeft"]) hero.vx = -4;
-  else hero.vx = 0;
-
+  // Horizontal
+  hero.vx = 0;
+  if(keys["ArrowRight"]) hero.vx = SPEED;
+  if(keys["ArrowLeft"]) hero.vx = -SPEED;
   hero.x += hero.vx;
+
+  // Gravity
   hero.vy += GRAVITY;
   hero.y += hero.vy;
-
   hero.onGround = false;
 
-  // Platform collision
+  // Platform collision (simple + safe)
   for(let p of platforms){
-    if(hero.x < p.x+p.w &&
-       hero.x+hero.w > p.x &&
-       hero.y+hero.h <= p.y &&
-       hero.y+hero.h+hero.vy >= p.y){
-        hero.y = p.y-hero.h;
-        hero.vy = 0;
-        hero.onGround = true;
+    if(
+      hero.x < p.x + p.w &&
+      hero.x + hero.w > p.x &&
+      hero.y + hero.h > p.y &&
+      hero.y + hero.h - hero.vy <= p.y
+    ){
+      hero.y = p.y - hero.h;
+      hero.vy = 0;
+      hero.onGround = true;
     }
   }
 
-  // Camera
+  // Camera follow
   camX = hero.x - 100;
-
-  // Enemy patrol
-  enemy.x += enemy.dir * 1.5;
-  if(enemy.x < 700 || enemy.x > 900) enemy.dir *= -1;
-
-  // Enemy collision
-  if(hero.x < enemy.x+enemy.w &&
-     hero.x+hero.w > enemy.x &&
-     hero.y < enemy.y+enemy.h &&
-     hero.y+hero.h > enemy.y){
-       gameOver = true;
-  }
 
   // Coins
   coins = coins.filter(c => {
-    const hit = Math.hypot(hero.x+hero.w/2-c.x, hero.y+hero.h/2-c.y) < 20;
+    const hit =
+      hero.x < c.x + 16 &&
+      hero.x + hero.w > c.x &&
+      hero.y < c.y + 16 &&
+      hero.y + hero.h > c.y;
     if(hit) score++;
     return !hit;
   });
 
-  // Fall death
-  if(hero.y > H) gameOver = true;
+  // Fall death (ONLY when fully gone)
+  if(hero.y > H + 200){
+    gameOver = true;
+  }
 }
 
 /* ===== DRAW ===== */
@@ -172,16 +153,12 @@ function draw(){
   ctx.fillStyle="gold";
   coins.forEach(c => {
     ctx.beginPath();
-    ctx.arc(c.x,c.y,c.r,0,Math.PI*2);
+    ctx.arc(c.x+8,c.y+8,8,0,Math.PI*2);
     ctx.fill();
   });
 
-  // Enemy
-  ctx.fillStyle="red";
-  ctx.fillRect(enemy.x,enemy.y,enemy.w,enemy.h);
-
   // Hero
-  ctx.fillStyle="#0066ff";
+  ctx.fillStyle="#ff4757";
   ctx.fillRect(hero.x,hero.y,hero.w,hero.h);
 
   ctx.restore();
