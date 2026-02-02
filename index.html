@@ -3,14 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Stack Hero</title>
+<title>Runner Boy</title>
 
 <style>
 html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  touch-action: manipulation;
+  background: linear-gradient(#7ec8ff, #e0f7ff);
+  touch-action: none;
   font-family: system-ui, sans-serif;
 }
 canvas { display: block; }
@@ -32,153 +33,160 @@ function resize(){
 window.addEventListener("resize", resize);
 resize();
 
-/* ===== BACKGROUND ===== */
-let bgShift = 0;
-function drawBackground(){
-  bgShift += 0.1;
-  const grad = ctx.createLinearGradient(0,0,0,H);
-  grad.addColorStop(0, `hsl(${220+bgShift},60%,30%)`);
-  grad.addColorStop(1, `hsl(${260+bgShift},60%,10%)`);
-  ctx.fillStyle = grad;
-  ctx.fillRect(0,0,W,H);
-}
-
-/* ===== GAME STATE ===== */
-let blocks = [];
-let current;
-let speed = 2;
-let score = 0;
-let gameOver = false;
+/* ===== WORLD ===== */
+const GRAVITY = 0.6;
+const GROUND_Y = H - 80;
 
 /* ===== HERO ===== */
 const hero = {
-  x: 0,
-  y: 0,
-  r: 12,
-  bounce: 0
+  x: 50,
+  y: GROUND_Y,
+  w: 30,
+  h: 40,
+  vx: 0,
+  vy: 0,
+  onGround: false
 };
 
-function drawHero(){
-  hero.bounce += 0.1;
-  const by = Math.sin(hero.bounce)*3;
+/* ===== CAMERA ===== */
+let camX = 0;
 
-  // head
-  ctx.beginPath();
-  ctx.arc(hero.x, hero.y-hero.r+by, hero.r, 0, Math.PI*2);
-  ctx.fillStyle = "#ffd166";
-  ctx.fill();
+/* ===== PLATFORMS ===== */
+const platforms = [
+  {x:0, y:GROUND_Y, w:2000, h:80},
+  {x:300, y:GROUND_Y-120, w:120, h:20},
+  {x:600, y:GROUND_Y-180, w:120, h:20},
+  {x:900, y:GROUND_Y-140, w:120, h:20},
+  {x:1200, y:GROUND_Y-200, w:150, h:20}
+];
 
-  // body
-  ctx.fillStyle = "#ffd166";
-  ctx.fillRect(hero.x-6, hero.y+by, 12, 18);
-}
+/* ===== COINS ===== */
+let coins = [
+  {x:330, y:GROUND_Y-160, r:10},
+  {x:630, y:GROUND_Y-220, r:10},
+  {x:930, y:GROUND_Y-180, r:10},
+  {x:1230, y:GROUND_Y-240, r:10}
+];
 
-/* ===== BLOCKS ===== */
-function randomColor(){
-  const hues=[180,210,260,320,140];
-  return `hsl(${hues[Math.floor(Math.random()*hues.length)]},80%,60%)`;
-}
+/* ===== ENEMY ===== */
+const enemy = {
+  x:800,
+  y:GROUND_Y-30,
+  w:30,
+  h:30,
+  dir:1
+};
 
-function startGame(){
-  blocks = [{
-    x: W/2-60,
-    y: H-80,
-    w: 120,
-    h: 30,
-    color: randomColor()
-  }];
-  score = 0;
-  speed = 2;
-  gameOver = false;
-  current = spawnBlock();
-}
+let score = 0;
+let gameOver = false;
 
-function spawnBlock(){
-  return {
-    x: 0,
-    y: blocks[blocks.length-1].y-40,
-    w: blocks[blocks.length-1].w,
-    h: 30,
-    dir: 1,
-    color: randomColor()
-  };
-}
+/* ===== CONTROLS ===== */
+let keys = {};
+window.addEventListener("keydown", e => keys[e.key] = true);
+window.addEventListener("keyup", e => keys[e.key] = false);
 
-canvas.addEventListener("click", drop);
-canvas.addEventListener("touchstart", drop);
+canvas.addEventListener("touchstart", () => {
+  if(hero.onGround) hero.vy = -12;
+});
 
-function drop(){
-  if(gameOver){
-    startGame();
-    return;
+/* ===== UPDATE ===== */
+function update(){
+  if(gameOver) return;
+
+  // Move
+  if(keys["ArrowRight"]) hero.vx = 4;
+  else if(keys["ArrowLeft"]) hero.vx = -4;
+  else hero.vx = 0;
+
+  hero.x += hero.vx;
+  hero.vy += GRAVITY;
+  hero.y += hero.vy;
+
+  hero.onGround = false;
+
+  // Platform collision
+  for(let p of platforms){
+    if(hero.x < p.x+p.w &&
+       hero.x+hero.w > p.x &&
+       hero.y+hero.h < p.y+20 &&
+       hero.y+hero.h+hero.vy >= p.y){
+        hero.y = p.y-hero.h;
+        hero.vy = 0;
+        hero.onGround = true;
+    }
   }
 
-  const last = blocks[blocks.length-1];
-  const overlap =
-    Math.min(current.x+current.w,last.x+last.w) -
-    Math.max(current.x,last.x);
+  // Camera follow
+  camX = hero.x - 100;
 
-  if(overlap<=0){
-    gameOver=true;
-    return;
+  // Enemy
+  enemy.x += enemy.dir * 1.5;
+  if(enemy.x < 700 || enemy.x > 900) enemy.dir *= -1;
+
+  // Enemy collision
+  if(hero.x < enemy.x+enemy.w &&
+     hero.x+hero.w > enemy.x &&
+     hero.y < enemy.y+enemy.h &&
+     hero.y+hero.h > enemy.y){
+       gameOver = true;
   }
 
-  current.x = Math.max(current.x,last.x);
-  current.w = overlap;
-
-  blocks.push({
-    x: current.x,
-    y: current.y,
-    w: current.w,
-    h: current.h,
-    color: current.color
+  // Coins
+  coins = coins.filter(c => {
+    const hit = Math.hypot(hero.x+hero.w/2-c.x, hero.y+hero.h/2-c.y) < 20;
+    if(hit) score++;
+    return !hit;
   });
 
-  score++;
-  speed += 0.15;
-  current = spawnBlock();
+  // Restart if fall
+  if(hero.y > H) gameOver = true;
 }
 
-function drawBlock(b){
-  ctx.fillStyle = b.color;
-  ctx.fillRect(b.x,b.y,b.w,b.h);
-  ctx.shadowBlur = 15;
-  ctx.shadowColor = b.color;
+/* ===== DRAW ===== */
+function draw(){
+  ctx.clearRect(0,0,W,H);
+
+  ctx.save();
+  ctx.translate(-camX,0);
+
+  // Platforms
+  ctx.fillStyle="#654321";
+  platforms.forEach(p => ctx.fillRect(p.x,p.y,p.w,p.h));
+
+  // Coins
+  ctx.fillStyle="gold";
+  coins.forEach(c => {
+    ctx.beginPath();
+    ctx.arc(c.x,c.y,c.r,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  // Enemy
+  ctx.fillStyle="red";
+  ctx.fillRect(enemy.x,enemy.y,enemy.w,enemy.h);
+
+  // Hero
+  ctx.fillStyle="#0066ff";
+  ctx.fillRect(hero.x,hero.y,hero.w,hero.h);
+
+  ctx.restore();
+
+  // UI
+  ctx.fillStyle="#000";
+  ctx.font="16px system-ui";
+  ctx.fillText("Coins: "+score,10,20);
+
+  if(gameOver){
+    ctx.fillText("GAME OVER - TAP / REFRESH",W/2-90,H/2);
+  }
 }
 
 /* ===== LOOP ===== */
 function loop(){
-  drawBackground();
-
-  blocks.forEach(drawBlock);
-
-  if(!gameOver){
-    current.x += speed*current.dir;
-    if(current.x<=0 || current.x+current.w>=W){
-      current.dir *= -1;
-    }
-    drawBlock(current);
-  }
-
-  // hero position
-  const top = blocks[blocks.length-1];
-  hero.x = top.x + top.w/2;
-  hero.y = top.y - 10;
-  drawHero();
-
-  // UI
-  ctx.fillStyle="#fff";
-  ctx.font="16px system-ui";
-  ctx.fillText("Score: "+score,12,24);
-
-  if(gameOver){
-    ctx.fillText("TAP TO RESTART",W/2-70,H/2);
-  }
-
+  update();
+  draw();
   requestAnimationFrame(loop);
 }
-
-startGame();
 loop();
 </script>
 </body>
