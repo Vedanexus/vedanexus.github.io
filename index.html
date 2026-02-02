@@ -11,14 +11,10 @@ html, body {
   padding: 0;
   overflow: hidden;
 }
-
-/* BACKGROUND IMAGE */
 body {
   background: url("bg.jpg") no-repeat center center fixed;
   background-size: cover;
 }
-
-/* DARK OVERLAY */
 body::after {
   content: "";
   position: fixed;
@@ -30,8 +26,6 @@ body::after {
   );
   pointer-events: none;
 }
-
-/* CANVAS */
 canvas {
   position: fixed;
   inset: 0;
@@ -68,6 +62,7 @@ enemyImg.src = "enemy.png";
 /* AUDIO */
 const music = document.getElementById("music");
 const hit = document.getElementById("hit");
+
 let musicStarted = false;
 
 /* PLAYER */
@@ -87,18 +82,27 @@ let gameOver = false;
 /* INPUT */
 let dragging = false;
 
-/* 🔹 START MUSIC (FIRST USER TAP ONLY) */
+/* 🔊 START MUSIC — MOBILE SAFE */
 function startMusic(){
   if(musicStarted) return;
-  music.volume = 0.4;
-  music.play().catch(()=>{});
-  musicStarted = true;
+
+  // STEP 1: play muted
+  music.muted = true;
+  music.play().then(() => {
+
+    // STEP 2: unmute after play starts
+    setTimeout(() => {
+      music.muted = false;
+      music.volume = 0.35;
+    }, 300);
+
+    musicStarted = true;
+  }).catch(()=>{});
 }
 
-/* POINTER EVENTS */
 document.addEventListener("pointerdown", e => {
 
-  startMusic(); // 🔊 always try to start music first
+  startMusic(); // 🔥 critical
 
   if(gameOver){
     enemies = [];
@@ -117,10 +121,7 @@ document.addEventListener("pointermove", e => {
     player.x = e.clientX - player.w/2;
   }
 });
-
-document.addEventListener("pointerup", () => {
-  dragging = false;
-});
+document.addEventListener("pointerup", () => dragging = false);
 
 /* SPAWN ENEMY */
 function spawnEnemy(){
