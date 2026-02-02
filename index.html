@@ -33,52 +33,57 @@ function resize(){
 window.addEventListener("resize", resize);
 resize();
 
-/* ===== WORLD ===== */
+/* ===== CONSTANTS ===== */
 const GRAVITY = 0.6;
-const GROUND_Y = H - 80;
+let GROUND_Y;
 
-/* ===== HERO ===== */
-const hero = {
-  x: 50,
-  y: GROUND_Y,
-  w: 30,
-  h: 40,
-  vx: 0,
-  vy: 0,
-  onGround: false
-};
+/* ===== GAME STATE ===== */
+let hero, camX, platforms, coins, enemy, score, gameOver;
 
-/* ===== CAMERA ===== */
-let camX = 0;
+/* ===== INIT / RESTART ===== */
+function initGame(){
+  GROUND_Y = H - 80;
 
-/* ===== PLATFORMS ===== */
-const platforms = [
-  {x:0, y:GROUND_Y, w:2000, h:80},
-  {x:300, y:GROUND_Y-120, w:120, h:20},
-  {x:600, y:GROUND_Y-180, w:120, h:20},
-  {x:900, y:GROUND_Y-140, w:120, h:20},
-  {x:1200, y:GROUND_Y-200, w:150, h:20}
-];
+  hero = {
+    x: 50,
+    y: GROUND_Y - 40, // FIXED
+    w: 30,
+    h: 40,
+    vx: 0,
+    vy: 0,
+    onGround: false
+  };
 
-/* ===== COINS ===== */
-let coins = [
-  {x:330, y:GROUND_Y-160, r:10},
-  {x:630, y:GROUND_Y-220, r:10},
-  {x:930, y:GROUND_Y-180, r:10},
-  {x:1230, y:GROUND_Y-240, r:10}
-];
+  camX = 0;
 
-/* ===== ENEMY ===== */
-const enemy = {
-  x:800,
-  y:GROUND_Y-30,
-  w:30,
-  h:30,
-  dir:1
-};
+  platforms = [
+    {x:0, y:GROUND_Y, w:3000, h:80},
+    {x:300, y:GROUND_Y-120, w:120, h:20},
+    {x:600, y:GROUND_Y-180, w:120, h:20},
+    {x:900, y:GROUND_Y-140, w:120, h:20},
+    {x:1200, y:GROUND_Y-200, w:150, h:20}
+  ];
 
-let score = 0;
-let gameOver = false;
+  coins = [
+    {x:330, y:GROUND_Y-160, r:10},
+    {x:630, y:GROUND_Y-220, r:10},
+    {x:930, y:GROUND_Y-180, r:10},
+    {x:1230, y:GROUND_Y-240, r:10}
+  ];
+
+  enemy = {
+    x:800,
+    y:GROUND_Y-30,
+    w:30,
+    h:30,
+    dir:1
+  };
+
+  score = 0;
+  gameOver = false;
+}
+
+initGame();
 
 /* ===== CONTROLS ===== */
 let keys = {};
@@ -86,14 +91,25 @@ window.addEventListener("keydown", e => keys[e.key] = true);
 window.addEventListener("keyup", e => keys[e.key] = false);
 
 canvas.addEventListener("touchstart", () => {
+  if(gameOver){
+    initGame();
+    return;
+  }
   if(hero.onGround) hero.vy = -12;
+});
+
+canvas.addEventListener("click", () => {
+  if(gameOver){
+    initGame();
+    return;
+  }
 });
 
 /* ===== UPDATE ===== */
 function update(){
   if(gameOver) return;
 
-  // Move
+  // Movement
   if(keys["ArrowRight"]) hero.vx = 4;
   else if(keys["ArrowLeft"]) hero.vx = -4;
   else hero.vx = 0;
@@ -108,7 +124,7 @@ function update(){
   for(let p of platforms){
     if(hero.x < p.x+p.w &&
        hero.x+hero.w > p.x &&
-       hero.y+hero.h < p.y+20 &&
+       hero.y+hero.h <= p.y &&
        hero.y+hero.h+hero.vy >= p.y){
         hero.y = p.y-hero.h;
         hero.vy = 0;
@@ -116,10 +132,10 @@ function update(){
     }
   }
 
-  // Camera follow
+  // Camera
   camX = hero.x - 100;
 
-  // Enemy
+  // Enemy patrol
   enemy.x += enemy.dir * 1.5;
   if(enemy.x < 700 || enemy.x > 900) enemy.dir *= -1;
 
@@ -138,14 +154,13 @@ function update(){
     return !hit;
   });
 
-  // Restart if fall
+  // Fall death
   if(hero.y > H) gameOver = true;
 }
 
 /* ===== DRAW ===== */
 function draw(){
   ctx.clearRect(0,0,W,H);
-
   ctx.save();
   ctx.translate(-camX,0);
 
@@ -177,7 +192,7 @@ function draw(){
   ctx.fillText("Coins: "+score,10,20);
 
   if(gameOver){
-    ctx.fillText("GAME OVER - TAP / REFRESH",W/2-90,H/2);
+    ctx.fillText("GAME OVER - TAP TO RESTART",W/2-110,H/2);
   }
 }
 
