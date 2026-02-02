@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Dark Forest Dodge</title>
+<title>Dark Forest Shooter</title>
 
 <style>
 html, body {
@@ -52,10 +52,9 @@ function resize(){
 window.addEventListener("resize", resize);
 resize();
 
-/* IMAGES */
+/* ASSETS */
 const heroImg = new Image(); heroImg.src = "hero.png";
 const enemyImg = new Image(); enemyImg.src = "enemy.png";
-const bulletImg = new Image(); bulletImg.src = "bullet.png"; // optional
 
 /* AUDIO */
 const music = document.getElementById("music");
@@ -63,14 +62,9 @@ const hit = document.getElementById("hit");
 let musicStarted = false;
 
 /* PLAYER */
-const player = {
-  x: W/2 - 32,
-  y: H - 150,
-  w: 64,
-  h: 96
-};
+const player = { x: W/2-32, y: H-150, w:64, h:96 };
 
-/* GAME STATE */
+/* STATE */
 let enemies = [];
 let bullets = [];
 let speed = 3;
@@ -78,7 +72,7 @@ let score = 0;
 let gameOver = false;
 let dragging = false;
 
-/* START MUSIC */
+/* START MUSIC (MOBILE SAFE) */
 function startMusic(){
   if(musicStarted) return;
   music.muted = true;
@@ -96,41 +90,33 @@ document.addEventListener("pointerdown", e => {
   startMusic();
 
   if(gameOver){
-    enemies = [];
-    bullets = [];
-    speed = 3;
-    score = 0;
-    gameOver = false;
+    enemies=[]; bullets=[];
+    speed=3; score=0;
+    gameOver=false;
     return;
   }
 
   dragging = true;
   player.x = e.clientX - player.w/2;
 
-  // 🔫 SHOOT
+  // SHOOT
   bullets.push({
-    x: player.x + player.w/2 - 6,
+    x: player.x + player.w/2 - 5,
     y: player.y,
-    w: 12,
-    h: 20,
-    speed: 10
+    w:10, h:20, v:10
   });
 });
-
-document.addEventListener("pointermove", e => {
-  if(dragging){
-    player.x = e.clientX - player.w/2;
-  }
+document.addEventListener("pointermove", e=>{
+  if(dragging) player.x = e.clientX - player.w/2;
 });
-document.addEventListener("pointerup", ()=> dragging = false);
+document.addEventListener("pointerup", ()=> dragging=false);
 
-/* SPAWN ENEMY */
+/* ENEMY */
 function spawnEnemy(){
   enemies.push({
-    x: Math.random() * (W - 70),
+    x: Math.random()*(W-70),
     y: -120,
-    w: 70,
-    h: 90
+    w:70, h:90
   });
 }
 
@@ -138,45 +124,37 @@ function spawnEnemy(){
 function update(){
   if(gameOver) return;
 
-  if(Math.random() < 0.03) spawnEnemy();
+  if(Math.random()<0.03) spawnEnemy();
 
-  enemies.forEach(en => en.y += speed);
-  bullets.forEach(b => b.y -= b.speed);
+  enemies.forEach(e=> e.y+=speed);
+  bullets.forEach(b=> b.y-=b.v);
 
-  // COLLISIONS
-  bullets.forEach((b, bi) => {
-    enemies.forEach((en, ei) => {
-      if(
-        b.x < en.x + en.w &&
-        b.x + b.w > en.x &&
-        b.y < en.y + en.h &&
-        b.y + b.h > en.y
-      ){
+  // BULLET HIT
+  bullets.forEach((b,bi)=>{
+    enemies.forEach((e,ei)=>{
+      if(b.x<e.x+e.w && b.x+b.w>e.x &&
+         b.y<e.y+e.h && b.y+b.h>e.y){
         enemies.splice(ei,1);
         bullets.splice(bi,1);
-        score += 50;
+        score+=50;
       }
     });
   });
 
   // ENEMY HIT HERO
-  enemies.forEach(en => {
-    if(
-      player.x < en.x + en.w &&
-      player.x + player.w > en.x &&
-      player.y < en.y + en.h &&
-      player.y + player.h > en.y
-    ){
-      hit.currentTime = 0;
+  enemies.forEach(e=>{
+    if(player.x<e.x+e.w && player.x+player.w>e.x &&
+       player.y<e.y+e.h && player.y+player.h>e.y){
+      hit.currentTime=0;
       hit.play().catch(()=>{});
-      gameOver = true;
+      gameOver=true;
     }
   });
 
-  enemies = enemies.filter(e => e.y < H + 200);
-  bullets = bullets.filter(b => b.y > -50);
+  enemies = enemies.filter(e=>e.y<H+200);
+  bullets = bullets.filter(b=>b.y>-50);
 
-  speed += 0.002;
+  speed+=0.002;
   score++;
 }
 
@@ -186,57 +164,50 @@ function draw(){
 
   // HERO SPOTLIGHT
   const g = ctx.createRadialGradient(
-    player.x + player.w/2,
-    player.y + player.h,
-    10,
-    player.x + player.w/2,
-    player.y + player.h,
-    140
+    player.x+player.w/2, player.y+player.h, 10,
+    player.x+player.w/2, player.y+player.h, 140
   );
   g.addColorStop(0,"rgba(255,255,255,0.18)");
   g.addColorStop(1,"rgba(255,255,255,0)");
-  ctx.fillStyle = g;
+  ctx.fillStyle=g;
   ctx.beginPath();
-  ctx.arc(player.x + player.w/2, player.y + player.h, 140, 0, Math.PI*2);
+  ctx.arc(player.x+player.w/2, player.y+player.h, 140,0,Math.PI*2);
   ctx.fill();
 
   // BULLETS
-  bullets.forEach(b=>{
-    ctx.fillStyle = "rgba(180,220,255,0.9)";
-    ctx.fillRect(b.x, b.y, b.w, b.h);
-  });
+  ctx.fillStyle="rgba(180,220,255,0.9)";
+  bullets.forEach(b=> ctx.fillRect(b.x,b.y,b.w,b.h));
 
   // ENEMIES
-  enemies.forEach(en=>{
-    ctx.shadowBlur = 35;
-    ctx.shadowColor = "rgba(255,0,0,0.9)";
-    ctx.drawImage(enemyImg, en.x, en.y, en.w, en.h);
+  enemies.forEach(e=>{
+    ctx.shadowBlur=35;
+    ctx.shadowColor="rgba(255,0,0,0.9)";
+    ctx.drawImage(enemyImg,e.x,e.y,e.w,e.h);
   });
 
   // HERO
-  ctx.shadowBlur = 25;
-  ctx.shadowColor = "rgba(255,255,255,0.85)";
-  ctx.drawImage(heroImg, player.x, player.y, player.w, player.h);
-  ctx.shadowBlur = 0;
+  ctx.shadowBlur=25;
+  ctx.shadowColor="rgba(255,255,255,0.85)";
+  ctx.drawImage(heroImg,player.x,player.y,player.w,player.h);
+  ctx.shadowBlur=0;
 
   // UI
-  ctx.fillStyle = "white";
-  ctx.font = "16px system-ui";
-  ctx.fillText("Score: " + score, 12, 22);
+  ctx.fillStyle="white";
+  ctx.font="16px system-ui";
+  ctx.fillText("Score: "+score,12,22);
 
   if(gameOver){
-    ctx.fillText("YOU WERE CONSUMED", W/2 - 90, H/2);
-    ctx.fillText("TAP TO TRY AGAIN", W/2 - 80, H/2 + 24);
+    ctx.fillText("YOU WERE CONSUMED",W/2-90,H/2);
+    ctx.fillText("TAP TO TRY AGAIN",W/2-80,H/2+24);
   }
 }
 
 /* LOOP */
-function loop(){
+(function loop(){
   update();
   draw();
   requestAnimationFrame(loop);
-}
-loop();
+})();
 </script>
 
 </body>
