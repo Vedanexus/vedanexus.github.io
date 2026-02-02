@@ -18,20 +18,20 @@ body {
   background-size: cover;
 }
 
-/* DARK OVERLAY (for cinematic feel) */
+/* DARK OVERLAY */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   background: radial-gradient(
     circle at center,
-    rgba(0,0,0,0.2),
-    rgba(0,0,0,0.7)
+    rgba(0,0,0,0.25),
+    rgba(0,0,0,0.75)
   );
   pointer-events: none;
 }
 
-/* GAME CANVAS */
+/* CANVAS */
 canvas {
   position: fixed;
   inset: 0;
@@ -42,6 +42,10 @@ canvas {
 <body>
 
 <canvas id="game"></canvas>
+
+<!-- AUDIO -->
+<audio id="music" src="music.mp3" loop></audio>
+<audio id="hit" src="hit.mp3"></audio>
 
 <script>
 const canvas = document.getElementById("game");
@@ -62,6 +66,11 @@ heroImg.src = "hero.png";
 const enemyImg = new Image();
 enemyImg.src = "enemy.png";
 
+/* AUDIO */
+const music = document.getElementById("music");
+const hit = document.getElementById("hit");
+let soundStarted = false;
+
 /* PLAYER */
 const player = {
   x: W/2 - 32,
@@ -70,16 +79,25 @@ const player = {
   h: 96
 };
 
-/* ENEMIES */
+/* GAME STATE */
 let enemies = [];
 let speed = 3;
 let score = 0;
 let gameOver = false;
 
-/* INPUT */
+/* INPUT + SOUND START */
 let dragging = false;
 
 document.addEventListener("pointerdown", e => {
+
+  // 🔊 START SOUND ON FIRST TAP
+  if(!soundStarted){
+    music.volume = 0.4;
+    music.play().catch(()=>{});
+    soundStarted = true;
+  }
+
+  // 🔁 RESTART
   if(gameOver){
     enemies = [];
     speed = 3;
@@ -87,6 +105,7 @@ document.addEventListener("pointerdown", e => {
     gameOver = false;
     return;
   }
+
   dragging = true;
   player.x = e.clientX - player.w/2;
 });
@@ -102,7 +121,7 @@ document.addEventListener("pointerup", () => dragging = false);
 function spawnEnemy(){
   enemies.push({
     x: Math.random() * (W - 60),
-    y: -100,
+    y: -120,
     w: 60,
     h: 80
   });
@@ -125,6 +144,8 @@ function update(){
       player.y < en.y + en.h &&
       player.y + player.h > en.y
     ){
+      hit.currentTime = 0;
+      hit.play().catch(()=>{});
       gameOver = true;
     }
   });
@@ -138,7 +159,7 @@ function update(){
 function draw(){
   ctx.clearRect(0,0,W,H);
 
-  // enemies
+  // ENEMIES
   enemies.forEach(en => {
     if(enemyImg.complete){
       ctx.drawImage(enemyImg, en.x, en.y, en.w, en.h);
@@ -148,7 +169,7 @@ function draw(){
     }
   });
 
-  // player
+  // PLAYER
   if(heroImg.complete){
     ctx.drawImage(heroImg, player.x, player.y, player.w, player.h);
   } else {
