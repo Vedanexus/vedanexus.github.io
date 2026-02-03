@@ -56,13 +56,14 @@ window.addEventListener("pointermove", e=>{
 });
 
 window.addEventListener("pointerdown", ()=>{
-  // agar game chal hi nahi raha
-  if(gameState !== "PLAY") return;
+  if(gameState === "WIN" || gameState === "OVER"){
+    restartGame();
+    return;
+  }
 
-  // agar bullets khatam ho gayi
   if(bulletsLeft <= 0) return;
 
-  bulletsLeft--; // 👈 ek bullet kam
+  bulletsLeft--;
 
   bullets.push({
     x: player.x + player.w/2 - 3,
