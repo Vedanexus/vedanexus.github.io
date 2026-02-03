@@ -159,11 +159,17 @@ function update(){
   }
 
   // level progression
-  if(level<=2 && enemies.length===0){
-    level++;
-    spawnLevel();
-    return;
-  }
+  if(level < 2 && enemies.length === 0){
+  level++;
+  spawnLevel();
+  return;
+}
+
+if(level === 2 && enemies.length === 0){
+  level = 3;
+  spawnLevel(); // boss spawn
+}
+
 
   // boss logic
   if(level===3 && boss){
