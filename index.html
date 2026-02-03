@@ -29,22 +29,19 @@ const ctx = canvas.getContext("2d");
 function resize(){
   const dpr = window.devicePixelRatio || 1;
 
-  const width = window.innerWidth;
-  const height = window.innerHeight;
+  screenW = window.innerWidth;
+  screenH = window.innerHeight;
 
-  canvas.width = width * dpr;
-  canvas.height = height * dpr;
+  canvas.width = screenW * dpr;
+  canvas.height = screenH * dpr;
 
-  canvas.style.width = width + "px";
-  canvas.style.height = height + "px";
+  canvas.style.width = screenW + "px";
+  canvas.style.height = screenH + "px";
 
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  // player ko visible area me rakho
-  if(typeof player !== "undefined"){
-    player.x = width / 2 - player.w / 2;
-    player.y = height - 80;
-  }
+  player.x = screenW / 2 - player.w / 2;
+  player.y = screenH - 80;
 }
 
 window.addEventListener("resize", resize);
