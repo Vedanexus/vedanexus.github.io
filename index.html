@@ -45,6 +45,9 @@ const player = {
 /* ===== ARRAYS ===== */
 let bullets = [];
 let enemies = [];
+let score = 0;
+let WIN_SCORE = 50;
+let gameState = "PLAY"; // PLAY | WIN | OVER
 
 /* ===== INPUT ===== */
 window.addEventListener("pointermove", e=>{
