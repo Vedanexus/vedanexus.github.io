@@ -102,6 +102,11 @@ window.addEventListener("pointerdown", e => {
   player.x = e.clientX - player.w / 2;
 });
 
+window.addEventListener("pointermove", e=>{
+  if(!isFiring) return;
+  player.x = e.clientX - player.w/2;
+});
+
 window.addEventListener("pointerup", ()=>{
   isFiring = false;
 });
