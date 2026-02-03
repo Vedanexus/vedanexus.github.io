@@ -152,7 +152,7 @@ function update(){
     if(p.life<=0) explosions.splice(k,1);
   }
 
-  /* BULLET vs ENEMY */
+    /* BULLET vs ENEMY */
   for(let i=bullets.length-1;i>=0;i--){
     for(let j=enemies.length-1;j>=0;j--){
       if(hit(bullets[i], enemies[j])){
@@ -160,4 +160,93 @@ function update(){
         const ex = enemies[j].x + enemies[j].w/2;
         const ey = enemies[j].y + enemies[j].h/2;
 
-        b
+        bullets.splice(i,1);
+        enemies.splice(j,1);
+        createExplosion(ex,ey);
+
+        score++;
+        if(score === 250) hintTimer = 120;
+
+        if(score >= WIN_SCORE){
+          gameState = "WIN";
+          player.alive = false;
+        }
+
+        if(Math.random() < 0.25){
+          bulletsLeft = Math.min(bulletsLeft + 1, 30);
+        }
+
+        break;
+      }
+    }
+  }
+
+  /* ENEMY vs PLAYER */
+  for(let e of enemies){
+    if(hit(e, player)){
+      player.alive = false;
+      gameState = "OVER";
+    }
+  }
+
+  bullets = bullets.filter(b=>b.y>-20);
+  enemies = enemies.filter(e=>e.y<screenH+40);
+}
+
+/* ===== DRAW ===== */
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  if(gameState==="WIN"){
+    ctx.fillStyle="#fff";
+    ctx.font="48px Arial";
+    ctx.textAlign="center";
+    ctx.fillText("IMPOSSIBLE…",screenW/2,screenH/2);
+    return;
+  }
+
+  if(gameState==="OVER"){
+    ctx.fillStyle="#fff";
+    ctx.font="48px Arial";
+    ctx.textAlign="center";
+    ctx.fillText("GAME OVER",screenW/2,screenH/2);
+    return;
+  }
+
+  ctx.fillStyle="#fff";
+  ctx.font="20px Arial";
+  ctx.textAlign="left";
+  ctx.fillText(`Score: ${score}/${WIN_SCORE}`,20,60);
+  ctx.fillText(`Bullets: ${bulletsLeft}`,20,90);
+
+  if(hintTimer>0){
+    ctx.textAlign="center";
+    ctx.font="24px Arial";
+    ctx.fillText("Almost there… stay sharp",screenW/2,120);
+    hintTimer--;
+  }
+
+  ctx.drawImage(heroImg,player.x,player.y,player.w,player.h);
+
+  ctx.fillStyle="yellow";
+  bullets.forEach(b=>ctx.fillRect(b.x,b.y,b.w,b.h));
+
+  explosions.forEach(p=>{
+    ctx.fillStyle=`rgba(255,180,50,${p.life/20})`;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,4,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  enemies.forEach(e=>{
+    ctx.drawImage(enemyImg,e.x,e.y,e.w,e.h);
+  });
+}
+
+/* ===== LOOP ===== */
+function loop(){
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+loop();
