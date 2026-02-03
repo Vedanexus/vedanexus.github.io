@@ -116,6 +116,17 @@ function hit(a,b){
     a.y + a.h > b.y
   );
 }
+function createExplosion(x, y) {
+  for (let i = 0; i < 12; i++) {
+    explosions.push({
+      x: x,
+      y: y,
+      vx: (Math.random() - 0.5) * 6,
+      vy: (Math.random() - 0.5) * 6,
+      life: 20
+    });
+  }
+}
 
 /* ===== UPDATE ===== */
 function update(){
