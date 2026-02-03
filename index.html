@@ -10,26 +10,18 @@ html,body{margin:0;padding:0;overflow:hidden}
 body{background:url("bg.jpg") center/cover fixed no-repeat}
 body::after{
   content:"";position:fixed;inset:0;
-  background:radial-gradient(circle,rgba(0,0,0,.15),rgba(0,0,0,.85));
+  background:radial-gradient(circle,rgba(0,0,0,.2),rgba(0,0,0,.9));
   pointer-events:none;
 }
 canvas{position:fixed;inset:0}
-#pauseBtn{
-  position:fixed;top:10px;right:10px;
-  background:rgba(0,0,0,.6);
-  color:white;border-radius:8px;
-  padding:8px 12px;
-  font-size:14px;
-  z-index:10;
-}
 </style>
 </head>
 
 <body>
-<div id="pauseBtn">⏸</div>
 <canvas id="game"></canvas>
 
 <audio id="music" src="music.mp3" loop playsinline></audio>
+<audio id="bossMusic" src="boss-music.mp3" loop playsinline></audio>
 <audio id="hit" src="hit.mp3" playsinline></audio>
 
 <script>
@@ -46,197 +38,215 @@ const bossImg=new Image();  bossImg.src="boss.png";
 
 /* ===== AUDIO ===== */
 const music=document.getElementById("music");
+const bossMusic=document.getElementById("bossMusic");
 const hit=document.getElementById("hit");
 let musicStarted=false;
-function startMusic(){
-  if(musicStarted) return;
-  music.muted=true;
-  music.play().then(()=>{
-    setTimeout(()=>{music.muted=false;music.volume=.35},300);
-    musicStarted=true;
-  });
-}
 
-/* ===== SAVE ===== */
-let highScore=Number(localStorage.getItem("highScore")||0);
+function startMusic(){
+ if(musicStarted) return;
+ music.muted=true;
+ music.play().then(()=>{
+   setTimeout(()=>{music.muted=false;music.volume=.35},300);
+   musicStarted=true;
+ });
+}
+function startBossMusic(){
+ music.pause();
+ bossMusic.currentTime=0;
+ bossMusic.volume=0.5;
+ bossMusic.play();
+}
+function stopBossMusic(){
+ bossMusic.pause();
+ music.play();
+}
 
 /* ===== STATE ===== */
 let player={x:W/2-32,y:H-150,w:64,h:96};
 let enemies=[],bullets=[],bossBullets=[];
 let boss=null;
+let bossIndex=1;
 let score=0,level=1,speed=3;
-let nextBossLevel=3;
-let gameOver=false,paused=false;
-let dragging=false;
-let specialCharge=0,specialReady=true;
-let storyTimer=120;
+let gameOver=false;
+let storyTimer=0;
+let introTimer=0;
 
 /* ===== INPUT ===== */
 addEventListener("pointerdown",e=>{
-  startMusic();
-  if(gameOver){reset();return;}
-  dragging=true;
-  player.x=e.clientX-player.w/2;
-  specialCharge=Date.now();
+ startMusic();
+ if(gameOver){reset();return;}
+ player.x=e.clientX-player.w/2;
+ shoot();
 });
-addEventListener("pointerup",()=>{
-  dragging=false;
-  let hold=Date.now()-specialCharge;
-  if(hold>1200 && specialReady){
-    fireSpecial();
-  }else{
-    shoot();
-  }
-});
-addEventListener("pointermove",e=>{
-  if(dragging) player.x=e.clientX-player.w/2;
-});
-
-/* ===== PAUSE ===== */
-document.getElementById("pauseBtn").onclick=()=>paused=!paused;
 
 /* ===== SHOOT ===== */
 function shoot(){
-  bullets.push({x:player.x+30,y:player.y,w:6,h:14,v:10});
-}
-
-/* ===== SPECIAL ===== */
-function fireSpecial(){
-  bullets.push({x:player.x-40,y:player.y-200,w:120,h:400,v:0,special:true});
-  specialReady=false;
-  setTimeout(()=>specialReady=true,8000);
+ bullets.push({x:player.x+30,y:player.y,w:6,h:14,v:10});
 }
 
 /* ===== SPAWN ===== */
 function spawnEnemy(){
-  enemies.push({x:Math.random()*(W-70),y:-100,w:70,h:90});
+ enemies.push({x:Math.random()*(W-70),y:-100,w:70,h:90});
 }
 function spawnBoss(){
-  boss={x:W/2-120,y:40,w:240,h:240,hp:50,dir:1,phase:1};
-  shake=40;
+ boss={
+  x:W/2-120,y:60,w:240,h:240,
+  hp:40+bossIndex*10,
+  dir:1,fireTick:0
+ };
+ introTimer=50;      // cinematic freeze
+ shake=40;
+ startBossMusic();
 }
 
 /* ===== UPDATE ===== */
 function update(){
-  if(paused||gameOver) return;
-  if(storyTimer>0){storyTimer--;return;}
+ if(gameOver) return;
 
-  level=Math.floor(score/800)+1;
-  speed=3+level*0.3;
+ level=Math.floor(score/800)+1;
+ speed=3+level*0.3;
 
-  if(!boss && level>=nextBossLevel){
-    spawnBoss();
-    nextBossLevel+=3;
-  }
+ if(!boss && level>=bossIndex*3){
+   spawnBoss();
+ }
 
-  if(!boss && Math.random()<.03) spawnEnemy();
+ if(introTimer>0){
+   introTimer--;
+   return;
+ }
 
-  enemies.forEach(e=>e.y+=speed);
-  bullets.forEach(b=>b.y-=b.v);
+ if(!boss && Math.random()<.03) spawnEnemy();
 
-  if(boss){
-    boss.x+=boss.dir*(boss.phase===2?3:2);
-    if(boss.x<20||boss.x+boss.w>W-20) boss.dir*=-1;
-    if(boss.hp<25) boss.phase=2;
-    if(Math.random()<(boss.phase===2?.04:.02)){
-      bossBullets.push({x:boss.x+boss.w/2-6,y:boss.y+boss.h,w:12,h:18,v: boss.phase===2?8:5});
+ enemies.forEach(e=>e.y+=speed);
+ bullets.forEach(b=>b.y-=b.v);
+
+ /* ===== BOSS BEHAVIOUR ===== */
+ if(boss){
+  boss.x+=boss.dir*(bossIndex>=3?3:2);
+  if(boss.x<20||boss.x+boss.w>W-20) boss.dir*=-1;
+
+  boss.fireTick++;
+  if(boss.fireTick> (bossIndex>=3?25:45)){
+    boss.fireTick=0;
+
+    // patterns
+    if(bossIndex===1){
+      bossBullets.push({x:boss.x+boss.w/2,y:boss.y+boss.h,w:10,h:16,v:5});
     }
-  }
-
-  bossBullets.forEach(b=>b.y+=b.v);
-
-  bullets.forEach((b,bi)=>{
-    enemies.forEach((e,ei)=>{
-      if(hitBox(b,e)){
-        enemies.splice(ei,1);
-        bullets.splice(bi,1);
-        score+=50;
+    else if(bossIndex===2){
+      bossBullets.push({x:boss.x+60,y:boss.y+boss.h,w:10,h:16,v:6});
+      bossBullets.push({x:boss.x+160,y:boss.y+boss.h,w:10,h:16,v:6});
+    }
+    else{
+      for(let i=-1;i<=1;i++){
+        bossBullets.push({
+          x:boss.x+boss.w/2+i*20,
+          y:boss.y+boss.h,
+          w:10,h:16,v:7
+        });
       }
-    });
-    if(boss && hitBox(b,boss)){
-      boss.hp-=b.special?5:1;
-      shake=10;
-      if(boss.hp<=0){boss=null;score+=1500;}
     }
+  }
+ }
+
+ bossBullets.forEach(b=>b.y+=b.v);
+
+ /* ===== COLLISIONS ===== */
+ bullets.forEach((b,bi)=>{
+  enemies.forEach((e,ei)=>{
+   if(hit(b,e)){
+    enemies.splice(ei,1);
+    bullets.splice(bi,1);
+    score+=50;
+   }
   });
+  if(boss && hit(b,boss)){
+   bullets.splice(bi,1);
+   boss.hp--;
+   shake=8;
+   if(boss.hp<=0){
+     boss=null;
+     bossIndex++;
+     stopBossMusic();
+     score+=1500;
+   }
+  }
+ });
 
-  enemies.forEach(e=>{ if(hitBox(player,e)) die(); });
-  bossBullets.forEach(b=>{ if(hitBox(player,b)) die(); });
+ enemies=enemies.filter(e=>e.y<H+200);
+ bullets=bullets.filter(b=>b.y>-50);
+ bossBullets=bossBullets.filter(b=>b.y<H+50);
 
-  enemies=enemies.filter(e=>e.y<H+200);
-  bullets=bullets.filter(b=>b.y>-500);
-  bossBullets=bossBullets.filter(b=>b.y<H+50);
-
-  score++;
+ score++;
 }
 
 /* ===== DRAW ===== */
 function draw(){
-  ctx.setTransform(1,0,0,1,0,0);
-  if(shake>0){ctx.translate(Math.random()*shake,Math.random()*shake);shake--}
-  ctx.clearRect(0,0,W,H);
+ ctx.setTransform(1,0,0,1,0,0);
+ if(shake>0){ctx.translate(Math.random()*shake,Math.random()*shake);shake--}
+ ctx.clearRect(0,0,W,H);
 
-  bullets.forEach(b=>{
-    ctx.fillStyle=b.special?"rgba(0,255,255,.4)":"rgba(180,220,255,.9)";
-    ctx.fillRect(b.x,b.y,b.w,b.h);
-  });
+ if(introTimer>0){
+  ctx.fillStyle="rgba(0,0,0,0.7)";
+  ctx.fillRect(0,0,W,H);
+  ctx.fillStyle="red";
+  ctx.font="28px system-ui";
+  ctx.fillText("⚠ WARNING ⚠",W/2-80,H/2-10);
+  ctx.fillText("SOMETHING IS COMING",W/2-140,H/2+25);
+  return;
+ }
 
-  bossBullets.forEach(b=>{
-    ctx.fillStyle="orange";
-    ctx.fillRect(b.x,b.y,b.w,b.h);
-  });
-
-  enemies.forEach(e=>{
-    ctx.shadowBlur=25;ctx.shadowColor="red";
-    ctx.drawImage(enemyImg,e.x,e.y,e.w,e.h);
-  });
-
-  if(boss){
-    ctx.shadowBlur=40;
-    ctx.shadowColor=boss.phase===2?"red":"purple";
-    ctx.drawImage(bossImg,boss.x,boss.y,boss.w,boss.h);
-    ctx.shadowBlur=0;
-    ctx.fillStyle="red";
-    ctx.fillRect(boss.x,boss.y-10,boss.w*(boss.hp/50),6);
-  }
-
-  ctx.shadowBlur=25;ctx.shadowColor="white";
-  ctx.drawImage(heroImg,player.x,player.y,player.w,player.h);
-  ctx.shadowBlur=0;
-
+ bullets.forEach(b=>{
   ctx.fillStyle="white";
-  ctx.font="16px system-ui";
-  ctx.fillText("Score: "+score,12,22);
-  ctx.fillText("Level: "+level,12,42);
+  ctx.fillRect(b.x,b.y,b.w,b.h);
+ });
 
-  if(gameOver){
-    ctx.fillText("YOU DIED",W/2-40,H/2);
-    ctx.fillText("TAP TO RESTART",W/2-70,H/2+24);
-  }
+ bossBullets.forEach(b=>{
+  ctx.fillStyle="orange";
+  ctx.fillRect(b.x,b.y,b.w,b.h);
+ });
+
+ enemies.forEach(e=>{
+  ctx.shadowBlur=20;ctx.shadowColor="red";
+  ctx.drawImage(enemyImg,e.x,e.y,e.w,e.h);
+ });
+
+ if(boss){
+  ctx.shadowBlur=40;
+  ctx.shadowColor=bossIndex>=3?"red":"purple";
+  ctx.drawImage(bossImg,boss.x,boss.y,boss.w,boss.h);
+  ctx.shadowBlur=0;
+  ctx.fillStyle="red";
+  ctx.fillRect(boss.x,boss.y-10,boss.w*(boss.hp/(40+bossIndex*10)),6);
+ }
+
+ ctx.shadowBlur=25;ctx.shadowColor="white";
+ ctx.drawImage(heroImg,player.x,player.y,player.w,player.h);
+ ctx.shadowBlur=0;
+
+ ctx.fillStyle="white";
+ ctx.font="16px system-ui";
+ ctx.fillText("Score: "+score,12,22);
+ ctx.fillText("Level: "+level,12,42);
 }
 
 /* ===== HELPERS ===== */
-function hitBox(a,b){
-  return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
-}
-function die(){
-  hit.currentTime=0;hit.play();
-  if(score>highScore){
-    highScore=score;
-    localStorage.setItem("highScore",highScore);
-  }
-  shake=40;
-  gameOver=true;
+function hit(a,b){
+ return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 }
 function reset(){
-  enemies=[];bullets=[];bossBullets=[];
-  boss=null;score=0;level=1;
-  nextBossLevel=3;
-  gameOver=false;storyTimer=120;
+ enemies=[];bullets=[];bossBullets=[];
+ boss=null;bossIndex=1;
+ score=0;level=1;
+ gameOver=false;
 }
 
 /* ===== LOOP ===== */
-(function loop(){update();draw();requestAnimationFrame(loop)})();
+(function loop(){
+ update();
+ draw();
+ requestAnimationFrame(loop);
+})();
 </script>
 </body>
 </html>
