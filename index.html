@@ -167,8 +167,13 @@ if(gameState === "OVER"){
 }
 ctx.fillStyle = "white";
 ctx.font = "20px Arial";
-ctx.fillText("Score: " + score + " / " + WIN_SCORE, 20, 30);
-ctx.fillText("Bullets: " + bulletsLeft, 20, 55);
+
+const HUD_X = 20;
+const HUD_Y = 60;
+
+ctx.fillText("Score: " + score + " / " + WIN_SCORE, HUD_X, HUD_Y);
+ctx.fillText("Bullets: " + bulletsLeft, HUD_X, HUD_Y + 30);
+
 
   // player
   ctx.fillStyle="cyan";
