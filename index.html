@@ -165,6 +165,9 @@ if (fireCooldown > 0) {
 for (let i = bullets.length - 1; i >= 0; i--) {
   for (let j = enemies.length - 1; j >= 0; j--) {
     if (hit(bullets[i], enemies[j])) {
+
+      const ex = enemies[j].x + enemies[j].w / 2;
+      const ey = enemies[j].y + enemies[j].h / 2;
       
       // remove bullet & enemy
       bullets.splice(i, 1);
