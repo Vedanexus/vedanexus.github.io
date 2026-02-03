@@ -31,14 +31,14 @@ let shootCooldown=0;
 let dragging=false;
 
 /* RESET */
-function resetGame(){
-  player={x:c.width/2-20,y:c.height-80,w:40,h:40};
-  bullets=[];
-  enemies=[];
-  boss=null;
-  kills=0;
-  shootCooldown=0;
+if(gameState==="start"){
+  gameState="play";
+  level = 1;
+  resetGame();
+  spawnLevel();   // 🔥 THIS WAS THE MISSING LINK
+  return;
 }
+
 
 /* SPAWN */
 function spawnLevel(){
