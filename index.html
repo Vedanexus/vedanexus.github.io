@@ -123,32 +123,36 @@ function update(){
   enemies.forEach(e => e.y += e.speed);
 
   // bullet vs enemy
-  for(let i = bullets.length - 1; i >= 0; i--){
-    for(let j = enemies.length - 1; j >= 0; j--){
-      if(hit(bullets[i], enemies[j])){
-  bullets.splice(i,1);
-  enemies.splice(j,1);
+for (let i = bullets.length - 1; i >= 0; i--) {
+  for (let j = enemies.length - 1; j >= 0; j--) {
+    if (hit(bullets[i], enemies[j])) {
 
-  // 1️⃣ score badhao
-  score++;
+      // remove bullet & enemy
+      bullets.splice(i, 1);
+      enemies.splice(j, 1);
 
-  // 2️⃣ near-win hint (sirf ek baar)
-  if(score === 250){
-    hintTimer = 120; // ~2 seconds
+      // 1️⃣ increase score (every kill)
+      score++;
+
+      // 2️⃣ near-win hint (only once at 250)
+      if (score === 250) {
+        hintTimer = 120; // ~2 seconds
+      }
+
+      // 3️⃣ WIN check (rare but possible)
+      if (score >= WIN_SCORE) {
+        gameState = "WIN";
+        player.alive = false;
+      }
+
+      // 4️⃣ bullet recovery chance (skill reward)
+      if (Math.random() < 0.25) {
+        bulletsLeft = Math.min(bulletsLeft + 1, 30);
+      }
+
+      break; // exit enemy loop after hit
+    }
   }
-
-  // 3️⃣ WIN check (har score pe)
-  if(score >= WIN_SCORE){
-    gameState = "WIN";
-    player.alive = false;
-  }
-
-  // 4️⃣ bullet recovery chance (har kill pe)
-  if(Math.random() < 0.25){
-    bulletsLeft = Math.min(bulletsLeft + 1, 30);
-  }
-
-  break;
 }
 
   // enemy vs player
