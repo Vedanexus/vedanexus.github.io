@@ -151,7 +151,7 @@ function update(){
 
   // boss logic
   if(level===3 && boss){
-    boss.x+=boss.dir*2;
+    boss.x += boss.dir * boss.speed;
     if(boss.x<20||boss.x+boss.w>c.width-20) boss.dir*=-1;
 
     for(let i=bullets.length-1;i>=0;i--){
