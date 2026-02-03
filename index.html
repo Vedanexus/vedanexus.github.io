@@ -256,12 +256,11 @@ ctx.drawImage(heroImg, player.x, player.y, player.w, player.h);
     ctx.fillRect(b.x,b.y,b.w,b.h);
   });
 
-  // enemies
-  ctx.fillStyle="red";
-  enemies.forEach(e=>{
-    ctx.fillRect(e.x,e.y,e.w,e.h);
-  });
-}
+  // enemies (laptop image)
+enemies.forEach(e=>{
+  ctx.drawImage(enemyImg, e.x, e.y, e.w, e.h);
+});
+
 
 /* ===== LOOP ===== */
 function loop(){
