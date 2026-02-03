@@ -140,15 +140,25 @@ function restartGame(){
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  if(!player.alive){
-    ctx.fillStyle="white";
-    ctx.font="48px Arial";
-    ctx.textAlign="center";
-    ctx.fillText("GAME OVER", canvas.width/2, canvas.height/2);
-    return;
-    ctx.font = "24px Arial";
-    ctx.fillText("Click to Restart", canvas.width/2, canvas.height/2 + 50);
-  }
+  if(gameState === "WIN"){
+  ctx.fillStyle="white";
+  ctx.font="48px Arial";
+  ctx.textAlign="center";
+  ctx.fillText("YOU WIN!", canvas.width/2, canvas.height/2);
+
+  ctx.font="24px Arial";
+  ctx.fillText("You defeated all enemies", canvas.width/2, canvas.height/2 + 50);
+  return;
+}
+
+if(gameState === "OVER"){
+  ctx.fillStyle="white";
+  ctx.font="48px Arial";
+  ctx.textAlign="center";
+  ctx.fillText("GAME OVER", canvas.width/2, canvas.height/2);
+  return;
+}
+
 
   // player
   ctx.fillStyle="cyan";
