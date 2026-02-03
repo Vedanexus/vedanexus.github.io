@@ -246,9 +246,9 @@ if(hintTimer > 0){
 }
 
 
-  // player
-  ctx.fillStyle="cyan";
-  ctx.fillRect(player.x, player.y, player.w, player.h);
+// player (hero image)
+ctx.drawImage(heroImg, player.x, player.y, player.w, player.h);
+
 
   // bullets
   ctx.fillStyle="yellow";
