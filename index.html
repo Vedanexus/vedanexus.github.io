@@ -26,6 +26,9 @@ canvas{
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
+let screenW = window.innerWidth;
+let screenH = window.innerHeight;
+  
 function resize(){
   const dpr = window.devicePixelRatio || 1;
 
