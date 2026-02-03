@@ -3,38 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VedaNexus Challenge Game</title>
-
+<title>VedaNexus Game</title>
 <style>
 html,body{margin:0;padding:0;overflow:hidden}
 body{background:url("bg.jpg") center/cover no-repeat fixed}
 canvas{display:block}
 </style>
 </head>
-
 <body>
+
 <canvas id="game"></canvas>
 <audio id="bgMusic" src="music.mp3" loop playsinline></audio>
 
 <script>
-/* ===== CANVAS ===== */
-const c=document.getElementById("game"),ctx=c.getContext("2d");
-function resize(){c.width=innerWidth;c.height=innerHeight}
-addEventListener("resize",resize);resize();
+/* ===== SETUP ===== */
+const c = document.getElementById("game");
+const ctx = c.getContext("2d");
+function resize(){ c.width=innerWidth; c.height=innerHeight }
+addEventListener("resize",resize); resize();
 
 /* ===== ASSETS ===== */
 const heroImg=new Image(); heroImg.src="hero.png";
 const enemyImg=new Image(); enemyImg.src="enemy.png";
-const bossImg=new Image();  bossImg.src="boss.png";
+const bossImg=new Image(); bossImg.src="boss.png";
 
 /* ===== STATE ===== */
-let gameState="start";
-let level=1;
+let gameState="start"; // start | play | win
+let level=0;
 let player, bullets, enemies, boss;
 let dragging=false;
+let shootCooldown=0;
 let winTimer=0;
 let musicStarted=false;
-let shootCooldown=0;
 
 /* ===== RESET ===== */
 function resetGame(){
@@ -42,52 +42,30 @@ function resetGame(){
   bullets=[];
   enemies=[];
   boss=null;
-  winTimer=0;
   shootCooldown=0;
+  winTimer=0;
 }
 
-/* ===== SPAWN LEVEL ===== */
-function spawnLevel(){
+/* ===== LEVEL CONTROL (ONLY HERE) ===== */
+function nextLevel(){
   enemies=[];
   boss=null;
+  level++;
 
-  // LEVEL 1 – straight enemies
   if(level===1){
     for(let i=0;i<8;i++){
-      enemies.push({
-        x:Math.random()*(c.width-48),
-        y:-i*50,
-        w:48,h:48,
-        v:3,
-        dx:0
-      });
+      enemies.push({x:Math.random()*(c.width-48),y:-i*60,w:48,h:48,v:3,dx:0});
     }
   }
 
-  // LEVEL 2 – zig-zag enemies
   if(level===2){
     for(let i=0;i<14;i++){
-      enemies.push({
-        x:Math.random()*(c.width-48),
-        y:-i*45,
-        w:48,h:48,
-        v:4.5,
-        dx: Math.random()<0.5 ? -2 : 2
-      });
+      enemies.push({x:Math.random()*(c.width-48),y:-i*50,w:48,h:48,v:4.5,dx:Math.random()<0.5?-2:2});
     }
   }
 
-  // LEVEL 3 – boss
   if(level===3){
-    boss={
-      x:c.width/2-80,
-      y:50,
-      w:160,
-      h:160,
-      hp:40,
-      dir:1,
-      speed:3
-    };
+    boss={x:c.width/2-80,y:60,w:160,h:160,hp:40,dir:1,speed:3};
   }
 }
 
@@ -100,10 +78,10 @@ addEventListener("pointerdown",e=>{
   }
 
   if(gameState==="start"){
-    level=1;
-    resetGame();
-    spawnLevel();
     gameState="play";
+    level=0;
+    resetGame();
+    nextLevel();
     return;
   }
 
@@ -121,14 +99,13 @@ addEventListener("pointerdown",e=>{
   }
 });
 addEventListener("pointermove",e=>{
-  if(gameState==="play"&&dragging)
-    player.x=e.clientX-player.w/2;
+  if(gameState==="play"&&dragging) player.x=e.clientX-player.w/2;
 });
 addEventListener("pointerup",()=>dragging=false);
 
 /* ===== COLLISION ===== */
 function hit(a,b){
-  return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
+  return a.x<b.x+b.w && a.x+a.w>b.x && a.y<b.y+b.h && a.y+a.h>b.y;
 }
 
 /* ===== UPDATE ===== */
@@ -141,13 +118,11 @@ function update(){
 
   enemies.forEach(e=>{
     e.y+=e.v;
-    if(e.dx!==0){
-      e.x+=e.dx;
-      if(e.x<0||e.x+e.w>c.width) e.dx*=-1;
-    }
+    e.x+=e.dx;
+    if(e.x<0||e.x+e.w>c.width) e.dx*=-1;
   });
 
-  // bullets → enemies
+  // bullets -> enemies
   for(let i=bullets.length-1;i>=0;i--){
     for(let j=enemies.length-1;j>=0;j--){
       if(hit(bullets[i],enemies[j])){
@@ -158,21 +133,13 @@ function update(){
     }
   }
 
-  // level progression
-  if(level < 2 && enemies.length === 0){
-  level++;
-  spawnLevel();
-  return;
-}
+  // ENEMIES CLEARED
+  if(enemies.length===0 && !boss){
+    nextLevel();
+  }
 
-if(level === 2 && enemies.length === 0){
-  level = 3;
-  spawnLevel(); // boss spawn
-}
-
-
-  // boss logic
-  if(level===3 && boss){
+  // BOSS
+  if(boss){
     boss.x+=boss.dir*boss.speed;
     if(boss.x<20||boss.x+boss.w>c.width-20) boss.dir*=-1;
 
@@ -189,7 +156,6 @@ if(level === 2 && enemies.length === 0){
         if(boss.hp<=0){
           boss=null;
           winTimer=60;
-          break;
         }
       }
     }
@@ -211,8 +177,6 @@ function draw(){
     ctx.fillStyle="white";
     ctx.font="24px system-ui";
     ctx.fillText("Tap to Start",c.width/2-70,c.height/2);
-    ctx.font="14px system-ui";
-    ctx.fillText("Built by VedaNexus",c.width/2-65,c.height/2+30);
     return;
   }
 
@@ -221,10 +185,7 @@ function draw(){
     ctx.fillRect(0,0,c.width,c.height);
     ctx.fillStyle="white";
     ctx.font="28px system-ui";
-    ctx.fillText("🎉 YOU QUALIFIED 🎉",c.width/2-110,c.height/2);
-    ctx.font="16px system-ui";
-    ctx.fillText("Top players only",c.width/2-60,c.height/2+30);
-    ctx.fillText("Powered by VedaNexus",c.width/2-80,c.height/2+55);
+    ctx.fillText("YOU QUALIFIED 🎉",c.width/2-100,c.height/2);
     return;
   }
 
@@ -238,10 +199,6 @@ function draw(){
     ctx.fillStyle="red";
     ctx.fillRect(boss.x,boss.y-10,boss.w*(boss.hp/40),6);
   }
-
-  ctx.font="12px system-ui";
-  ctx.fillStyle="rgba(255,255,255,0.4)";
-  ctx.fillText("VedaNexus",c.width-90,c.height-15);
 }
 
 /* ===== LOOP ===== */
