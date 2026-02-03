@@ -252,7 +252,11 @@ function restartGame(){
 
 /* ===== DRAW ===== */
 function draw(){
+// 🔥 CLEAR PREVIOUS FRAME COMPLETELY
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // (rest of your drawing code)
+  
   if(gameState==="WIN"){
     ctx.fillStyle="#fff";
     ctx.font="48px Arial";
