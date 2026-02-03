@@ -129,14 +129,11 @@ function update(){
         enemies.splice(j,1);
         score++;
 
-        if(score >= WIN_SCORE){
-          gameState = "WIN";
-          player.alive = false;
-        }
-        break;
-      }
-    }
+        // 25% chance to recover 1 bullet
+  if(Math.random() < 0.25){
+    bulletsLeft = Math.min(bulletsLeft + 1, 30);
   }
+}
 
   // enemy vs player
   for(let i = 0; i < enemies.length; i++){
