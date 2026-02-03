@@ -28,7 +28,7 @@ const enemyImg=new Image(); enemyImg.src="enemy.png";
 const bossImg=new Image();  bossImg.src="boss.png";
 
 /* ===== STATE ===== */
-let gameState="start"; // start | play | win
+let gameState="start";
 let level=1;
 let player, bullets, enemies, boss;
 let dragging=false;
@@ -51,17 +51,20 @@ function spawnLevel(){
   enemies=[];
   boss=null;
 
+  // LEVEL 1 – straight enemies
   if(level===1){
     for(let i=0;i<8;i++){
       enemies.push({
         x:Math.random()*(c.width-48),
         y:-i*50,
         w:48,h:48,
-        v:3
+        v:3,
+        dx:0
       });
     }
   }
 
+  // LEVEL 2 – zig-zag enemies
   if(level===2){
     for(let i=0;i<14;i++){
       enemies.push({
@@ -69,11 +72,12 @@ function spawnLevel(){
         y:-i*45,
         w:48,h:48,
         v:4.5,
-        dx:Math.random()<0.5?-1.5:1.5
+        dx: Math.random()<0.5 ? -2 : 2
       });
     }
   }
 
+  // LEVEL 3 – boss
   if(level===3){
     boss={
       x:c.width/2-80,
@@ -134,9 +138,10 @@ function update(){
   if(shootCooldown>0) shootCooldown--;
 
   bullets.forEach(b=>b.y-=b.v);
+
   enemies.forEach(e=>{
     e.y+=e.v;
-    if(e.dx){
+    if(e.dx!==0){
       e.x+=e.dx;
       if(e.x<0||e.x+e.w>c.width) e.dx*=-1;
     }
@@ -153,15 +158,14 @@ function update(){
     }
   }
 
-  /* ===== LEVEL PROGRESSION ===== */
+  // level progression
   if(level<=2 && enemies.length===0){
     level++;
     spawnLevel();
-    // ❗ RETURN ONLY FOR LEVEL 1 & 2
     return;
   }
 
-  /* ===== BOSS LOGIC ===== */
+  // boss logic
   if(level===3 && boss){
     boss.x+=boss.dir*boss.speed;
     if(boss.x<20||boss.x+boss.w>c.width-20) boss.dir*=-1;
