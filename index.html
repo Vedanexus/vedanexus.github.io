@@ -222,13 +222,17 @@ function draw(){
     return;
   }
 
-  if(gameState==="OVER"){
-    ctx.fillStyle="#fff";
-    ctx.font="48px Arial";
-    ctx.textAlign="center";
-    ctx.fillText("GAME OVER",screenW/2,screenH/2);
-    return;
-  }
+  if(gameState === "OVER"){
+  ctx.fillStyle="#fff";
+  ctx.font="48px Arial";
+  ctx.textAlign="center";
+  ctx.fillText("GAME OVER", screenW/2, screenH/2);
+
+  ctx.font="22px Arial";
+  ctx.fillText("Tap to Play Again", screenW/2, screenH/2 + 50);
+  return;
+}
+
 
   ctx.fillStyle="#fff";
   ctx.font="20px Arial";
