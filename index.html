@@ -131,6 +131,8 @@ function restartGame(){
   player.alive = true;
   bullets = [];
   enemies = [];
+  score = 0;
+  gameState = "PLAY";
 
   player.x = canvas.width/2 - player.w/2;
   player.y = canvas.height - 80;
@@ -158,6 +160,9 @@ if(gameState === "OVER"){
   ctx.fillText("GAME OVER", canvas.width/2, canvas.height/2);
   return;
 }
+ctx.fillStyle = "white";
+ctx.font = "20px Arial";
+ctx.fillText("Score: " + score + " / " + WIN_SCORE, 20, 30);
 
 
   // player
