@@ -158,37 +158,60 @@ function update(){
 function draw(){
   ctx.clearRect(0,0,c.width,c.height);
 
+  /* ===== START SCREEN ===== */
   if(gameState==="start"){
     ctx.fillStyle="white";
     ctx.font="24px system-ui";
     ctx.fillText("Tap to Start",c.width/2-70,c.height/2);
+
+    // 🔹 BRANDING (START)
+    ctx.font="14px system-ui";
+    ctx.fillStyle="rgba(255,255,255,0.7)";
+    ctx.fillText("Built by VedaNexus", c.width/2-65, c.height/2+30);
     return;
   }
 
+  /* ===== WIN SCREEN ===== */
   if(gameState==="win"){
     ctx.fillStyle="rgba(0,0,0,0.7)";
     ctx.fillRect(0,0,c.width,c.height);
+
     ctx.fillStyle="white";
     ctx.font="28px system-ui";
     ctx.fillText("🎉 YOU WIN 🎉",c.width/2-90,c.height/2-10);
+
     ctx.font="16px system-ui";
     ctx.fillText("Game Completed",c.width/2-70,c.height/2+20);
     ctx.fillText("Tap to Play Again",c.width/2-75,c.height/2+45);
+
+    // 🔹 BRANDING (WIN)
+    ctx.font="14px system-ui";
+    ctx.fillStyle="rgba(255,255,255,0.8)";
+    ctx.fillText("Powered by VedaNexus", c.width/2-80, c.height/2+70);
     return;
   }
 
+  /* ===== GAME PLAY ===== */
   ctx.drawImage(heroImg,player.x,player.y,player.w,player.h);
+
   ctx.fillStyle="cyan";
   bullets.forEach(b=>ctx.fillRect(b.x,b.y,b.w,b.h));
-  enemies.forEach(e=>ctx.drawImage(enemyImg,e.x,e.y,e.w,e.h));
+
+  enemies.forEach(e=>{
+    ctx.drawImage(enemyImg,e.x,e.y,e.w,e.h);
+  });
 
   if(boss){
     ctx.drawImage(bossImg,boss.x,boss.y,boss.w,boss.h);
     ctx.fillStyle="red";
     ctx.fillRect(boss.x,boss.y-10,boss.w*(boss.hp/20),6);
   }
-}
 
+  // 🔹 BRANDING (IN-GAME WATERMARK)
+  ctx.font="12px system-ui";
+  ctx.fillStyle="rgba(255,255,255,0.4)";
+  ctx.fillText("VedaNexus", c.width-90, c.height-15);
+}
 /* LOOP */
 (function loop(){
   update();
