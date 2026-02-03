@@ -20,14 +20,17 @@ const c=document.getElementById("game"),ctx=c.getContext("2d");
 function resize(){c.width=innerWidth;c.height=innerHeight}
 addEventListener("resize",resize);resize();
 
-const heroImg=new Image();heroImg.src="hero.png";
-const enemyImg=new Image();enemyImg.src="enemy.png";
-const bossImg=new Image();bossImg.src="boss.png";
+/* ASSETS */
+const heroImg=new Image(); heroImg.src="hero.png";
+const enemyImg=new Image(); enemyImg.src="enemy.png";
+const bossImg=new Image();  bossImg.src="boss.png";
 
+/* STATE */
 let gameState="start"; // start | play | win
 let level=1;
 let player, bullets, enemies, boss;
 let dragging=false;
+let winTimer=0;
 let musicStarted=false;
 
 function resetGame(){
@@ -35,27 +38,30 @@ function resetGame(){
   bullets=[];
   enemies=[];
   boss=null;
+  winTimer=0;
 }
 
+/* LEVEL SETUP */
 function spawnLevel(){
   enemies=[];
   boss=null;
 
   if(level===1){
-    for(let i=0;i<6;i++){
+    for(let i=0;i<6;i++)
       enemies.push({x:Math.random()*(c.width-48),y:-i*80,w:48,h:48,v:2});
-    }
   }
+
   if(level===2){
-    for(let i=0;i<10;i++){
+    for(let i=0;i<10;i++)
       enemies.push({x:Math.random()*(c.width-48),y:-i*70,w:48,h:48,v:3});
-    }
   }
+
   if(level===3){
     boss={x:c.width/2-80,y:60,w:160,h:160,hp:20,dir:1};
   }
 }
 
+/* INPUT */
 addEventListener("pointerdown",e=>{
   if(!musicStarted){
     bgMusic.volume=0.4;
@@ -78,61 +84,77 @@ addEventListener("pointerdown",e=>{
 
   dragging=true;
   player.x=e.clientX-player.w/2;
-
   bullets.push({x:player.x+22,y:player.y,w:4,h:12,v:10});
 });
 
 addEventListener("pointermove",e=>{
-  if(gameState==="play" && dragging){
+  if(gameState==="play" && dragging)
     player.x=e.clientX-player.w/2;
-  }
 });
 addEventListener("pointerup",()=>dragging=false);
 
+/* COLLISION */
 function hit(a,b){
   return a.x<b.x+b.w && a.x+a.w>b.x &&
          a.y<b.y+b.h && a.y+a.h>b.y;
 }
 
+/* UPDATE */
 function update(){
   if(gameState!=="play") return;
 
   bullets.forEach(b=>b.y-=b.v);
   enemies.forEach(e=>e.y+=e.v);
 
-  bullets.forEach((b,bi)=>{
-    enemies.forEach((e,ei)=>{
-      if(hit(b,e)){
-        bullets.splice(bi,1);
-        enemies.splice(ei,1);
+  // bullets → enemies
+  for(let i=bullets.length-1;i>=0;i--){
+    for(let j=enemies.length-1;j>=0;j--){
+      if(hit(bullets[i],enemies[j])){
+        bullets.splice(i,1);
+        enemies.splice(j,1);
+        break;
       }
-    });
-  });
+    }
+  }
 
+  // level advance
   if(level<=2 && enemies.length===0){
     level++;
     spawnLevel();
     return;
   }
 
+  // boss logic
   if(level===3 && boss){
     boss.x+=boss.dir*2;
     if(boss.x<20||boss.x+boss.w>c.width-20) boss.dir*=-1;
 
-    bullets.forEach((b,bi)=>{
-      if(hit(b,boss)){
-        bullets.splice(bi,1);
+    for(let i=bullets.length-1;i>=0;i--){
+      if(hit(bullets[i],boss)){
+        bullets.splice(i,1);
         boss.hp--;
         if(boss.hp<=0){
           boss=null;
-          gameState="win";
-          return; // 🔥 HARD STOP
+          winTimer=60; // 1 sec buffer
+          break;
         }
       }
-    });
+    }
   }
+
+  // win timer
+  if(winTimer>0){
+    winTimer--;
+    if(winTimer===0){
+      gameState="win";
+    }
+  }
+
+  bullets=bullets.filter(b=>b.y>-20);
+  enemies=enemies.filter(e=>e.y<c.height+60);
 }
 
+/* DRAW */
 function draw(){
   ctx.clearRect(0,0,c.width,c.height);
 
@@ -144,7 +166,7 @@ function draw(){
   }
 
   if(gameState==="win"){
-    ctx.fillStyle="rgba(0,0,0,0.75)";
+    ctx.fillStyle="rgba(0,0,0,0.7)";
     ctx.fillRect(0,0,c.width,c.height);
     ctx.fillStyle="white";
     ctx.font="28px system-ui";
@@ -159,15 +181,15 @@ function draw(){
   ctx.fillStyle="cyan";
   bullets.forEach(b=>ctx.fillRect(b.x,b.y,b.w,b.h));
   enemies.forEach(e=>ctx.drawImage(enemyImg,e.x,e.y,e.w,e.h));
+
   if(boss){
     ctx.drawImage(bossImg,boss.x,boss.y,boss.w,boss.h);
     ctx.fillStyle="red";
     ctx.fillRect(boss.x,boss.y-10,boss.w*(boss.hp/20),6);
   }
-  ctx.fillStyle="white";
-  ctx.fillText("Level: "+level,12,20);
 }
 
+/* LOOP */
 (function loop(){
   update();
   draw();
