@@ -39,6 +39,7 @@ const player = {
   w: 40,
   h: 40,
   speed: 6
+  alive: true
 };
 
 /* ===== ARRAYS ===== */
@@ -85,6 +86,8 @@ function hit(a,b){
 
 /* ===== UPDATE ===== */
 function update(){
+  if(!player.alive) return;
+
   bullets.forEach(b => b.y -= b.speed);
   enemies.forEach(e => e.y += e.speed);
 
@@ -105,6 +108,17 @@ function update(){
 
 /* ===== DRAW ===== */
 function draw(){
+  if(!player.alive){
+  ctx.fillStyle = "rgba(0,0,0,0.7)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle = "white";
+  ctx.font = "48px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("GAME OVER", canvas.width/2, canvas.height/2);
+  return;
+}
+
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
   // player
