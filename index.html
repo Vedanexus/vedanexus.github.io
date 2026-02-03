@@ -69,7 +69,7 @@ let explosions = [];
 
 let score = 0;
 let WIN_SCORE = 300;
-let bulletsLeft = 30;
+let bulletsLeft = 300;
 let gameState = "PLAY";
 
 let isFiring = false;
@@ -98,9 +98,10 @@ setInterval(()=>{
     y: -44,
     w: 44,
     h: 44,
-    speed: Math.min(2 + score*0.03, 8)
+    speed: Math.min(2 + score * 0.05, 14)
   });
-},1000);
+}, Math.max(300, 1000 - score * 2));
+
 
 /* ===== HELPERS ===== */
 function hit(a,b){
@@ -167,13 +168,17 @@ function update(){
         score++;
         if(score === 250) hintTimer = 120;
 
-        if(score >= WIN_SCORE){
+        if(score >= 300){
+  gameState = "WIN";
+  player.alive = false;
+}
+
           gameState = "WIN";
           player.alive = false;
         }
 
         if(Math.random() < 0.25){
-          bulletsLeft = Math.min(bulletsLeft + 1, 30);
+          bulletsLeft = 300;
         }
 
         break;
@@ -183,7 +188,13 @@ function update(){
 
   /* ENEMY vs PLAYER */
   for(let e of enemies){
-    if(hit(e, player)){
+    if(
+  e.x < player.x + player.w - 6 &&
+  e.x + e.w > player.x + 6 &&
+  e.y < player.y + player.h - 6 &&
+  e.y + e.h > player.y + 6
+){
+
       player.alive = false;
       gameState = "OVER";
     }
@@ -217,7 +228,7 @@ function draw(){
   ctx.font="20px Arial";
   ctx.textAlign="left";
   ctx.fillText(`Score: ${score}/${WIN_SCORE}`,20,60);
-  ctx.fillText(`Bullets: ${bulletsLeft}`,20,90);
+  ctx.fillText(`Ammo: ${bulletsLeft}`,20,90);
 
   if(hintTimer>0){
     ctx.textAlign="center";
