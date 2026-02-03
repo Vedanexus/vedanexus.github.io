@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VedaNexus Debug Game</title>
+<title>Mini Shooter</title>
 <style>
 html,body{margin:0;padding:0;overflow:hidden}
-body{background:#000}
+body{background:#111}
 canvas{display:block}
 </style>
 </head>
@@ -15,63 +15,68 @@ canvas{display:block}
 <canvas id="game"></canvas>
 
 <script>
-const c=document.getElementById("game");
-const ctx=c.getContext("2d");
+const c = document.getElementById("game");
+const ctx = c.getContext("2d");
 function resize(){c.width=innerWidth;c.height=innerHeight}
 addEventListener("resize",resize);resize();
 
 /* STATE */
-let gameState="start";
+let gameState="start"; // start | play | win
 let level=1;
-let kills=0;
-let targetKills=0;
 
 let player, bullets, enemies, boss;
 let shootCooldown=0;
 let dragging=false;
 
 /* RESET */
-if(gameState==="start"){
-  gameState="play";
-  level = 1;
-  resetGame();
-  spawnLevel();   // 🔥 THIS WAS THE MISSING LINK
-  return;
+function resetGame(){
+  player={x:c.width/2-20,y:c.height-80,w:40,h:40};
+  bullets=[];
+  enemies=[];
+  boss=null;
+  shootCooldown=0;
 }
-
 
 /* SPAWN */
 function spawnLevel(){
   enemies=[];
   boss=null;
-  kills=0;
 
   if(level===1){
-    targetKills=3; // 🔥 intentionally low for testing
-    for(let i=0;i<3;i++){
-      enemies.push({x:100+i*80,y:-i*60,w:40,h:40,v:2,dx:0});
+    for(let i=0;i<6;i++){
+      enemies.push({x:Math.random()*(c.width-40),y:-i*80,w:40,h:40,v:2});
     }
   }
 
   if(level===2){
-    targetKills=3;
-    for(let i=0;i<3;i++){
-      enemies.push({x:100+i*80,y:-i*60,w:40,h:40,v:3,dx:2});
+    for(let i=0;i<8;i++){
+      enemies.push({
+        x:Math.random()*(c.width-40),
+        y:-i*70,
+        w:40,h:40,
+        v:3,
+        dx:Math.random()<0.5?-1.5:1.5
+      });
     }
   }
 
   if(level===3){
-    boss={x:c.width/2-60,y:40,w:120,h:120,hp:5,dir:1,speed:2};
+    boss={x:c.width/2-60,y:40,w:120,h:120,hp:20,dir:1};
   }
 }
 
 /* INPUT */
 addEventListener("pointerdown",e=>{
   if(gameState==="start"){
-    gameState="play";
     level=1;
     resetGame();
     spawnLevel();
+    gameState="play";
+    return;
+  }
+
+  if(gameState==="win"){
+    gameState="start";
     return;
   }
 
@@ -84,14 +89,14 @@ addEventListener("pointerdown",e=>{
   }
 });
 addEventListener("pointermove",e=>{
-  if(dragging) player.x=e.clientX-player.w/2;
+  if(gameState==="play"&&dragging)
+    player.x=e.clientX-player.w/2;
 });
 addEventListener("pointerup",()=>dragging=false);
 
 /* HIT */
 function hit(a,b){
-  return a.x<b.x+b.w && a.x+a.w>b.x &&
-         a.y<b.y+b.h && a.y+a.h>b.y;
+  return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 }
 
 /* UPDATE */
@@ -100,41 +105,45 @@ function update(){
   if(shootCooldown>0) shootCooldown--;
 
   bullets.forEach(b=>b.y-=b.v);
+
   enemies.forEach(e=>{
     e.y+=e.v;
-    e.x+=e.dx;
-    if(e.x<0||e.x+e.w>c.width) e.dx*=-1;
+    if(e.dx){
+      e.x+=e.dx;
+      if(e.x<0||e.x+e.w>c.width) e.dx*=-1;
+    }
   });
 
-  // bullet -> enemy
+  // bullets -> enemies
   for(let i=bullets.length-1;i>=0;i--){
     for(let j=enemies.length-1;j>=0;j--){
       if(hit(bullets[i],enemies[j])){
         bullets.splice(i,1);
         enemies.splice(j,1);
-        kills++;
         break;
       }
     }
   }
 
-  // LEVEL SWITCH (DEBUG SAFE)
-  if(level<=2 && kills>=targetKills){
+  // LEVEL PROGRESS
+  if(level<=2 && enemies.length===0){
     level++;
     spawnLevel();
+    return;
   }
 
-  // boss
+  // BOSS
   if(level===3 && boss){
-    boss.x+=boss.dir*boss.speed;
-    if(boss.x<0||boss.x+boss.w>c.width) boss.dir*=-1;
+    boss.x+=boss.dir*2;
+    if(boss.x<20||boss.x+boss.w>c.width-20) boss.dir*=-1;
 
     for(let i=bullets.length-1;i>=0;i--){
       if(hit(bullets[i],boss)){
         bullets.splice(i,1);
         boss.hp--;
         if(boss.hp<=0){
-          gameState="start";
+          boss=null;
+          gameState="win";
         }
       }
     }
@@ -147,36 +156,42 @@ function update(){
 function draw(){
   ctx.clearRect(0,0,c.width,c.height);
 
-  // DEBUG OVERLAY
-  ctx.fillStyle="lime";
-  ctx.font="14px monospace";
-  ctx.fillText(`LEVEL: ${level}`,10,20);
-  ctx.fillText(`KILLS: ${kills} / ${targetKills}`,10,40);
-  ctx.fillText(`ENEMIES: ${enemies.length}`,10,60);
-  ctx.fillText(`BOSS: ${boss? "YES":"NO"}`,10,80);
-
   if(gameState==="start"){
     ctx.fillStyle="white";
-    ctx.font="24px sans-serif";
+    ctx.font="22px sans-serif";
     ctx.fillText("TAP TO START",c.width/2-80,c.height/2);
     return;
   }
 
-  ctx.fillStyle="white";
+  if(gameState==="win"){
+    ctx.fillStyle="white";
+    ctx.font="24px sans-serif";
+    ctx.fillText("YOU WIN 🎉",c.width/2-70,c.height/2);
+    return;
+  }
+
+  // player
+  ctx.fillStyle="cyan";
   ctx.fillRect(player.x,player.y,player.w,player.h);
 
-  ctx.fillStyle="cyan";
+  // bullets
+  ctx.fillStyle="yellow";
   bullets.forEach(b=>ctx.fillRect(b.x,b.y,b.w,b.h));
 
-  enemies.forEach(e=>{
-    ctx.fillStyle="red";
-    ctx.fillRect(e.x,e.y,e.w,e.h);
-  });
+  // enemies
+  ctx.fillStyle="red";
+  enemies.forEach(e=>ctx.fillRect(e.x,e.y,e.w,e.h));
 
+  // boss
   if(boss){
     ctx.fillStyle="orange";
     ctx.fillRect(boss.x,boss.y,boss.w,boss.h);
+    ctx.fillStyle="red";
+    ctx.fillRect(boss.x,boss.y-10,boss.w*(boss.hp/20),6);
   }
+
+  ctx.fillStyle="white";
+  ctx.fillText("Level: "+level,10,20);
 }
 
 /* LOOP */
