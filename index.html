@@ -52,6 +52,11 @@ window.addEventListener("pointermove", e=>{
 });
 
 window.addEventListener("pointerdown", ()=>{
+  if(!player.alive){
+    restartGame();
+    return;
+  }
+
   bullets.push({
     x: player.x + player.w/2 - 3,
     y: player.y,
