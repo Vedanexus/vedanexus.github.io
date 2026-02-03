@@ -46,7 +46,7 @@ const player = {
 let bullets = [];
 let enemies = [];
 let score = 0;
-let WIN_SCORE = 50;
+let WIN_SCORE = 300;
 let gameState = "PLAY"; // PLAY | WIN | OVER
 
 /* ===== INPUT ===== */
@@ -76,7 +76,7 @@ setInterval(()=>{
     y: -40,
     w: 40,
     h: 40,
-    speed: 2
+    speed: 2 + score * 0.05
   });
 },1000);
 
