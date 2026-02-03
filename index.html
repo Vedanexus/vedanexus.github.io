@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Working Game</title>
+<title>VedaNexus Game</title>
 
 <style>
 html,body{
@@ -34,30 +34,27 @@ enemyImg.src = "enemy_laptop.png";
 
 let screenW = window.innerWidth;
 let screenH = window.innerHeight;
-  
+
 function resize(){
   const dpr = window.devicePixelRatio || 1;
-
   screenW = window.innerWidth;
   screenH = window.innerHeight;
 
   canvas.width = screenW * dpr;
   canvas.height = screenH * dpr;
-
   canvas.style.width = screenW + "px";
   canvas.style.height = screenH + "px";
 
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
 
-  player.x = screenW / 2 - player.w / 2;
+  player.x = screenW/2 - player.w/2;
   player.y = screenH - 80;
 }
-
 window.addEventListener("resize", resize);
 
 /* ===== PLAYER ===== */
 const player = {
-  x: screenW / 2 - 24,
+  x: screenW/2 - 24,
   y: screenH - 80,
   w: 48,
   h: 48,
@@ -65,249 +62,102 @@ const player = {
 };
 resize();
 
-/* ===== ARRAYS ===== */
-let explosions = [];
+/* ===== GAME STATE ===== */
 let bullets = [];
 let enemies = [];
+let explosions = [];
+
 let score = 0;
 let WIN_SCORE = 300;
-let gameState = "PLAY"; // PLAY | WIN | OVER
 let bulletsLeft = 30;
-let isFiring = false;   // finger down hai ya nahi
-let fireCooldown = 0;  // fire rate control
+let gameState = "PLAY";
+
+let isFiring = false;
+let fireCooldown = 0;
 let hintTimer = 0;
 
 /* ===== INPUT ===== */
-window.addEventListener("pointermove", e => {
-  if(!isFiring) return;
-
-  player.x = e.clientX - player.w / 2;
-});
-
-window.addEventListener("pointerdown", e => {
+window.addEventListener("pointerdown", e=>{
   if(gameState !== "PLAY") return;
-
   isFiring = true;
-  player.x = e.clientX - player.w / 2;
+  player.x = e.clientX - player.w/2;
 });
-  
-window.addEventListener("pointerup", () => {
+window.addEventListener("pointermove", e=>{
+  if(!isFiring) return;
+  player.x = e.clientX - player.w/2;
+});
+window.addEventListener("pointerup", ()=>{
   isFiring = false;
 });
 
-
 /* ===== ENEMY SPAWN ===== */
 setInterval(()=>{
+  if(gameState !== "PLAY") return;
   enemies.push({
     x: Math.random() * (screenW - 44),
-    y: -40,
+    y: -44,
     w: 44,
     h: 44,
-    speed: Math.min(2 + score * 0.03, 8)
+    speed: Math.min(2 + score*0.03, 8)
   });
 },1000);
 
-/* ===== COLLISION ===== */
+/* ===== HELPERS ===== */
 function hit(a,b){
-  return (
-    a.x < b.x + b.w &&
-    a.x + a.w > b.x &&
-    a.y < b.y + b.h &&
-    a.y + a.h > b.y
-  );
+  return a.x < b.x + b.w &&
+         a.x + a.w > b.x &&
+         a.y < b.y + b.h &&
+         a.y + a.h > b.y;
 }
-function createExplosion(x, y) {
-  for (let i = 0; i < 12; i++) {
+
+function createExplosion(x,y){
+  for(let i=0;i<12;i++){
     explosions.push({
-      x: x,
-      y: y,
-      vx: (Math.random() - 0.5) * 6,
-      vy: (Math.random() - 0.5) * 6,
-      life: 20
+      x,y,
+      vx:(Math.random()-0.5)*6,
+      vy:(Math.random()-0.5)*6,
+      life:20
     });
   }
 }
 
 /* ===== UPDATE ===== */
 function update(){
-  // AUTO FIRE (bullets LIMITED)
-if (
-  isFiring &&
-  gameState === "PLAY" &&
-  bulletsLeft > 0 &&
-  fireCooldown <= 0
-) {
-  bulletsLeft--;
 
-  bullets.push({
-    x: player.x + player.w / 2 - 3,
-    y: player.y,
-    w: 6,
-    h: 12,
-    speed: 8
-  });
-
-  fireCooldown = 10; // fire speed (8 fast, 12 slow)
-}
-
-// cooldown timer
-if (fireCooldown > 0) {
-  fireCooldown--;
-}
-
-  if(gameState !== "PLAY") return;
-  if(!player.alive) return;
-
-  bullets.forEach(b => b.y -= b.speed);
-  enemies.forEach(e => e.y += e.speed);
-
-  // bullet vs enemy
-for (let i = bullets.length - 1; i >= 0; i--) {
-  for (let j = enemies.length - 1; j >= 0; j--) {
-    if (hit(bullets[i], enemies[j])) {
-
-      const ex = enemies[j].x + enemies[j].w / 2;
-      const ey = enemies[j].y + enemies[j].h / 2;
-      
-      // remove bullet & enemy
-      bullets.splice(i, 1);
-      enemies.splice(j, 1);
-      
-// update explosions
-for (let i = explosions.length - 1; i >= 0; i--) {
-  const p = explosions[i];
-  p.x += p.vx;
-  p.y += p.vy;
-  p.life--;
-
-  if (p.life <= 0) {
-    explosions.splice(i, 1);
+  /* AUTO FIRE */
+  if(isFiring && gameState==="PLAY" && bulletsLeft>0 && fireCooldown<=0){
+    bulletsLeft--;
+    bullets.push({
+      x: player.x + player.w/2 - 3,
+      y: player.y,
+      w: 6,
+      h: 12,
+      speed: 8
+    });
+    fireCooldown = 10;
   }
-}     
-      
-createExplosion(
-  enemies[j]?.x || bullets[i].x,
-  enemies[j]?.y || bullets[i].y
-);
+  if(fireCooldown>0) fireCooldown--;
 
-      // 1️⃣ increase score (every kill)
-      score++;
+  if(gameState!=="PLAY" || !player.alive) return;
 
-      // 2️⃣ near-win hint (only once at 250)
-      if (score === 250) {
-        hintTimer = 120; // ~2 seconds
-      }
+  bullets.forEach(b=>b.y -= b.speed);
+  enemies.forEach(e=>e.y += e.speed);
 
-      // 3️⃣ WIN check (rare but possible)
-      if (score >= WIN_SCORE) {
-        gameState = "WIN";
-        player.alive = false;
-      }
-
-      // 4️⃣ bullet recovery chance (skill reward)
-      if (Math.random() < 0.25) {
-        bulletsLeft = Math.min(bulletsLeft + 1, 30);
-      }
-
-      break; // exit enemy loop after hit
-    }
-  }
-}
-
-  // enemy vs player
-  for(let i = 0; i < enemies.length; i++){
-    if(hit(enemies[i], player)){
-      player.alive = false;
-      gameState = "OVER";
-    }
+  /* EXPLOSION UPDATE (ONLY HERE) */
+  for(let k=explosions.length-1;k>=0;k--){
+    const p = explosions[k];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.life--;
+    if(p.life<=0) explosions.splice(k,1);
   }
 
-  bullets = bullets.filter(b => b.y > -20);
-  enemies = enemies.filter(e => e.y < screenH + 40);
-}
+  /* BULLET vs ENEMY */
+  for(let i=bullets.length-1;i>=0;i--){
+    for(let j=enemies.length-1;j>=0;j--){
+      if(hit(bullets[i], enemies[j])){
 
-function restartGame(){
-  player.alive = true;
-  bullets = [];
-  enemies = [];
-  score = 0;
-  bulletsLeft = 30;
-  gameState = "PLAY";
+        const ex = enemies[j].x + enemies[j].w/2;
+        const ey = enemies[j].y + enemies[j].h/2;
 
-  player.x = screenW / 2 - player.w / 2;
-  player.y = screenH - 80;
-}
-
-/* ===== DRAW ===== */
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  if(gameState === "WIN"){
-  ctx.fillStyle="white";
-  ctx.font="48px Arial";
-  ctx.textAlign="center";
-  ctx.fillText("IMPOSSIBLE…", screenW / 2, screenH / 2);
-  ctx.font="20px Arial";
-  ctx.fillText("You are not supposed to be here", screenW / 2, screenH / 2 + 40);
-  return;
-}
-
-if(gameState === "OVER"){
-  ctx.fillStyle="white";
-  ctx.font="48px Arial";
-  ctx.textAlign="center";
-  ctx.fillText("GAME OVER", screenW / 2, screenH / 2);
-  return;
-}
-ctx.fillStyle = "white";
-ctx.font = "20px Arial";
-ctx.textAlign = "left";
-
-const HUD_X = 20;
-const HUD_Y = 60;
-
-ctx.fillText("Score: " + score + " / " + WIN_SCORE, HUD_X, HUD_Y);
-ctx.fillText("Bullets: " + bulletsLeft, HUD_X, HUD_Y + 30);
-if(hintTimer > 0){
-  ctx.fillStyle = "rgba(255,255,255,0.8)";
-  ctx.font = "24px Arial";
-  ctx.textAlign = "center";
-  ctx.fillText("Almost there… stay sharp", screenW / 2, 120);
-  hintTimer--;
-}
-
-
-// player (hero image)
-ctx.drawImage(heroImg, player.x, player.y, player.w, player.h);
-
-
-  // bullets
-  ctx.fillStyle="yellow";
-  bullets.forEach(b=>{
-    ctx.fillRect(b.x,b.y,b.w,b.h);
-  });
-
-  // explosions
-explosions.forEach(p => {
-  ctx.fillStyle = `rgba(255,180,50,${p.life / 20})`;
-  ctx.beginPath();
-  ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
-  ctx.fill();
-});
-
-  // enemies (laptop image)
-enemies.forEach(e=>{
-  ctx.drawImage(enemyImg, e.x, e.y, e.w, e.h);
-});
-}
-
-/* ===== LOOP ===== */
-function loop(){
-  update();
-  draw();
-  requestAnimationFrame(loop);
-}
-loop();
-</script>
-</body>
-</html>
+        b
