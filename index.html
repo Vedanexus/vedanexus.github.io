@@ -67,31 +67,28 @@ let score = 0;
 let WIN_SCORE = 300;
 let gameState = "PLAY"; // PLAY | WIN | OVER
 let bulletsLeft = 30;
+let isFiring = false;   // finger down hai ya nahi
+let fireCooldown = 0;  // fire rate control
 let hintTimer = 0;
 
 /* ===== INPUT ===== */
-window.addEventListener("pointermove", e=>{
-  player.x = e.clientX - player.w/2;
+window.addEventListener("pointermove", e => {
+  if(!isFiring) return;
+
+  player.x = e.clientX - player.w / 2;
 });
 
-window.addEventListener("pointerdown", ()=>{
-  if(gameState === "WIN" || gameState === "OVER"){
-    restartGame();
-    return;
-  }
+window.addEventListener("pointerdown", e => {
+  if(gameState !== "PLAY") return;
 
-  if(bulletsLeft <= 0) return;
-
-  bulletsLeft--;
-
-  bullets.push({
-    x: player.x + player.w/2 - 3,
-    y: player.y,
-    w: 6,
-    h: 12,
-    speed: 8
-  });
+  isFiring = true;
+  player.x = e.clientX - player.w / 2;
 });
+  
+window.addEventListener("pointerup", () => {
+  isFiring = false;
+});
+
 
 /* ===== ENEMY SPAWN ===== */
 setInterval(()=>{
@@ -116,6 +113,31 @@ function hit(a,b){
 
 /* ===== UPDATE ===== */
 function update(){
+  // AUTO FIRE (bullets LIMITED)
+if (
+  isFiring &&
+  gameState === "PLAY" &&
+  bulletsLeft > 0 &&
+  fireCooldown <= 0
+) {
+  bulletsLeft--;
+
+  bullets.push({
+    x: player.x + player.w / 2 - 3,
+    y: player.y,
+    w: 6,
+    h: 12,
+    speed: 8
+  });
+
+  fireCooldown = 10; // fire speed (8 fast, 12 slow)
+}
+
+// cooldown timer
+if (fireCooldown > 0) {
+  fireCooldown--;
+}
+
   if(gameState !== "PLAY") return;
   if(!player.alive) return;
 
