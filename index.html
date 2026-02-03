@@ -43,21 +43,46 @@ function resetGame(){
 
 /* LEVEL SETUP */
 function spawnLevel(){
-  enemies=[];
-  boss=null;
+  enemies = [];
+  boss = null;
 
-  if(level===1){
-    for(let i=0;i<6;i++)
-      enemies.push({x:Math.random()*(c.width-48),y:-i*80,w:48,h:48,v:2});
+  /* ===== LEVEL 1 (Pressure Starts) ===== */
+  if(level === 1){
+    for(let i=0;i<8;i++){   // enemies badh gaye
+      enemies.push({
+        x: Math.random() * (c.width - 48),
+        y: -i * 50,         // gap kam (pehle 80 tha)
+        w: 48,
+        h: 48,
+        v: 3                // speed badhi (pehle 2)
+      });
+    }
   }
 
-  if(level===2){
-    for(let i=0;i<10;i++)
-      enemies.push({x:Math.random()*(c.width-48),y:-i*70,w:48,h:48,v:3});
+  /* ===== LEVEL 2 (REAL CHALLENGE) ===== */
+  if(level === 2){
+    for(let i=0;i<14;i++){  // kaafi enemies
+      enemies.push({
+        x: Math.random() * (c.width - 48),
+        y: -i * 45,         // aur tight gap
+        w: 48,
+        h: 48,
+        v: 4.5              // high speed
+      });
+    }
   }
 
-  if(level===3){
-    boss={x:c.width/2-80,y:60,w:160,h:160,hp:20,dir:1};
+  /* ===== LEVEL 3 (FINAL BOSS) ===== */
+  if(level === 3){
+    boss = {
+      x: c.width/2 - 80,
+      y: 50,
+      w: 160,
+      h: 160,
+      hp: 40,               // double health (pehle 20)
+      dir: 1,
+      speed: 3              // faster movement
+    };
   }
 }
 
