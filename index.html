@@ -154,18 +154,27 @@ function update(){
     boss.x += boss.dir * boss.speed;
     if(boss.x<20||boss.x+boss.w>c.width-20) boss.dir*=-1;
 
-    for(let i=bullets.length-1;i>=0;i--){
-      if(hit(bullets[i],boss)){
-        bullets.splice(i,1);
-        boss.hp--;
-        if(boss.hp<=0){
-          boss=null;
-          winTimer=60; // 1 sec buffer
-          break;
-        }
-      }
+    // boss damage – CENTER HIT ONLY
+const center = {
+  x: boss.x + boss.w * 0.3,
+  y: boss.y + boss.h * 0.3,
+  w: boss.w * 0.4,
+  h: boss.h * 0.4
+};
+
+for(let i = bullets.length - 1; i >= 0; i--){
+  if(hit(bullets[i], center)){
+    bullets.splice(i,1);
+    boss.hp--;
+
+    if(boss.hp <= 0){
+      boss = null;
+      winTimer = 60; // 1 sec buffer before win
+      break;
     }
   }
+}
+
 
   // win timer
   if(winTimer>0){
