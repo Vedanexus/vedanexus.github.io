@@ -154,33 +154,43 @@ function update(){
   }
 
     /* BULLET vs ENEMY */
-  for(let i=bullets.length-1;i>=0;i--){
-    for(let j=enemies.length-1;j>=0;j--){
-      if(hit(bullets[i], enemies[j])){
+for(let i = bullets.length - 1; i >= 0; i--){
+  for(let j = enemies.length - 1; j >= 0; j--){
+    if(hit(bullets[i], enemies[j])){
 
-        const ex = enemies[j].x + enemies[j].w/2;
-        const ey = enemies[j].y + enemies[j].h/2;
+      const ex = enemies[j].x + enemies[j].w / 2;
+      const ey = enemies[j].y + enemies[j].h / 2;
 
-        bullets.splice(i,1);
-        enemies.splice(j,1);
-        createExplosion(ex,ey);
+      // remove bullet & enemy
+      bullets.splice(i, 1);
+      enemies.splice(j, 1);
 
-        score++;
-        if(score === 250) hintTimer = 120;
+      // explosion
+      createExplosion(ex, ey);
 
-        if(score >= 300){
-          gameState = "WIN";
-          player.alive = false;
-        }
+      // score
+      score++;
 
-        if(Math.random() < 0.25){
-          bulletsLeft = 300;
-        }
-
-        break;
+      // near-win hint
+      if(score === 250){
+        hintTimer = 120;
       }
+
+      // WIN check (ONLY HERE)
+      if(score >= WIN_SCORE){
+        gameState = "WIN";
+        player.alive = false;
+      }
+
+      // ammo recovery (NOT reset)
+      if(Math.random() < 0.25){
+        bulletsLeft = Math.min(bulletsLeft + 1, 300);
+      }
+
+      break;
     }
   }
+}
 
   /* ENEMY vs PLAYER */
   for(let e of enemies){
