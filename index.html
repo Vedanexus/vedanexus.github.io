@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Dark Forest – FINAL FIXED BUILD</title>
+<title>Dark Forest – Final Mission</title>
 
 <style>
 html,body{margin:0;padding:0;overflow:hidden}
-body{background:url("bg.jpg") center/cover fixed no-repeat}
+body{background:#000}
 canvas{display:block}
 </style>
 </head>
@@ -15,180 +15,135 @@ canvas{display:block}
 <body>
 <canvas id="game"></canvas>
 
-<audio id="music" src="music.mp3" loop playsinline></audio>
-<audio id="bossMusic" src="boss-music.mp3" loop playsinline></audio>
-<audio id="hitSound" src="hit.mp3" playsinline></audio>
-
 <script>
-/* ===== CORE ===== */
 const c=document.getElementById("game"),ctx=c.getContext("2d");
 function resize(){c.width=innerWidth;c.height=innerHeight}
 addEventListener("resize",resize);resize();
 
-/* ===== IMAGES ===== */
-const heroImg=new Image();heroImg.src="hero.png";
-const enemyImg=new Image();enemyImg.src="enemy.png";
-const bossImg=new Image(); bossImg.src="boss.png";
+/* ASSETS */
+const heroImg=new Image(); heroImg.src="hero.png";
+const enemyImg=new Image(); enemyImg.src="enemy.png";
+const bossImg=new Image();  bossImg.src="boss.png";
 
-/* ===== AUDIO ===== */
-const music=document.getElementById("music");
-const bossMusic=document.getElementById("bossMusic");
-const hitSound=document.getElementById("hitSound");
-let audioStarted=false;
+/* STATE */
+let level=1;
+let player, bullets, enemies, boss;
+let gameState="start"; // start | play | win | over
 
-function startAudio(){
-  if(audioStarted) return;
-  music.muted=true;
-  music.play().then(()=>{
-    setTimeout(()=>{music.muted=false;music.volume=.35},300);
-    audioStarted=true;
-  });
-}
-function startBossMusic(){
-  music.pause();
-  bossMusic.currentTime=0;
-  bossMusic.volume=.5;
-  bossMusic.play().catch(()=>{});
-}
-function stopBossMusic(){
-  bossMusic.pause();
-  music.play().catch(()=>{});
-}
-
-/* ===== STATE ===== */
-let player, bullets, enemies, bossBullets;
-let boss=null, bossIndex=1;
-let score=0, level=1;
-let gameOver=false;
-let dragging=false;
-
-function resetGame(){
-  player={x:c.width/2-24,y:c.height-90,w:48,h:48,invincible:120};
+function reset(){
+  player={x:c.width/2-24,y:c.height-90,w:48,h:48};
   bullets=[];
   enemies=[];
-  bossBullets=[];
   boss=null;
-  bossIndex=1;
-  score=0;
-  level=1;
-  gameOver=false;
 }
-resetGame();
+reset();
 
-/* ===== INPUT ===== */
+/* INPUT */
 addEventListener("pointerdown",e=>{
-  startAudio();
-  if(gameOver){resetGame();return;}
-  dragging=true;
-  player.x=e.clientX-player.w/2;
-  bullets.push({x:player.x+22,y:player.y,w:6,h:12,v:10});
+  if(gameState==="start"){
+    gameState="play";
+    return;
+  }
+  if(gameState==="win"||gameState==="over"){
+    level=1;
+    gameState="start";
+    reset();
+    return;
+  }
+  bullets.push({
+    x:player.x+22,y:player.y,w:4,h:12,v:10
+  });
 });
 addEventListener("pointermove",e=>{
-  if(dragging && !gameOver) player.x=e.clientX-player.w/2;
+  if(gameState==="play"){
+    player.x=e.clientX-player.w/2;
+  }
 });
-addEventListener("pointerup",()=>dragging=false);
 
-/* ===== COLLISION ===== */
+/* COLLISION */
 function hit(a,b){
-  return a.x<b.x+b.w && a.x+a.w>b.x &&
-         a.y<b.y+b.h && a.y+a.h>b.y;
+  return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 }
 
-/* ===== SPAWN ENEMY ===== */
-setInterval(()=>{
-  if(!boss && !gameOver){
-    enemies.push({
-      x:Math.random()*(c.width-48),
-      y:-60,w:48,h:48,v:3+level*0.3
-    });
-  }
-},900);
-
-/* ===== UPDATE ===== */
+/* UPDATE */
 function update(){
-  if(gameOver) return;
-
-  level=Math.floor(score/600)+1;
-
-  if(player.invincible>0) player.invincible--;
+  if(gameState!=="play") return;
 
   bullets.forEach(b=>b.y-=b.v);
+
+  // LEVEL 1 & 2 ENEMIES
+  if(level<=2 && Math.random()<0.02){
+    enemies.push({
+      x:Math.random()*(c.width-48),
+      y:-50,w:48,h:48,v:2+level
+    });
+  }
+
   enemies.forEach(e=>e.y+=e.v);
-  bossBullets.forEach(b=>b.y+=b.v);
 
-  /* ===== BOSS SPAWN ===== */
-  if(!boss && level>=bossIndex*3){
-    enemies=[]; bullets=[]; bossBullets=[];
-    boss={
-      x:c.width/2-120,y:50,w:240,h:240,
-      hp:40+bossIndex*15,dir:1,fire:0,invincible:90
-    };
-    player.invincible=120;
-    startBossMusic();
-  }
-
-  /* ===== BOSS UPDATE ===== */
-  if(boss){
-    boss.x+=boss.dir*(2+bossIndex);
-    if(boss.x<20||boss.x+boss.w>c.width-20) boss.dir*=-1;
-    if(boss.invincible>0) boss.invincible--;
-
-    boss.fire++;
-    if(boss.fire>50){
-      boss.fire=0;
-      bossBullets.push({
-        x:boss.x+boss.w/2-6,
-        y:boss.y+boss.h+10,
-        w:12,h:18,v:6+bossIndex
-      });
-    }
-  }
-
-  /* ===== BULLET → ENEMY (FIXED) ===== */
+  // BULLET → ENEMY
   bullets.forEach((b,bi)=>{
     enemies.forEach((e,ei)=>{
       if(hit(b,e)){
         bullets.splice(bi,1);
         enemies.splice(ei,1);
-        score+=50;
-        hitSound.currentTime=0;
-        hitSound.play().catch(()=>{});
       }
     });
   });
 
-  /* ===== BULLET → BOSS ===== */
-  bullets.forEach((b,bi)=>{
-    if(boss && boss.invincible<=0 && hit(b,boss)){
-      bullets.splice(bi,1);
-      boss.hp--;
-      if(boss.hp<=0){
-        boss=null;
-        bossIndex++;
-        stopBossMusic();
-        score+=1500;
+  // LEVEL PROGRESSION
+  if(level===1 && enemies.length===0){
+    level=2;
+  }
+  if(level===2 && enemies.length===0){
+    level=3;
+    boss={x:c.width/2-80,y:60,w:160,h:160,hp:20,dir:1};
+  }
+
+  // FINAL BOSS
+  if(level===3 && boss){
+    boss.x+=boss.dir*2;
+    if(boss.x<20||boss.x+boss.w>c.width-20) boss.dir*=-1;
+
+    bullets.forEach((b,bi)=>{
+      if(hit(b,boss)){
+        bullets.splice(bi,1);
+        boss.hp--;
+        if(boss.hp<=0){
+          boss=null;
+          gameState="win";
+        }
       }
-    }
-  });
+    });
+  }
 
-  /* ===== PLAYER HIT ===== */
-  enemies.forEach(e=>{
-    if(player.invincible<=0 && hit(player,e)) gameOver=true;
-  });
-  bossBullets.forEach(b=>{
-    if(player.invincible<=0 && hit(player,b)) gameOver=true;
-  });
-
-  bullets=bullets.filter(b=>b.y>-50);
+  bullets=bullets.filter(b=>b.y>-20);
   enemies=enemies.filter(e=>e.y<c.height+60);
-  bossBullets=bossBullets.filter(b=>b.y<c.height+60);
-
-  score++;
 }
 
-/* ===== DRAW ===== */
+/* DRAW */
 function draw(){
   ctx.clearRect(0,0,c.width,c.height);
+
+  if(gameState==="start"){
+    ctx.fillStyle="white";
+    ctx.font="24px system-ui";
+    ctx.fillText("FINAL MISSION",c.width/2-90,c.height/2-10);
+    ctx.font="16px system-ui";
+    ctx.fillText("Tap to Start",c.width/2-50,c.height/2+20);
+    return;
+  }
+
+  if(gameState==="win"){
+    ctx.fillStyle="white";
+    ctx.font="26px system-ui";
+    ctx.fillText("YOU WIN 🎉",c.width/2-80,c.height/2);
+    ctx.font="16px system-ui";
+    ctx.fillText("Tap to Play Again",c.width/2-70,c.height/2+30);
+    return;
+  }
+
+  ctx.drawImage(heroImg,player.x,player.y,player.w,player.h);
 
   bullets.forEach(b=>{
     ctx.fillStyle="cyan";
@@ -202,26 +157,14 @@ function draw(){
   if(boss){
     ctx.drawImage(bossImg,boss.x,boss.y,boss.w,boss.h);
     ctx.fillStyle="red";
-    ctx.fillRect(boss.x,boss.y-10,boss.w*(boss.hp/(40+bossIndex*15)),6);
+    ctx.fillRect(boss.x,boss.y-10,boss.w*(boss.hp/20),6);
   }
-
-  ctx.globalAlpha=player.invincible>0?0.6:1;
-  ctx.drawImage(heroImg,player.x,player.y,player.w,player.h);
-  ctx.globalAlpha=1;
 
   ctx.fillStyle="white";
-  ctx.fillText("Score: "+score,12,20);
-  ctx.fillText("Level: "+level,12,40);
-
-  if(gameOver){
-    ctx.fillRect(0,0,c.width,c.height);
-    ctx.fillStyle="white";
-    ctx.fillText("GAME OVER",c.width/2-50,c.height/2);
-    ctx.fillText("Tap to Restart",c.width/2-60,c.height/2+20);
-  }
+  ctx.fillText("Level: "+level,12,20);
 }
 
-/* ===== LOOP ===== */
+/* LOOP */
 (function loop(){
   update();
   draw();
