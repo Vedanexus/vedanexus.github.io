@@ -77,15 +77,21 @@ let fireCooldown = 0;
 let hintTimer = 0;
 
 /* ===== INPUT ===== */
-window.addEventListener("pointerdown", e=>{
+window.addEventListener("pointerdown", e => {
+
+  // 🔁 restart if game ended
+  if(gameState === "OVER" || gameState === "WIN"){
+    restartGame();
+    return;
+  }
+
+  // normal gameplay
   if(gameState !== "PLAY") return;
+
   isFiring = true;
-  player.x = e.clientX - player.w/2;
+  player.x = e.clientX - player.w / 2;
 });
-window.addEventListener("pointermove", e=>{
-  if(!isFiring) return;
-  player.x = e.clientX - player.w/2;
-});
+
 window.addEventListener("pointerup", ()=>{
   isFiring = false;
 });
