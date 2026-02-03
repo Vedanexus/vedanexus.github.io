@@ -92,6 +92,7 @@ function hit(a,b){
 
 /* ===== UPDATE ===== */
 function update(){
+  if(gameState !== "PLAY") return;
   if(!player.alive) return;
 
   bullets.forEach(b => b.y -= b.speed);
