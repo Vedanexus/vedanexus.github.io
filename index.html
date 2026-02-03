@@ -155,12 +155,32 @@ function update(){
     if(boss.x<20||boss.x+boss.w>c.width-20) boss.dir*=-1;
 
     // boss damage – CENTER HIT ONLY
-const center = {
-  x: boss.x + boss.w * 0.3,
-  y: boss.y + boss.h * 0.3,
-  w: boss.w * 0.4,
-  h: boss.h * 0.4
-};
+// boss damage – CENTER HIT ONLY (SAFE VERSION)
+for(let i = bullets.length - 1; i >= 0; i--){
+  const b = bullets[i];
+
+  const cx = boss.x + boss.w * 0.3;
+  const cy = boss.y + boss.h * 0.3;
+  const cw = boss.w * 0.4;
+  const ch = boss.h * 0.4;
+
+  if(
+    b.x < cx + cw &&
+    b.x + b.w > cx &&
+    b.y < cy + ch &&
+    b.y + b.h > cy
+  ){
+    bullets.splice(i,1);
+    boss.hp--;
+
+    if(boss.hp <= 0){
+      boss = null;
+      winTimer = 60;
+      break;
+    }
+  }
+}
+
 
 for(let i = bullets.length - 1; i >= 0; i--){
   if(hit(bullets[i], center)){
