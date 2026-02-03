@@ -67,6 +67,7 @@ let score = 0;
 let WIN_SCORE = 300;
 let gameState = "PLAY"; // PLAY | WIN | OVER
 let bulletsLeft = 30;
+let hintTimer = 0;
 
 /* ===== INPUT ===== */
 window.addEventListener("pointermove", e=>{
@@ -99,7 +100,7 @@ setInterval(()=>{
     y: -40,
     w: 40,
     h: 40,
-    speed: 2 + score * 0.05
+    speed: Math.min(2 + score * 0.03, 8)
   });
 },1000);
 
@@ -125,14 +126,29 @@ function update(){
   for(let i = bullets.length - 1; i >= 0; i--){
     for(let j = enemies.length - 1; j >= 0; j--){
       if(hit(bullets[i], enemies[j])){
-        bullets.splice(i,1);
-        enemies.splice(j,1);
-        score++;
+  bullets.splice(i,1);
+  enemies.splice(j,1);
 
-        // 25% chance to recover 1 bullet
+  // 1️⃣ score badhao
+  score++;
+
+  // 2️⃣ near-win hint (sirf ek baar)
+  if(score === 250){
+    hintTimer = 120; // ~2 seconds
+  }
+
+  // 3️⃣ WIN check (har score pe)
+  if(score >= WIN_SCORE){
+    gameState = "WIN";
+    player.alive = false;
+  }
+
+  // 4️⃣ bullet recovery chance (har kill pe)
   if(Math.random() < 0.25){
     bulletsLeft = Math.min(bulletsLeft + 1, 30);
   }
+
+  break;
 }
 
   // enemy vs player
@@ -189,6 +205,13 @@ const HUD_Y = 60;
 
 ctx.fillText("Score: " + score + " / " + WIN_SCORE, HUD_X, HUD_Y);
 ctx.fillText("Bullets: " + bulletsLeft, HUD_X, HUD_Y + 30);
+if(hintTimer > 0){
+  ctx.fillStyle = "rgba(255,255,255,0.8)";
+  ctx.font = "24px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("Almost there… stay sharp", screenW / 2, 120);
+  hintTimer--;
+}
 
 
   // player
