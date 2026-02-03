@@ -3,11 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Dark Forest – Final Mission</title>
+<title>Mini Shooter</title>
 
 <style>
-html,body{margin:0;padding:0;overflow:hidden}
-body{background:#000}
+html,body{
+  margin:0;
+  padding:0;
+  overflow:hidden;
+}
+body{
+  background:url("bg.jpg") center/cover no-repeat fixed;
+}
 canvas{display:block}
 </style>
 </head>
@@ -16,72 +22,110 @@ canvas{display:block}
 <canvas id="game"></canvas>
 
 <script>
+/* ===== CANVAS ===== */
 const c=document.getElementById("game"),ctx=c.getContext("2d");
 function resize(){c.width=innerWidth;c.height=innerHeight}
 addEventListener("resize",resize);resize();
 
-/* ASSETS */
+/* ===== IMAGES ===== */
 const heroImg=new Image(); heroImg.src="hero.png";
 const enemyImg=new Image(); enemyImg.src="enemy.png";
 const bossImg=new Image();  bossImg.src="boss.png";
 
-/* STATE */
+/* ===== GAME STATE ===== */
+let gameState="start"; // start | play | win
 let level=1;
-let player, bullets, enemies, boss;
-let gameState="start"; // start | play | win | over
 
-function reset(){
+let player, bullets, enemies, boss;
+let dragging=false;
+
+/* ===== RESET ===== */
+function resetGame(){
   player={x:c.width/2-24,y:c.height-90,w:48,h:48};
   bullets=[];
   enemies=[];
   boss=null;
 }
-reset();
+resetGame();
 
-/* INPUT */
+/* ===== INPUT ===== */
 addEventListener("pointerdown",e=>{
   if(gameState==="start"){
     gameState="play";
+    level=1;
+    resetGame();
+    spawnLevel();
     return;
   }
-  if(gameState==="win"||gameState==="over"){
-    level=1;
+  if(gameState==="win"){
     gameState="start";
-    reset();
     return;
   }
   bullets.push({
-    x:player.x+22,y:player.y,w:4,h:12,v:10
+    x:player.x+player.w/2-3,
+    y:player.y,
+    w:6,h:12,v:10
   });
+  dragging=true;
 });
 addEventListener("pointermove",e=>{
-  if(gameState==="play"){
+  if(gameState==="play" && dragging){
     player.x=e.clientX-player.w/2;
   }
 });
+addEventListener("pointerup",()=>dragging=false);
 
-/* COLLISION */
+/* ===== COLLISION ===== */
 function hit(a,b){
-  return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
+  return a.x<b.x+b.w && a.x+a.w>b.x &&
+         a.y<b.y+b.h && a.y+a.h>b.y;
 }
 
-/* UPDATE */
+/* ===== LEVEL SETUP ===== */
+function spawnLevel(){
+  enemies=[];
+  boss=null;
+
+  if(level===1){
+    for(let i=0;i<6;i++){
+      enemies.push({
+        x:Math.random()*(c.width-48),
+        y:-i*80,
+        w:48,h:48,v:2
+      });
+    }
+  }
+
+  if(level===2){
+    for(let i=0;i<10;i++){
+      enemies.push({
+        x:Math.random()*(c.width-48),
+        y:-i*70,
+        w:48,h:48,v:3
+      });
+    }
+  }
+
+  if(level===3){
+    boss={
+      x:c.width/2-80,
+      y:60,
+      w:160,
+      h:160,
+      hp:20,
+      dir:1
+    };
+  }
+}
+
+/* ===== UPDATE ===== */
 function update(){
   if(gameState!=="play") return;
 
   bullets.forEach(b=>b.y-=b.v);
-
-  // LEVEL 1 & 2 ENEMIES
-  if(level<=2 && Math.random()<0.02){
-    enemies.push({
-      x:Math.random()*(c.width-48),
-      y:-50,w:48,h:48,v:2+level
-    });
-  }
-
   enemies.forEach(e=>e.y+=e.v);
 
-  // BULLET → ENEMY
+  // Bullet → Enemy
   bullets.forEach((b,bi)=>{
     enemies.forEach((e,ei)=>{
       if(hit(b,e)){
@@ -91,16 +135,13 @@ function update(){
     });
   });
 
-  // LEVEL PROGRESSION
-  if(level===1 && enemies.length===0){
-    level=2;
-  }
-  if(level===2 && enemies.length===0){
-    level=3;
-    boss={x:c.width/2-80,y:60,w:160,h:160,hp:20,dir:1};
+  // Level clear
+  if(level<=2 && enemies.length===0){
+    level++;
+    spawnLevel();
   }
 
-  // FINAL BOSS
+  // Boss logic
   if(level===3 && boss){
     boss.x+=boss.dir*2;
     if(boss.x<20||boss.x+boss.w>c.width-20) boss.dir*=-1;
@@ -121,16 +162,14 @@ function update(){
   enemies=enemies.filter(e=>e.y<c.height+60);
 }
 
-/* DRAW */
+/* ===== DRAW ===== */
 function draw(){
   ctx.clearRect(0,0,c.width,c.height);
 
   if(gameState==="start"){
     ctx.fillStyle="white";
     ctx.font="24px system-ui";
-    ctx.fillText("FINAL MISSION",c.width/2-90,c.height/2-10);
-    ctx.font="16px system-ui";
-    ctx.fillText("Tap to Start",c.width/2-50,c.height/2+20);
+    ctx.fillText("Tap to Start",c.width/2-70,c.height/2);
     return;
   }
 
@@ -143,17 +182,19 @@ function draw(){
     return;
   }
 
+  // Player
   ctx.drawImage(heroImg,player.x,player.y,player.w,player.h);
 
-  bullets.forEach(b=>{
-    ctx.fillStyle="cyan";
-    ctx.fillRect(b.x,b.y,b.w,b.h);
-  });
+  // Bullets
+  ctx.fillStyle="cyan";
+  bullets.forEach(b=>ctx.fillRect(b.x,b.y,b.w,b.h));
 
+  // Enemies
   enemies.forEach(e=>{
     ctx.drawImage(enemyImg,e.x,e.y,e.w,e.h);
   });
 
+  // Boss
   if(boss){
     ctx.drawImage(bossImg,boss.x,boss.y,boss.w,boss.h);
     ctx.fillStyle="red";
@@ -164,7 +205,7 @@ function draw(){
   ctx.fillText("Level: "+level,12,20);
 }
 
-/* LOOP */
+/* ===== LOOP ===== */
 (function loop(){
   update();
   draw();
