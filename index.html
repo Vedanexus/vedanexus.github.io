@@ -37,7 +37,10 @@ function resize(){
 
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  player.y = canvas.height / dpr - 80;
+  // 👇 SAFETY CHECK
+  if(typeof player !== "undefined"){
+    player.y = canvas.height / dpr - 80;
+  }
 }
 
 resize();
