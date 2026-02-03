@@ -103,7 +103,14 @@ function update(){
       if(hit(bullets[i], enemies[j])){
         bullets.splice(i,1);
         enemies.splice(j,1);
+        score++;
+
+        if(score >= WIN_SCORE){
+          gameState = "WIN";
+          player.alive = false;
+        }
         break;
+       }
       }
     }
   }
@@ -112,7 +119,8 @@ function update(){
   for(let i=0;i<enemies.length;i++){
     if(hit(enemies[i], player)){
       player.alive = false;
-    }
+      gameState = "OVER";
+     }
   }
 
   bullets = bullets.filter(b => b.y > -20);
