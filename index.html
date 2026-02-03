@@ -166,6 +166,10 @@ for (let i = bullets.length - 1; i >= 0; i--) {
   for (let j = enemies.length - 1; j >= 0; j--) {
     if (hit(bullets[i], enemies[j])) {
       
+      // remove bullet & enemy
+      bullets.splice(i, 1);
+      enemies.splice(j, 1);
+      
 // update explosions
 for (let i = explosions.length - 1; i >= 0; i--) {
   const p = explosions[i];
@@ -176,11 +180,7 @@ for (let i = explosions.length - 1; i >= 0; i--) {
   if (p.life <= 0) {
     explosions.splice(i, 1);
   }
-}
-
-      // remove bullet & enemy
-      bullets.splice(i, 1);
-      enemies.splice(j, 1);
+}     
       
 createExplosion(
   enemies[j]?.x || bullets[i].x,
