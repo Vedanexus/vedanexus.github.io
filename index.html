@@ -48,6 +48,7 @@ let enemies = [];
 let score = 0;
 let WIN_SCORE = 300;
 let gameState = "PLAY"; // PLAY | WIN | OVER
+let bulletsLeft = 30;
 
 /* ===== INPUT ===== */
 window.addEventListener("pointermove", e=>{
@@ -55,10 +56,13 @@ window.addEventListener("pointermove", e=>{
 });
 
 window.addEventListener("pointerdown", ()=>{
-  if(!player.alive){
-    restartGame();
-    return;
-  }
+  // agar game chal hi nahi raha
+  if(gameState !== "PLAY") return;
+
+  // agar bullets khatam ho gayi
+  if(bulletsLeft <= 0) return;
+
+  bulletsLeft--; // 👈 ek bullet kam
 
   bullets.push({
     x: player.x + player.w/2 - 3,
@@ -145,11 +149,9 @@ function draw(){
   ctx.fillStyle="white";
   ctx.font="48px Arial";
   ctx.textAlign="center";
-  ctx.fillText("YOU WIN!", canvas.width/2, canvas.height/2);
-
-  ctx.font="24px Arial";
-  ctx.fillText("You defeated all enemies", canvas.width/2, canvas.height/2 + 50);
-  return;
+  ctx.fillText("IMPOSSIBLE…", canvas.width/2, canvas.height/2);
+  ctx.font="20px Arial";
+  ctx.fillText("You are not supposed to be here", canvas.width/2, canvas.height/2 + 40);
 }
 
 if(gameState === "OVER"){
