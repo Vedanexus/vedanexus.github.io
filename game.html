@@ -43,6 +43,13 @@ canvas {
 <canvas id="game"></canvas>
 
 <script>
+/* ===== GA4 EVENT HELPER ===== */
+function trackEvent(eventName){
+  if(typeof gtag === "function"){
+    gtag("event", eventName);
+  }
+}
+  
 /* ===== CANVAS ===== */
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -227,6 +234,7 @@ for(let i = bullets.length - 1; i >= 0; i--){
       if(score >= WIN_SCORE){
         gameState = "WIN";
         player.alive = false;
+        trackEvent("game_win");
       }
 
       // ammo recovery (NOT reset)
@@ -250,6 +258,8 @@ for(let i = bullets.length - 1; i >= 0; i--){
 
       player.alive = false;
       gameState = "OVER";
+      trackEvent("game_over");
+
     }
   }
 
@@ -274,6 +284,9 @@ function restartGame(){
 
   player.x = screenW / 2 - player.w / 2;
   player.y = screenH - 80;
+
+  trackEvent("game_start");
+
 }
 
 /* ===== DRAW ===== */
