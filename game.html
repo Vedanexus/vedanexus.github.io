@@ -238,7 +238,7 @@ if(isFiring && gameState==="PLAY" && bulletsLeft>0 && fireCooldown<=0){
 }
 
 // ✅ YE HAMESHA ALAG HONA CHAHIYE
-if(fireCooldown > 0) fireCooldown--;
+  if(fireCooldown > 0) fireCooldown--;
 
 
   if(gameState!=="PLAY" || !player.alive) return;
@@ -263,49 +263,46 @@ for(let i = bullets.length - 1; i >= 0; i--){
       const ex = enemies[j].x + enemies[j].w / 2;
       const ey = enemies[j].y + enemies[j].h / 2;
 
-      // remove bullet & enemy
       bullets.splice(i, 1);
       enemies.splice(j, 1);
 
-      // explosion
       createExplosion(ex, ey);
-      
-      // score
-     score++;
 
-// ✅ sound independent logic
-if(score === 250){
-  hintTimer = 120;
-}
+      // ✅ GAME LOGIC (sound se independent)
+      score++;
 
-if(score >= WIN_SCORE){
-  gameState = "WIN";
-  player.alive = false;
-  trackEvent("game_win");
+      if(score === 250){
+        hintTimer = 120;
+      }
 
-  bgMusic.pause();
-  bgMusic.currentTime = 0;
+      if(score >= WIN_SCORE){
+        gameState = "WIN";
+        player.alive = false;
+        trackEvent("game_win");
 
-  if(soundEnabled){
-    winSound.currentTime = 0;
-    winSound.play().catch(()=>{});
-  }
-}
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
 
-if(Math.random() < 0.25){
-  bulletsLeft = Math.min(bulletsLeft + 1, 300);
-}
+        if(soundEnabled){
+          winSound.currentTime = 0;
+          winSound.play().catch(()=>{});
+        }
+      }
 
-if(soundEnabled){
-  explodeSound.currentTime = 0;
-  explodeSound.play().catch(()=>{});
-}
+      if(Math.random() < 0.25){
+        bulletsLeft = Math.min(bulletsLeft + 1, 300);
+      }
 
-break;
+      // 🔊 SOUND ALAG
+      if(soundEnabled){
+        explodeSound.currentTime = 0;
+        explodeSound.play().catch(()=>{});
+      }
+
+      break;
     }
   }
 }
-
   /* ENEMY vs PLAYER */
   for(let e of enemies){
     if(
