@@ -228,10 +228,12 @@ function update(){
       h: 12,
       speed: 8
     });
+    fireCooldown = 10;
+    
     if(soundEnabled){
     shootSound.currentTime = 0;
     shootSound.play().catch(()=>{});
-    fireCooldown = 10;
+    
   }
   if(fireCooldown>0) fireCooldown--;
 
@@ -264,12 +266,12 @@ for(let i = bullets.length - 1; i >= 0; i--){
       // explosion
       createExplosion(ex, ey);
       
+      // score
+      score++;
+      
     if(soundEnabled){
       explodeSound.currentTime = 0;
       explodeSound.play().catch(()=>{});
-
-      // score
-      score++;
 
       // near-win hint
       if(score === 250){
@@ -285,14 +287,11 @@ for(let i = bullets.length - 1; i >= 0; i--){
       bgMusic.pause();
       bgMusic.currentTime = 0;
 
-      winSound.currentTime = 0;
       if(soundEnabled){
       winSound.currentTime = 0;
       winSound.play().catch(()=>{});
      }
-
-
-
+    }
       // ammo recovery (NOT reset)
       if(Math.random() < 0.25){
         bulletsLeft = Math.min(bulletsLeft + 1, 300);
