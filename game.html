@@ -199,6 +199,8 @@ function update(){
       h: 12,
       speed: 8
     });
+    shootSound.currentTime = 0;
+    shootSound.play().catch(()=>{});
     fireCooldown = 10;
   }
   if(fireCooldown>0) fireCooldown--;
