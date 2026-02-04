@@ -292,17 +292,16 @@ if(score >= WIN_SCORE){
   }
 }
 
+if(Math.random() < 0.25){
+  bulletsLeft = Math.min(bulletsLeft + 1, 300);
+}
+
 if(soundEnabled){
   explodeSound.currentTime = 0;
   explodeSound.play().catch(()=>{});
 }
 
-      // ammo recovery (NOT reset)
-      if(Math.random() < 0.25){
-        bulletsLeft = Math.min(bulletsLeft + 1, 300);
-      }
-
-      break;
+break;
     }
   }
 }
