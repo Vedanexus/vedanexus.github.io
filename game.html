@@ -89,6 +89,21 @@ let hintTimer = 0;
 /* ===== INPUT ===== */
 window.addEventListener("pointerdown", e => {
 
+  // GAME OVER → About page click
+if(gameState === "OVER"){
+  const y = e.clientY;
+
+  // About VedaNexus text area
+  if(y > screenH/2 + 65 && y < screenH/2 + 95){
+    window.location.href = "about.html";
+    return;
+  }
+
+  // otherwise restart game
+  restartGame();
+  return;
+}
+
   // 🔁 restart if game ended
   if(gameState === "OVER" || gameState === "WIN"){
     restartGame();
