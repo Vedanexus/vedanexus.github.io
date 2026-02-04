@@ -1,55 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VedaNexus Game</title>
+<title>VedaNexus – Impossible Game</title>
 
 <style>
-body{
+*{
   margin:0;
   padding:0;
-  height:100vh;
-  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+    url("bg.jpg") center/cover no-repeat;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-family: Arial, sans-serif;
   color:#fff;
 }
 
 .container{
   text-align:center;
-  max-width:400px;
   padding:20px;
+  max-width:420px;
 }
 
 .logo{
-  font-size:36px;
+  font-size:34px;
   font-weight:bold;
+  letter-spacing:1px;
   color:#ffd400;
-  margin-bottom:10px;
 }
 
-.subtitle{
+.tagline{
+  margin-top:10px;
+  font-size:18px;
+  opacity:0.9;
+}
+
+.game-title{
+  margin:30px 0 10px;
+  font-size:26px;
+  font-weight:bold;
+}
+
+.desc{
   font-size:16px;
-  opacity:0.8;
-  margin-bottom:30px;
+  line-height:1.5;
+  opacity:0.85;
 }
 
 .play-btn{
+  margin-top:30px;
   display:inline-block;
-  padding:14px 32px;
-  background:#ffd400;
-  color:#000;
-  text-decoration:none;
+  padding:14px 28px;
   font-size:18px;
   font-weight:bold;
+  color:#111;
+  background:#ffd400;
   border-radius:30px;
+  text-decoration:none;
+  box-shadow:0 8px 20px rgba(0,0,0,0.4);
+  transition:0.2s ease;
 }
 
 .play-btn:hover{
-  background:#ffea00;
+  transform:scale(1.05);
+}
+
+.note{
+  margin-top:20px;
+  font-size:13px;
+  opacity:0.7;
 }
 </style>
 </head>
@@ -57,15 +84,26 @@ body{
 <body>
 
 <div class="container">
-  <div class="logo">VedaNexus</div>
-  <div class="subtitle">
-    Skill-Based Tech Challenge  
-    <br>Can you beat the impossible?
+
+  <div class="logo">VEDANEXUS</div>
+  <div class="tagline">Tech • Laptops • IT Solutions</div>
+
+  <div class="game-title">🔥 The Impossible Game</div>
+
+  <div class="desc">
+    Shoot the falling laptops.<br>
+    Reach <b>300 points</b> if you can.<br>
+    <b>Almost nobody wins.</b>
   </div>
 
-  <a href="game.html" class="play-btn">
+  <a class="play-btn" href="game.html">
     ▶ Play Game
   </a>
+
+  <div class="note">
+    Best played on mobile • One hand • Tap & drag
+  </div>
+
 </div>
 
 </body>
