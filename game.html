@@ -219,23 +219,27 @@ function createExplosion(x,y){
 function update(){
 
   /* AUTO FIRE */
-  if(isFiring && gameState==="PLAY" && bulletsLeft>0 && fireCooldown<=0){
-    bulletsLeft--;
-    bullets.push({
-      x: player.x + player.w/2 - 3,
-      y: player.y,
-      w: 6,
-      h: 12,
-      speed: 8
-    });
-    fireCooldown = 10;
-    
-    if(soundEnabled){
+if(isFiring && gameState==="PLAY" && bulletsLeft>0 && fireCooldown<=0){
+  bulletsLeft--;
+  bullets.push({
+    x: player.x + player.w/2 - 3,
+    y: player.y,
+    w: 6,
+    h: 12,
+    speed: 8
+  });
+
+  fireCooldown = 10;
+
+  if(soundEnabled){
     shootSound.currentTime = 0;
     shootSound.play().catch(()=>{});
-    
   }
-  if(fireCooldown>0) fireCooldown--;
+}
+
+// ✅ YE HAMESHA ALAG HONA CHAHIYE
+if(fireCooldown > 0) fireCooldown--;
+
 
   if(gameState!=="PLAY" || !player.alive) return;
 
@@ -267,31 +271,32 @@ for(let i = bullets.length - 1; i >= 0; i--){
       createExplosion(ex, ey);
       
       // score
-      score++;
-      
-    if(soundEnabled){
-      explodeSound.currentTime = 0;
-      explodeSound.play().catch(()=>{});
+     score++;
 
-      // near-win hint
-      if(score === 250){
-        hintTimer = 120;
-      }
+// ✅ sound independent logic
+if(score === 250){
+  hintTimer = 120;
+}
 
-      // WIN check (ONLY HERE)
-      if(score >= WIN_SCORE){
-      gameState = "WIN";
-      player.alive = false;
-      trackEvent("game_win");
+if(score >= WIN_SCORE){
+  gameState = "WIN";
+  player.alive = false;
+  trackEvent("game_win");
 
-      bgMusic.pause();
-      bgMusic.currentTime = 0;
+  bgMusic.pause();
+  bgMusic.currentTime = 0;
 
-      if(soundEnabled){
-      winSound.currentTime = 0;
-      winSound.play().catch(()=>{});
-     }
-    }
+  if(soundEnabled){
+    winSound.currentTime = 0;
+    winSound.play().catch(()=>{});
+  }
+}
+
+if(soundEnabled){
+  explodeSound.currentTime = 0;
+  explodeSound.play().catch(()=>{});
+}
+
       // ammo recovery (NOT reset)
       if(Math.random() < 0.25){
         bulletsLeft = Math.min(bulletsLeft + 1, 300);
