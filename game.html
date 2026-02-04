@@ -62,6 +62,9 @@ explodeSound.volume = 0.5;
 const gameOverSound = new Audio("sounds/gameover.mp3");
 gameOverSound.volume = 0.6;
 
+const winSound = new Audio("sounds/win.mp3");
+winSound.volume = 0.6;
+
 /* ===== CANVAS ===== */
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -253,10 +256,17 @@ for(let i = bullets.length - 1; i >= 0; i--){
 
       // WIN check (ONLY HERE)
       if(score >= WIN_SCORE){
-        gameState = "WIN";
-        player.alive = false;
-        trackEvent("game_win");
-      }
+      gameState = "WIN";
+      player.alive = false;
+      trackEvent("game_win");
+
+      bgMusic.pause();
+      bgMusic.currentTime = 0;
+
+      winSound.currentTime = 0;
+      winSound.play().catch(()=>{});
+     }
+
 
       // ammo recovery (NOT reset)
       if(Math.random() < 0.25){
