@@ -125,7 +125,7 @@ let hintTimer = 0;
 window.addEventListener("pointerdown", e => {
 
 // 🔊 Sound toggle tap
-if(e.clientX > screenW - 60 && e.clientY < 60){
+if(e.clientX > screenW - 80 && e.clientY < 80){
   soundEnabled = !soundEnabled;
 
   bgMusic.muted = !soundEnabled;
@@ -439,8 +439,6 @@ function loop(){
   draw();
   requestAnimationFrame(loop);
 }
-
-trackEvent("game_start");
   
 loop();
 </script>
