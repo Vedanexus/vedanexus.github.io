@@ -313,6 +313,9 @@ function restartGame(){
   player.y = screenH - 80;
 
   trackEvent("game_start");
+  
+  gameOverSound.pause();
+  gameOverSound.currentTime = 0;
 
 }
 
