@@ -49,6 +49,12 @@ function trackEvent(eventName){
   }
 }
   
+<script>
+const bgMusic = new Audio("sounds/bg.mp3");
+bgMusic.loop = true;
+bgMusic.volume = 0.25; // low volume
+</script>
+
 /* ===== CANVAS ===== */
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -105,6 +111,10 @@ let hintTimer = 0;
 
 /* ===== INPUT ===== */
 window.addEventListener("pointerdown", e => {
+
+if(bgMusic.paused){
+  bgMusic.play().catch(()=>{});
+}
 
   // GAME OVER → About page click
 if(gameState === "OVER"){
@@ -258,6 +268,9 @@ for(let i = bullets.length - 1; i >= 0; i--){
       player.alive = false;
       gameState = "OVER";
       trackEvent("game_over");
+      bgMusic.pause();
+      bgMusic.currentTime = 0;
+
 
     }
   }
