@@ -128,6 +128,12 @@ window.addEventListener("pointerdown", e => {
 if(e.clientX > screenW - 60 && e.clientY < 60){
   soundEnabled = !soundEnabled;
 
+  bgMusic.muted = !soundEnabled;
+  shootSound.muted = !soundEnabled;
+  explodeSound.muted = !soundEnabled;
+  gameOverSound.muted = !soundEnabled;
+  winSound.muted = !soundEnabled;
+  
   if(!soundEnabled){
     bgMusic.pause();
     bgMusic.currentTime = 0;
@@ -222,6 +228,7 @@ function update(){
       h: 12,
       speed: 8
     });
+    if(soundEnabled){
     shootSound.currentTime = 0;
     shootSound.play().catch(()=>{});
     fireCooldown = 10;
@@ -256,7 +263,8 @@ for(let i = bullets.length - 1; i >= 0; i--){
 
       // explosion
       createExplosion(ex, ey);
-
+      
+    if(soundEnabled){
       explodeSound.currentTime = 0;
       explodeSound.play().catch(()=>{});
 
@@ -354,13 +362,16 @@ function restartGame(){
 
 /* ===== DRAW ===== */
 function draw(){
+  // 🔥 CLEAR PREVIOUS FRAME COMPLETELY
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
   // 🔊 Sound Toggle Icon
     ctx.font = "20px Arial";
     ctx.textAlign = "right";
+    ctx.fillStyle = "#fff";
     ctx.fillText(soundEnabled ? "🔊" : "🔇", screenW - 20, 35);
 
-// 🔥 CLEAR PREVIOUS FRAME COMPLETELY
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 
   // (rest of your drawing code)
   
