@@ -181,6 +181,8 @@ function boom(x,y){
 
 /* ========= UPDATE ========= */
 function update(){
+  if(gameState !== "PLAY") return;
+
   if(isFiring && fireCooldown<=0 && ammo>0 && gameState==="PLAY"){
     bullets.push({x:player.x+22,y:player.y,w:6,h:12,speed:8});
     ammo--; fireCooldown=10;
@@ -266,6 +268,7 @@ function draw(){
 
 /* ========= LOOP ========= */
 function loop(){ update(); draw(); requestAnimationFrame(loop); }
+  askPlayerName();
 loop();
 
 /* ========= RESET ========= */
