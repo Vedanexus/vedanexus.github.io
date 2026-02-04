@@ -1,131 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About VedaNexus</title>
 
 <style>
-*{
+body{
   margin:0;
   padding:0;
-  box-sizing:border-box;
   font-family: Arial, sans-serif;
-}
-
-body{
-  background:#0f1115;
+  background:#0f172a;
   color:#fff;
 }
 
-.header{
-  background:#ffd400;
-  color:#111;
-  padding:18px;
+.container{
+  max-width:420px;
+  margin:40px auto;
+  padding:20px;
+}
+
+h1{
+  color:#38bdf8;
   text-align:center;
-  font-size:26px;
-  font-weight:bold;
-}
-
-.section{
-  padding:25px 18px;
-  max-width:700px;
-  margin:auto;
-}
-
-h2{
-  margin-bottom:10px;
-  color:#ffd400;
 }
 
 p{
-  line-height:1.6;
+  text-align:center;
   opacity:0.9;
-  margin-bottom:15px;
 }
 
-.services li{
-  margin-bottom:8px;
-}
-
-.card{
-  background:#1a1d24;
-  border-radius:12px;
-  padding:20px;
-  margin-top:20px;
+input, textarea, button{
+  width:100%;
+  padding:12px;
+  margin-top:12px;
+  border-radius:8px;
+  border:none;
+  font-size:16px;
 }
 
 input, textarea{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border:none;
-  border-radius:8px;
-  outline:none;
-  font-size:15px;
+  background:#020617;
+  color:#fff;
 }
 
 button{
-  margin-top:15px;
-  width:100%;
-  padding:14px;
-  background:#ffd400;
-  color:#111;
-  border:none;
-  border-radius:30px;
-  font-size:18px;
+  background:#38bdf8;
+  color:#020617;
   font-weight:bold;
   cursor:pointer;
 }
 
-.footer{
-  text-align:center;
-  padding:15px;
-  font-size:13px;
-  opacity:0.6;
+button:hover{
+  background:#0ea5e9;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">VEDANEXUS</div>
+<div class="container">
+  <h1>VedaNexus</h1>
+  <p>IT Hardware • Laptop • Desktop • Support</p>
 
-<div class="section">
-  <h2>Who We Are</h2>
-  <p>
-    VedaNexus is a technology solutions brand providing
-    laptops, desktops and IT hardware support for individuals
-    and businesses.
-  </p>
+  <form onsubmit="sendWhatsApp(); return false;">
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="text" id="mobile" placeholder="Mobile Number" required>
+    <textarea id="message" placeholder="What do you need?"></textarea>
+
+    <button type="submit">Send on WhatsApp</button>
+  </form>
 </div>
 
-<div class="section">
-  <h2>What We Offer</h2>
-  <ul class="services">
-    <li>✔ New & Refurbished Laptops</li>
-    <li>✔ Laptop Repair & Upgrades</li>
-    <li>✔ SSD / RAM / OS Installation</li>
-    <li>✔ Business IT Support</li>
-  </ul>
-</div>
+<script>
+function sendWhatsApp(){
+  const name = document.getElementById("name").value;
+  const mobile = document.getElementById("mobile").value;
+  const msg = document.getElementById("message").value;
 
-<div class="section">
-  <div class="card">
-    <h2>Get Laptop Details</h2>
-    <p>Fill the form and we’ll contact you.</p>
+  const text =
+    `Hello VedaNexus 👋%0A` +
+    `Name: ${name}%0A` +
+    `Mobile: ${mobile}%0A` +
+    `Requirement: ${msg}`;
 
-    <input type="text" placeholder="Your Name">
-    <input type="tel" placeholder="Mobile Number">
-    <textarea rows="3" placeholder="Laptop Requirement"></textarea>
+  // 👇 APNA WHATSAPP NUMBER YAHA DAALO (91 ke sath)
+  const phone = "917987410213";
 
-    <button>Submit</button>
-  </div>
-</div>
-
-<div class="footer">
-  © 2026 VedaNexus • Powered by Tech
-</div>
+  window.open(`https://wa.me/${phone}?text=${text}`, "_blank");
+}
+</script>
 
 </body>
 </html>
