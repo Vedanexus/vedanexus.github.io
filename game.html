@@ -237,6 +237,9 @@ for(let i = bullets.length - 1; i >= 0; i--){
       // explosion
       createExplosion(ex, ey);
 
+      explodeSound.currentTime = 0;
+      explodeSound.play().catch(()=>{});
+
       // score
       score++;
 
