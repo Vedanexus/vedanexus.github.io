@@ -50,6 +50,21 @@ const gameOverSound = new Audio("sounds/gameover.mp3");
 const winSound = new Audio("sounds/win.mp3");
 
 let soundEnabled = true;
+let playerName = localStorage.getItem("vn_player_name");
+
+function askPlayerName(){
+  if(!playerName){
+    playerName = prompt("Enter your name (Leaderboard ke liye):");
+    
+    if(!playerName || playerName.trim()===""){
+      playerName = "Guest";
+    }
+
+    playerName = playerName.substring(0,12); // limit length
+    localStorage.setItem("vn_player_name", playerName);
+  }
+}
+
 
 /* ========= LEADERBOARD ========= */
 function saveScoreOnce(score){
@@ -57,7 +72,13 @@ function saveScoreOnce(score){
   if(saved) return;
 
   let scores = JSON.parse(localStorage.getItem("vn_scores")) || [];
-  scores.push({ score, time: new Date().toLocaleString() });
+
+  scores.push({
+    name: playerName || "Guest",
+    score: score,
+    time: new Date().toLocaleString()
+  });
+
   scores.sort((a,b)=>b.score-a.score);
   scores = scores.slice(0,10);
 
@@ -237,7 +258,8 @@ function draw(){
     ctx.font="22px Arial";
     ctx.fillText("🏆 TOP PLAYERS",W/2,H/2+130);
     scores.forEach((s,i)=>{
-      ctx.fillText(`${i+1}. ${s.score}`,W/2,H/2+165+i*24);
+      ctx.fillText(`${i+1}. ${s.name} - ${s.score}`, W/2, H/2 + 165 + i * 24);
+
     });
   }
 }
@@ -248,6 +270,8 @@ loop();
 
 /* ========= RESET ========= */
 function restartGame(){
+  askPlayerName();
+
   bullets=[]; enemies=[]; explosions=[];
   score=0; ammo=300; fireCooldown=0;
   gameState="PLAY";
