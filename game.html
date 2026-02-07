@@ -226,6 +226,7 @@ function update(){
         if(soundEnabled){explodeSound.currentTime=0;explodeSound.play().catch(()=>{});}
         if(score>=WIN_SCORE){
           gameState="WIN";
+          trackEvent("game_win"); 
           saveScoreOnce(score);
           bgMusic.pause();
           if(soundEnabled) winSound.play().catch(()=>{});
@@ -238,6 +239,7 @@ function update(){
   for(let e of enemies){
     if(hit(player,e)){
       gameState="OVER";
+      trackEvent("game_over"); 
       saveScoreOnce(score);
       bgMusic.pause();
       if(soundEnabled) gameOverSound.play().catch(()=>{});
@@ -290,6 +292,7 @@ function draw(){
 /* ========= LOOP ========= */
 function loop(){ update(); draw(); requestAnimationFrame(loop); }
   askPlayerName();
+  trackEvent("game_start");
 loop();
 
 /* ========= RESET ========= */
