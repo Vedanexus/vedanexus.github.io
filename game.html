@@ -241,7 +241,8 @@ if(player.x + player.w > W) player.x = W - player.w;
 
   if(gameState !== "PLAY") return;
 
-  if((isFiring || keyShoot) && fireCooldown<=0 && ammo>0 && gameState==="PLAY"){
+  if((isFiring || keyShoot) && fireCooldown<=0 && ammo>0){
+
 
     bullets.push({x:player.x+22,y:player.y,w:6,h:12,speed:8});
     ammo--; fireCooldown=10;
@@ -322,12 +323,13 @@ function draw(){
     ctx.fillText("🏆 TOP PLAYERS",W/2,H/2+130);
     scores.forEach((s,i)=>{
       ctx.fillText(`${i+1}. ${s.name} - ${s.score}`, W/2, H/2 + 165 + i * 24);
+
+    });
+
     ctx.font = "14px Arial";
     ctx.textAlign = "center";
     ctx.fillStyle = "#ccc";
     ctx.fillText("Controls: ← →  +  Space", W/2, H - 15);
-
-    });
   }
 }
 
