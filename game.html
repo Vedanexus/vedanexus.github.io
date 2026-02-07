@@ -247,7 +247,14 @@ if(player.x + player.w > W) player.x = W - player.w;
   if((isFiring || keyShoot) && fireCooldown<=0 && ammo>0){
 
 
-    bullets.push({x:player.x+22,y:player.y,w:6,h:12,speed:8});
+    bullets.push({
+  x: player.x + player.w/2 - 3,
+  y: player.y,
+  w: 6,
+  h: 14,
+  speed: 9
+});
+
     ammo--; fireCooldown=10;
     if(soundEnabled){shootSound.currentTime=0;shootSound.play().catch(()=>{});}
   }
@@ -262,7 +269,11 @@ if(player.x + player.w > W) player.x = W - player.w;
   for(let i=bullets.length-1;i>=0;i--){
     for(let j=enemies.length-1;j>=0;j--){
       if(hit(bullets[i],enemies[j])){
-        boom(enemies[j].x+22,enemies[j].y+22);
+        boom(
+  enemies[j].x + enemies[j].w/2,
+  enemies[j].y + enemies[j].h/2
+);
+
         bullets.splice(i,1); enemies.splice(j,1);
         score++;
         if(soundEnabled){explodeSound.currentTime=0;explodeSound.play().catch(()=>{});}
