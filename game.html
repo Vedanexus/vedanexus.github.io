@@ -347,6 +347,8 @@ function restartGame(){
   score=0; ammo=300; fireCooldown=0;
   gameState="PLAY";
   localStorage.removeItem("vn_saved");
+
+  trackEvent("game_start");
 }
 </script>
 </body>
