@@ -139,7 +139,8 @@ const enemyImg = new Image();
 enemyImg.src = "enemy_laptop.png";
 
 /* ========= PLAYER ========= */
-const player = { x:W/2-24, y:H-80, w:48, h:48 };
+const player = { x:W/2-32, y:H-100, w:64, h:64 };
+
 
 /* ========= GAME STATE ========= */
 let bullets=[], enemies=[], explosions=[];
@@ -204,12 +205,14 @@ window.addEventListener("keydown", e => {
 /* ========= ENEMY SPAWN ========= */
 setInterval(()=>{
   if(gameState!=="PLAY") return;
-  enemies.push({
-    x:Math.random()*(W-44),
-    y:-44,
-    w:44,h:44,
-    speed:Math.min(2+score*0.05,14)
-  });
+enemies.push({
+  x:Math.random()*(W-64),
+  y:-64,
+  w:64,
+  h:64,
+  speed:Math.min(2+score*0.05,14)
+});
+
 },700);
 
 /* ========= HELPERS ========= */
