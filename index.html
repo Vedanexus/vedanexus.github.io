@@ -1,224 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VedaNexus – Reliable IT Services</title>
+  <meta charset="UTF-8" />
+  <title>VedaNexus | Reliable IT Services</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-/* ================= RESET ================= */
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#000;
-  color:#fff;
-  overflow-x:hidden;
-}
-
-/* ================= HEADER ================= */
-header{
-  position:fixed;
-  top:0;left:0;
-  width:100%;
-  height:64px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0 20px;
-  background:rgba(0,0,0,0.7);
-  backdrop-filter:blur(8px);
-  z-index:1000;
-}
-
-.logo{
-  font-size:22px;
-  font-weight:bold;
-  color:#ffd400;
-}
-
-.menu{
-  font-size:30px;
-  cursor:pointer;
-}
-
-/* ================= SIDE MENU ================= */
-.drawer{
-  position:fixed;
-  top:0;
-  right:-280px;
-  width:280px;
-  height:100%;
-  background:#0c0c0c;
-  padding:90px 25px;
-  transition:0.4s ease;
-  z-index:1200;
-}
-
-.drawer a{
-  display:block;
-  color:#fff;
-  text-decoration:none;
-  font-size:18px;
-  padding:14px 0;
-  border-bottom:1px solid #222;
-}
-
-.drawer a:hover{color:#ffd400}
-
-.drawer.open{right:0}
-
-/* ================= HERO ================= */
-.hero{
-  min-height:100vh;
-  padding:120px 20px 60px;
-  display:flex;
-  align-items:center;
-  background-size:cover;
-  background-position:center;
-  transition:background-image 1s ease-in-out;
-  position:relative;
-}
-
-.hero::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(
-    rgba(0,0,0,0.15),
-    rgba(0,0,0,0.45)
-  );
-}
-
-
-.hero-content{
-  position:relative;
-  max-width:900px;
-  animation:fadeUp 1.2s ease forwards;
-}
-
-.hero h1{
-  font-size:44px;
-  line-height:1.2;
-  margin-bottom:20px;
-}
-
-.hero p{
-  font-size:18px;
-  opacity:.9;
-  margin-bottom:30px;
-}
-
-.btn{
-  display:inline-block;
-  background:#ffd400;
-  color:#000;
-  padding:14px 28px;
-  border-radius:8px;
-  font-weight:bold;
-  text-decoration:none;
-  transition:transform .3s ease;
-}
-
-.btn:hover{transform:scale(1.05)}
-
-/* ================= SECTIONS ================= */
-section{
-  padding:140px 20px;
-}
-
-.dark{background:#0c0c0c}
-.darker{background:#111}
-
-.container{
-  max-width:1100px;
-  margin:auto;
-  animation:fadeUp 1.2s ease forwards;
-}
-
-h2{
-  font-size:36px;
-  color:#ffd400;
-  margin-bottom:20px;
-}
-
-p{
-  font-size:17px;
-  line-height:1.8;
-  opacity:.9;
-}
-
-/* ================= ANIMATIONS ================= */
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(40px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-footer{
-  background:#000;
-  padding:40px 20px;
-  text-align:center;
-  opacity:.7;
-}
-</style>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
-
 <body>
 
-<header>
-  <div class="logo">VedaNexus</div>
-  <div class="menu" id="menuBtn">☰</div>
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">Veda<span>Nexus</span></div>
+
+  <div class="menu-btn" onclick="toggleMenu()">☰</div>
+
+  <nav id="menu">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="services.html">Services</a>
+    <a href="contact.html">Contact</a>
+  </nav>
 </header>
 
-<div class="drawer" id="drawer">
-  <a href="#">Home</a>
-  <a href="#">About</a>
-  <a href="#">Services</a>
-  <a href="#">Careers</a>
-  <a href="#">Contact</a>
-  <a href="game.html">Play Game</a>
-</div>
-
-<section class="hero" id="hero">
-  <div class="hero-content">
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
     <h1>
-      Reliable IT Services.<br>
-      Powered by VedaNexus.
+      Reliable IT Services.<br />
+      Powered by <span>VedaNexus</span>.
     </h1>
+
     <p>
-      Managed IT, AMC, Technical Support & Procurement —
-      built for businesses that demand scale, security and stability.
+      Managed IT, AMC, Technical Support & Procurement<br />
+      built for growing businesses.
     </p>
-    <a href="#services" class="btn">Explore Services</a>
+
+    <a href="services.html" class="btn">Explore Services</a>
+  </div>
+
+  <div class="hero-image">
+    <img src="images/mascot-hero.png" alt="VedaNexus Mascot" />
   </div>
 </section>
 
-<section class="dark" id="services">
-  <div class="container">
-    <h2>Enterprise-Grade IT Support</h2>
-    <p>
-      Ye homepage intentionally **bahut lamba** hai.  
-      Scroll karte jao… content khatam hi nahi hota.
-    </p>
-  </div>
+<!-- LONG SCROLL SECTION -->
+<section class="section">
+  <h2>Enterprise-Grade IT Support</h2>
+  <p>
+    Ye homepage jaan-boojhkar **bahut lamba** rakha gaya hai 😄  
+    Scroll karte jao… content khatam hi nahi hota.
+  </p>
 </section>
 
-<section class="darker">
-  <div class="container">
-    <h2>What We Do</h2>
-    <p>
-      • Managed IT Services<br>
-      • AMC & Maintenance<br>
-      • Technical Support<br>
-      • Procurement & Projects
-    </p>
-  </div>
+<section class="section alt">
+  <h2>What We Do</h2>
+  <ul>
+    <li>Managed IT Services</li>
+    <li>AMC & Maintenance</li>
+    <li>Technical Support</li>
+    <li>IT Procurement</li>
+    <li>Project Deployments</li>
+  </ul>
 </section>
 
-<section class="dark">
-  <div class="container">
-    <h2>Why Businesses Trust Us</h2>
+<section class="section">
+  <h2>Calm, Secure, Predictable IT</h2>
+  <div class="center">
+    <img src="images/mascot-meditate.png" class="meditate" />
     <p>
-      Reliable systems. Predictable costs. Zero nonsense.
+      Jab IT stable hota hai, business automatically grow karta hai.
     </p>
   </div>
 </section>
@@ -227,34 +78,6 @@ footer{
   © 2026 VedaNexus. All rights reserved.
 </footer>
 
-<script>
-/* ===== MENU ===== */
-const menuBtn = document.getElementById("menuBtn");
-const drawer = document.getElementById("drawer");
-
-menuBtn.onclick = () => {
-  drawer.classList.toggle("open");
-};
-
-/* ===== BACKGROUND SLIDESHOW ===== */
-const images = [
-  "https://images.unsplash.com/photo-1518770660439-4636190af475",
-  "https://images.unsplash.com/photo-1526378722484-dc8f3b43f47b",
-  "https://images.unsplash.com/photo-1517433456452-f9633a875f6f",
-  "https://images.unsplash.com/photo-1498050108023-c5249f4df085"
-];
-
-let i = 0;
-const hero = document.getElementById("hero");
-
-function changeBg(){
-  hero.style.backgroundImage = `url(${images[i]})`;
-  i = (i + 1) % images.length;
-}
-
-changeBg();
-setInterval(changeBg, 5000);
-</script>
-
+<script src="js/main.js"></script>
 </body>
 </html>
