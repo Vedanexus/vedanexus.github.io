@@ -1,0 +1,140 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #fff;
+  color: #111;
+}
+
+/* HEADER */
+.header {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #eee;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.logo span {
+  color: #f5c400;
+}
+
+.menu-btn {
+  font-size: 26px;
+  cursor: pointer;
+}
+
+#menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 70%;
+  height: 100%;
+  background: #fff;
+  padding: 40px;
+  transition: 0.3s;
+}
+
+#menu a {
+  display: block;
+  margin: 20px 0;
+  text-decoration: none;
+  font-size: 20px;
+  color: #111;
+}
+
+/* HERO */
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 80px 24px;
+  align-items: center;
+}
+
+.hero-text {
+  flex: 1;
+}
+
+.hero-text h1 {
+  font-size: 40px;
+}
+
+.hero-text span {
+  color: #f5c400;
+}
+
+.hero-image img {
+  width: 320px;
+}
+
+/* SECTIONS */
+.section {
+  padding: 100px 24px;
+}
+
+.section.alt {
+  background: #f9f9f9;
+}
+
+.section h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.section ul li {
+  margin: 10px 0;
+}
+
+/* BUTTON */
+.btn {
+  display: inline-block;
+  margin-top: 20px;
+  background: #f5c400;
+  color: #000;
+  padding: 12px 22px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+/* CARD */
+.card {
+  padding: 20px;
+  border: 1px solid #eee;
+  margin: 10px 0;
+  border-radius: 8px;
+}
+
+/* FORM */
+.form input,
+.form textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+}
+
+/* FOOTER */
+footer {
+  padding: 40px;
+  text-align: center;
+  border-top: 1px solid #eee;
+  color: #777;
+}
+
+.meditate {
+  width: 260px;
+  margin: 20px auto;
+}
