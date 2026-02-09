@@ -1,188 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VedaNexus – Reliable IT Services</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VedaNexus – Reliable IT Services</title>
 
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PL6RCL2113"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-PL6RCL2113');
-  </script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#000;
+  color:#fff;
+}
 
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{
-      font-family:Arial,Helvetica,sans-serif;
-      background:#000;
-      color:#fff;
-      overflow-x:hidden;
-    }
+/* ================= HEADER ================= */
+header{
+  position:fixed;
+  top:0;left:0;
+  width:100%;
+  z-index:999;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 20px;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(8px);
+}
 
-    /* ================= HEADER ================= */
-    header{
-      position:fixed;
-      top:0;left:0;
-      width:100%;
-      z-index:999;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:14px 20px;
-      background:rgba(0,0,0,0.55);
-      backdrop-filter:blur(8px);
-    }
+.logo{
+  font-size:22px;
+  font-weight:bold;
+  color:#ffd400;
+}
 
-    .logo{
-      font-size:22px;
-      font-weight:bold;
-      color:#ffd400;
-      letter-spacing:.5px;
-    }
+.menu{
+  font-size:26px;
+  cursor:pointer;
+}
 
-    .menu{
-      font-size:26px;
-      cursor:pointer;
-    }
+/* ================= HERO ================= */
+.hero{
+  min-height:100vh;
+  padding:120px 20px 80px;
+  display:flex;
+  align-items:center;
 
-    /* ================= HERO ================= */
-    .hero{
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      padding:120px 20px 80px;
-      position:relative;
-    }
+  background-size:cover;
+  background-position:center;
+  animation:slideShow 18s infinite;
 
-    /* slideshow background */
-    .hero::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background-size:cover;
-      background-position:center;
-      animation:slideShow 20s infinite;
-      z-index:-2;
-    }
+  position:relative;
+}
 
-    .hero::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(
-        rgba(0,0,0,.7),
-        rgba(0,0,0,.85)
-      );
-      z-index:-1;
-    }
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    rgba(0,0,0,0.65),
+    rgba(0,0,0,0.85)
+  );
+}
 
-    @keyframes slideShow{
-      0%{
-        background-image:url("https://images.unsplash.com/photo-1518770660439-4636190af475");
-      }
-      25%{
-        background-image:url("https://images.unsplash.com/photo-1519389950473-47ba0277781c");
-      }
-      50%{
-        background-image:url("https://images.unsplash.com/photo-1526378722484-bd91ca387e72");
-      }
-      75%{
-        background-image:url("https://images.unsplash.com/photo-1498050108023-c5249f4df085");
-      }
-      100%{
-        background-image:url("https://images.unsplash.com/photo-1518770660439-4636190af475");
-      }
-    }
+.hero-content{
+  position:relative;
+  max-width:900px;
+}
 
-    .hero-content{
-      max-width:900px;
-    }
+.hero h1{
+  font-size:42px;
+  line-height:1.2;
+  margin-bottom:20px;
+}
 
-    .hero h1{
-      font-size:42px;
-      line-height:1.2;
-      margin-bottom:20px;
-    }
+.hero p{
+  font-size:18px;
+  max-width:700px;
+  opacity:.9;
+  margin-bottom:30px;
+}
 
-    .hero p{
-      font-size:18px;
-      max-width:700px;
-      opacity:.9;
-      margin-bottom:30px;
-    }
+.btn{
+  display:inline-block;
+  background:#ffd400;
+  color:#000;
+  padding:14px 26px;
+  border-radius:8px;
+  font-weight:bold;
+  text-decoration:none;
+}
 
-    .btn{
-      display:inline-block;
-      background:#ffd400;
-      color:#000;
-      padding:14px 26px;
-      border-radius:8px;
-      font-weight:bold;
-      text-decoration:none;
-      transition:.3s;
-    }
+/* ================= SLIDESHOW ================= */
+@keyframes slideShow{
+  0%{
+    background-image:url("https://cdn.pixabay.com/photo/2018/05/08/08/42/technology-3387878_1280.jpg");
+  }
+  33%{
+    background-image:url("https://cdn.pixabay.com/photo/2016/11/19/14/00/code-1839406_1280.jpg");
+  }
+  66%{
+    background-image:url("https://cdn.pixabay.com/photo/2017/08/30/01/05/technology-2699531_1280.jpg");
+  }
+  100%{
+    background-image:url("https://cdn.pixabay.com/photo/2018/05/08/08/42/technology-3387878_1280.jpg");
+  }
+}
 
-    .btn:hover{
-      background:#fff;
-      transform:translateY(-2px);
-    }
+/* ================= LONG CONTENT ================= */
+section{
+  padding:100px 20px;
+  background:#0c0c0c;
+}
 
-    /* ================= LONG HOME SECTIONS ================= */
-    section{
-      padding:100px 20px;
-      background:#0c0c0c;
-    }
+section:nth-child(even){
+  background:#111;
+}
 
-    section:nth-child(even){
-      background:#111;
-    }
+.container{
+  max-width:1100px;
+  margin:auto;
+}
 
-    .container{
-      max-width:1100px;
-      margin:auto;
-    }
+h2{
+  font-size:34px;
+  margin-bottom:20px;
+  color:#ffd400;
+}
 
-    h2{
-      font-size:34px;
-      margin-bottom:20px;
-      color:#ffd400;
-    }
+p{
+  font-size:17px;
+  line-height:1.7;
+  opacity:.9;
+}
 
-    p{
-      font-size:17px;
-      line-height:1.7;
-      opacity:.9;
-    }
+.spacer{height:120px}
 
-    .spacer{
-      height:120px;
-    }
-
-    /* ================= FOOTER ================= */
-    footer{
-      background:#000;
-      padding:40px 20px;
-      text-align:center;
-      font-size:14px;
-      opacity:.7;
-    }
-
-  </style>
+footer{
+  background:#000;
+  padding:40px 20px;
+  text-align:center;
+  font-size:14px;
+  opacity:.7;
+}
+</style>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <header>
   <div class="logo">VedaNexus</div>
   <div class="menu">☰</div>
 </header>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-content">
     <h1>
@@ -197,48 +166,28 @@
   </div>
 </section>
 
-<!-- VERY LONG HOME CONTENT -->
-<section>
+<section id="services">
   <div class="container">
     <h2>Why VedaNexus?</h2>
     <p>
-      VedaNexus delivers enterprise-grade IT support for growing companies.
-      From preventive maintenance to mission-critical infrastructure,
-      we ensure uptime, security and performance.
+      Enterprise-grade IT support for growing businesses.
+      We ensure uptime, security and peace of mind.
     </p>
     <div class="spacer"></div>
     <p>
-      Our engineers work as an extension of your team,
-      not just as vendors. We believe IT should empower growth,
-      not slow it down.
-    </p>
-  </div>
-</section>
-
-<section id="services">
-  <div class="container">
-    <h2>Our Services</h2>
-    <p>• Managed IT Services<br>
-       • AMC & Preventive Maintenance<br>
-       • On-site & Remote Technical Support<br>
-       • IT Procurement & Asset Management<br>
-       • Infrastructure & Network Projects
-    </p>
-    <div class="spacer"></div>
-    <p>
-      Whether you’re a startup or an enterprise,
-      we scale with you.
+      Scroll karte jao… page khatam hone ka naam nahi lega 😄
     </p>
   </div>
 </section>
 
 <section>
   <div class="container">
-    <h2>Built for Long-Term Partnerships</h2>
+    <h2>Our Services</h2>
     <p>
-      We focus on reliability, transparency and long-term value.
-      Our success is measured by how smoothly your systems run —
-      day after day, year after year.
+      • Managed IT Services<br>
+      • AMC & Maintenance<br>
+      • Technical Support<br>
+      • Procurement & Projects
     </p>
   </div>
 </section>
