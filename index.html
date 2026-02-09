@@ -6,21 +6,15 @@
 <title>VedaNexus – Reliable IT Services</title>
 
 <style>
-.hero-play{
-  display:inline-block;
-  margin-top:24px;
-  background:#111;
-  color:white;
-  padding:14px 28px;
-  border-radius:12px;
-  font-weight:700;
+@keyframes float{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
+  100%{transform:translateY(0)}
 }
 
-@keyframes float{ 0%{transform:translateY(0)} 50%{transform:translateY(-12px)} 100%{transform:translateY(0)} }
 :root{
   --yellow:#FFD400;
   --blue:#1f6fff;
-  --dark:#0e0e0e;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui;}
@@ -30,26 +24,7 @@ body{
   color:#111;
   overflow-x:hidden;
 }
-<header class="header">
-  <div class="logo">Veda<span>Nexus</span></div>
 
-  <!-- Desktop Menu -->
-  <nav class="nav-desktop">
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="services.html">Services</a>
-
-    <!-- GAME BUTTON -->
-    <a href="game.html" class="play-btn">▶ Play Game</a>
-
-    <a href="contact.html">Contact</a>
-  </nav>
-
-  <!-- Mobile Menu Icon -->
-  <div class="menu-toggle" onclick="toggleMenu()">☰</div>
-</header>
-
-/* ================= HEADER ================= */
 /* ===== HEADER ===== */
 .header{
   display:flex;
@@ -64,13 +39,10 @@ body{
 
 .logo{
   font-size:22px;
-  font-weight:700;
+  font-weight:800;
 }
-.logo span{
-  color:#facc15;
-}
+.logo span{color:var(--yellow)}
 
-/* Desktop Nav */
 .nav-desktop{
   display:flex;
   gap:28px;
@@ -80,80 +52,56 @@ body{
 .nav-desktop a{
   text-decoration:none;
   color:#111;
-  font-weight:500;
+  font-weight:600;
 }
 
-/* Play Game button */
 .play-btn{
-  background:#facc15;
+  background:var(--yellow);
   padding:10px 18px;
   border-radius:8px;
-  font-weight:700;
+  font-weight:800;
 }
 
-/* Mobile menu icon */
+/* Mobile icon */
 .menu-toggle{
   display:none;
   font-size:26px;
   cursor:pointer;
 }
 
-/* ===== MOBILE MENU ===== */
+/* Mobile Menu */
 .mobile-menu{
   position:fixed;
   top:0;
   right:-100%;
   width:70%;
   height:100vh;
-  background:white;
-  padding:60px 30px;
+  background:#fff;
+  padding:80px 30px;
   display:flex;
   flex-direction:column;
-  gap:22px;
-  transition:0.3s;
+  gap:24px;
+  transition:.3s;
   z-index:999;
 }
 
 .mobile-menu a{
-  text-decoration:none;
   font-size:18px;
-  font-weight:600;
-  color:#111;
-}
-
-/* Responsive switch */
-@media(max-width:900px){
-  .nav-desktop{ display:none; }
-  .menu-toggle{ display:block; }
-}
-
-
-/* ================= MENU ================= */
-nav{
-  position:fixed;
-  inset:0;
-  background:#fff;
-  transform:translateX(100%);
-  transition:.4s ease;
-  z-index:998;
-  padding:90px 30px;
-}
-nav.active{transform:translateX(0)}
-nav a{
-  display:block;
-  font-size:28px;
   font-weight:700;
-  margin:20px 0;
   text-decoration:none;
   color:#111;
 }
 
-/* ================= HERO ================= */
+@media(max-width:900px){
+  .nav-desktop{display:none}
+  .menu-toggle{display:block}
+}
+
+/* ===== HERO ===== */
 .hero{
   min-height:120vh;
   padding:140px 6vw 80px;
   position:relative;
-  overflow:hidden;
 }
 
 .hero::before{
@@ -162,23 +110,13 @@ nav a{
   inset:-20%;
   background:
     radial-gradient(circle at 30% 30%,rgba(31,111,255,.15),transparent 40%),
-    radial-gradient(circle at 70% 40%,rgba(255,212,0,.18),transparent 45%),
-    url("https://images.unsplash.com/photo-1526378722445-7c3e4b1c65b9?auto=format&fit=crop&w=1800&q=80");
-  background-size:cover;
-  animation:floatBg 30s linear infinite;
-  z-index:-2;
-}
-
-@keyframes floatBg{
-  0%{transform:scale(1) translateY(0)}
-  50%{transform:scale(1.05) translateY(-40px)}
-  100%{transform:scale(1) translateY(0)}
+    radial-gradient(circle at 70% 40%,rgba(255,212,0,.18),transparent 45%);
+  z-index:-1;
 }
 
 .hero h1{
   font-size:clamp(40px,6vw,78px);
   font-weight:900;
-  line-height:1.05;
   max-width:900px;
 }
 
@@ -194,15 +132,23 @@ nav a{
   padding:16px 26px;
   background:var(--yellow);
   color:#000;
-  font-weight:700;
+  font-weight:800;
   border-radius:10px;
   text-decoration:none;
 }
 
-/* ================= SECTION ================= */
-section{
-  padding:120px 6vw;
+.hero-play{
+  display:inline-block;
+  margin-top:24px;
+  background:#111;
+  color:white;
+  padding:14px 28px;
+  border-radius:12px;
+  font-weight:800;
 }
+
+/* ===== SECTIONS ===== */
+section{padding:120px 6vw}
 
 .section-title{
   font-size:42px;
@@ -219,13 +165,10 @@ section{
 .card{
   padding:32px;
   border-radius:18px;
-  background:#fff;
   box-shadow:0 20px 60px rgba(0,0,0,.08);
 }
 
-.card h3{margin-bottom:10px}
-
-/* ================= MASCOT ================= */
+/* Mascot */
 .mascot{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -236,121 +179,80 @@ section{
 .mascot img{
   width:100%;
   max-width:420px;
+  animation:float 6s ease-in-out infinite;
 }
 
-/* ================= STATS ================= */
-.stats{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:40px;
-  text-align:center;
+@media(max-width:900px){
+  .mascot{grid-template-columns:1fr}
 }
 
-.stat{
-  font-size:48px;
-  font-weight:900;
-  color:var(--blue);
-}
-.stat span{
-  display:block;
-  font-size:14px;
-  font-weight:600;
-  color:#444;
-}
-
-/* ================= FOOTER ================= */
+/* Footer */
 footer{
   padding:80px 6vw;
   background:#f7f7f7;
   text-align:center;
   color:#666;
 }
-
-/* ================= MOBILE ================= */
-@media(max-width:900px){
-  .mascot{grid-template-columns:1fr}
-}
 </style>
 </head>
 
 <body>
 
-<header>
+<header class="header">
   <div class="logo">Veda<span>Nexus</span></div>
-  <div class="menu-btn" onclick="nav.classList.add('active')">
-    <span></span><span></span><span></span>
-  </div>
+
+  <nav class="nav-desktop">
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="game.html" class="play-btn">▶ Play Game</a>
+    <a href="#">Contact</a>
+  </nav>
+
+  <div class="menu-toggle" onclick="toggleMenu()">☰</div>
 </header>
 
-<nav id="nav">
-  <a href="#" onclick="nav.classList.remove('active')">Home</a>
+<div id="mobileMenu" class="mobile-menu">
+  <a href="#">Home</a>
   <a href="#">About</a>
   <a href="#">Services</a>
-  <a href="#">Careers</a>
+  <a href="game.html">▶ Play Game</a>
   <a href="#">Contact</a>
-</nav>
+</div>
 
-<!-- HERO -->
 <section class="hero">
   <h1>Reliable IT Services.<br>Built to Stay Calm.</h1>
-  <p>
-    Managed IT, AMC, Technical Support & Procurement —
-    engineered for businesses that value stability, security and scale.
-  </p>
-  <a href="#" class="btn">Explore Services</a>
+  <p>Managed IT, AMC, Technical Support & Procurement — engineered for stability and scale.</p>
+  <a href="#" class="btn">Explore Services</a><br>
   <a href="game.html" class="hero-play">▶ Play VedaNexus Game</a>
 </section>
 
-<!-- WHAT WE DO -->
 <section>
   <h2 class="section-title">What We Do</h2>
   <div class="cards">
     <div class="card"><h3>Managed IT</h3><p>End-to-end infrastructure care.</p></div>
-    <div class="card"><h3>AMC</h3><p>Predictable support. Zero surprises.</p></div>
-    <div class="card"><h3>Technical Support</h3><p>Fast, accountable problem solving.</p></div>
-    <div class="card"><h3>Procurement</h3><p>Right hardware. Right price.</p></div>
+    <div class="card"><h3>AMC</h3><p>Predictable support.</p></div>
+    <div class="card"><h3>Technical Support</h3><p>Fast problem solving.</p></div>
+    <div class="card"><h3>Procurement</h3><p>Right hardware.</p></div>
   </div>
 </section>
 
-<!-- MASCOT -->
 <section class="mascot">
   <div>
     <h2 class="section-title">Calm Technology. Serious Results.</h2>
-    <p>
-      VedaNexus believes IT should disappear into the background —
-      until the moment you need it.
-    </p>
+    <p>IT that stays invisible — until you need it.</p>
   </div>
-
-  <img src="assets/images/mascot-standing.png"
-       alt="VedaNexus Mascot"
-       style="max-width:420px;width:100%;animation:float 6s ease-in-out infinite;">
+  <img src="assets/images/mascot-standing.png" alt="VedaNexus Mascot">
 </section>
 
-
-<!-- STATS -->
-<section>
-  <h2 class="section-title">Why Businesses Trust Us</h2>
-  <div class="stats">
-    <div class="stat">99.9%<span>Uptime</span></div>
-    <div class="stat">24×7<span>Support</span></div>
-    <div class="stat">10+<span>Industries</span></div>
-    <div class="stat">100%<span>Accountability</span></div>
-  </div>
-</section>
-
-<footer>
-  © 2026 VedaNexus. All rights reserved.
-</footer>
+<footer>© 2026 VedaNexus. All rights reserved.</footer>
 
 <script>
 function toggleMenu(){
-  const menu = document.getElementById("mobileMenu");
-  menu.style.right = menu.style.right === "0px" ? "-100%" : "0px";
+  const m=document.getElementById("mobileMenu");
+  m.style.right = m.style.right==="0px" ? "-100%" : "0px";
 }
 </script>
 
-
 </body>
 </html>
- 
