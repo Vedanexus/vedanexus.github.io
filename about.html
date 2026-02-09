@@ -1,106 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About VedaNexus</title>
-
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-PL6RCL2113"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-PL6RCL2113');
-</script>
-
-  
-<style>
-body{
-  margin:0;
-  padding:0;
-  font-family: Arial, sans-serif;
-  background:#0f172a;
-  color:#fff;
-}
-
-.container{
-  max-width:420px;
-  margin:40px auto;
-  padding:20px;
-}
-
-h1{
-  color:#38bdf8;
-  text-align:center;
-}
-
-p{
-  text-align:center;
-  opacity:0.9;
-}
-
-input, textarea, button{
-  width:100%;
-  padding:12px;
-  margin-top:12px;
-  border-radius:8px;
-  border:none;
-  font-size:16px;
-}
-
-input, textarea{
-  background:#020617;
-  color:#fff;
-}
-
-button{
-  background:#38bdf8;
-  color:#020617;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-button:hover{
-  background:#0ea5e9;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>About | VedaNexus</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
-<div class="container">
-  <h1>VedaNexus</h1>
-  <p>IT Hardware • Laptop • Desktop • Support</p>
+<header class="header">
+  <div class="logo">Veda<span>Nexus</span></div>
+  <a href="index.html" class="back">← Home</a>
+</header>
 
-  <form onsubmit="sendWhatsApp(); return false;">
-    <input type="text" id="name" placeholder="Your Name" required>
-    <input type="text" id="mobile" placeholder="Mobile Number" required>
-    <textarea id="message" placeholder="What do you need?"></textarea>
+<section class="section">
+  <h2>About VedaNexus</h2>
+  <p>
+    VedaNexus ek IT services company hai jo **simplicity, stability
+    aur trust** par kaam karti hai.
+  </p>
 
-    <button type="submit">Send on WhatsApp</button>
-  </form>
-</div>
+  <p>
+    Hum IT ko headache nahi, **support system** banate hain.
+  </p>
+</section>
 
-<script>
-function sendWhatsApp(){
-  const name = document.getElementById("name").value;
-  const mobile = document.getElementById("mobile").value;
-  const msg = document.getElementById("message").value;
-
-  const text =
-    `Hello VedaNexus 👋%0A` +
-    `Name: ${name}%0A` +
-    `Mobile: ${mobile}%0A` +
-    `Requirement: ${msg}`;
-
-  // 👇 APNA WHATSAPP NUMBER YAHA DAALO (91 ke sath)
-  const phone = "917987410213";
-
-  window.open(`https://wa.me/${phone}?text=${text}`, "_blank");
-}
-</script>
-
+<footer>© 2026 VedaNexus</footer>
 </body>
 </html>
