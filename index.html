@@ -6,6 +6,93 @@
 <title>VedaNexus – Reliable IT Services</title>
 
 <style>
+
+.hero{
+  position:relative;
+  min-height:100vh;
+  padding:160px 6vw 120px;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(70,140,255,.18), transparent 45%),
+    radial-gradient(circle at 80% 40%, rgba(255,215,0,.20), transparent 45%),
+    linear-gradient(120deg,#f6f9ff,#fffdf3);
+  overflow:hidden;
+}
+
+.hero-content{
+  max-width:900px;
+  position:relative;
+  z-index:2;
+}
+
+.hero h1{
+  font-size:clamp(40px,5.5vw,76px);
+  font-weight:900;
+  line-height:1.05;
+  color:#111;
+}
+
+.hero p{
+  margin-top:24px;
+  max-width:620px;
+  font-size:18px;
+  color:#555;
+}
+
+.hero-actions{
+  margin-top:32px;
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+/* buttons */
+.btn-primary{
+  background:#FFD400;
+  color:#000;
+  padding:16px 28px;
+  border-radius:12px;
+  font-weight:700;
+  text-decoration:none;
+}
+
+.btn-secondary{
+  background:#111;
+  color:#fff;
+  padding:16px 28px;
+  border-radius:12px;
+  font-weight:700;
+  text-decoration:none;
+}
+
+/* WAVE EFFECT */
+.hero-wave{
+  position:absolute;
+  right:-10%;
+  top:50%;
+  width:120%;
+  height:420px;
+  background:
+    radial-gradient(circle at 30% 50%, rgba(31,111,255,.25), transparent 60%),
+    radial-gradient(circle at 60% 40%, rgba(255,212,0,.25), transparent 55%);
+  filter:blur(40px);
+  transform:translateY(-50%);
+  animation:waveFloat 18s ease-in-out infinite;
+  z-index:1;
+}
+
+@keyframes waveFloat{
+  0%{transform:translateY(-50%) translateX(0)}
+  50%{transform:translateY(-55%) translateX(-40px)}
+  100%{transform:translateY(-50%) translateX(0)}
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  .hero{
+    padding-top:120px;
+  }
+}
+
 @keyframes float{
   0%{transform:translateY(0)}
   50%{transform:translateY(-12px)}
@@ -197,6 +284,27 @@ footer{
 </head>
 
 <body>
+<section class="hero">
+  <div class="hero-content">
+    <h1>
+      Reliable IT Services.<br>
+      Built to Stay Calm.
+    </h1>
+
+    <p>
+      Managed IT, AMC, Technical Support & Procurement —
+      designed for businesses that demand stability, security and scale.
+    </p>
+
+    <div class="hero-actions">
+      <a href="services.html" class="btn-primary">Explore Services</a>
+      <a href="game.html" class="btn-secondary">▶ Play VedaNexus Game</a>
+    </div>
+  </div>
+
+  <!-- decorative wave -->
+  <div class="hero-wave"></div>
+</section>
 
 <header class="header">
   <div class="logo">Veda<span>Nexus</span></div>
